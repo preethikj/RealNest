@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RealNest | Properties</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-white font-sans">
+
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+<main>
+    <section class="max-w-7xl mx-auto px-6 py-12">
+
+        <th:block th:replace="~{fragments/section-header ::
+            sectionHeader(
+            'EXPLORE HOMES',
+            'Find Your Perfect Property',
+            'Browse verified homes, apartments and villas across top locations.',
+            '',
+            ''
+            )}">
+        </th:block>
+
+<!--        Locality search bar-->
+        <div class="mt-10">
+            <th:block th:replace="~{fragments/locality-search :: localitySearch}"></th:block>
+        </div>
+
+<!--        Location chip-->
+        <section class="mt-4 flex flex-wrap gap-3">
+            <span class="rounded-full bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400">
+                Bangalore
+            </span>
+            <span class="rounded-full bg-white/5 px-4 py-2 text-sm text-slate-300">
+                All Localities
+            </span>
+        </section>
+
+<!--Listing layout-->
+        <section class="mt-10 grid gap-8 lg:grid-cols-4">
+
+            <aside class="self-start rounded-3xl border border-white/10 bg-slate-900 p-6">
+                <h2 class="text-xl font-bold">Filters</h2>
+
+                <section class="mt-6 space-y-5">
+                    <div>
+                        <label class="text-sm text-slate-400">Property Type</label>
+                        <select class="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm outline-none">
+                            <option>All Types</option>
+                            <option>Apartment</option>
+                            <option>Villa</option>
+                            <option>Independent House</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-sm text-slate-400">Bedrooms</label>
+                        <select class="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm outline-none">
+                            <option>Any</option>
+                            <option>1 BHK</option>
+                            <option>2 BHK</option>
+                            <option>3 BHK</option>
+                            <option>4+ BHK</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-sm text-slate-400">Budget</label>
+                        <select class="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm outline-none">
+                            <option>Any Budget</option>
+                            <option>Below ₹50 L</option>
+                            <option>₹50 L - ₹1 Cr</option>
+                            <option>Above ₹1 Cr</option>
+                        </select>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="lg:col-span-3">
+                <div class="flex items-center justify-between">
+                    <p class="text-slate-400">
+                        Showing <span class="font-semibold text-white">24</span> properties in
+                        <span class="font-semibold text-emerald-400">Bangalore</span>
+                    </p>
+                    <select class="rounded-full border border-white/10 bg-slate-900 px-4 py-3 text-sm outline-none">
+                        <option>Sort by Latest</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                    </select>
+                </div>
+
+                <section class="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+                </section>
+
+<!--                Pagination-->
+                <section class="mt-10 flex items-center justify-center gap-3">
+                    <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
+                        Prev
+                    </button>
+
+                    <button class="h-10 w-10 rounded-full bg-emerald-500 text-sm font-bold text-slate-950">
+                        1
+                    </button>
+
+                    <button class="h-10 w-10 rounded-full border border-white/10 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
+                        2
+                    </button>
+
+                    <button class="h-10 w-10 rounded-full border border-white/10 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
+                        3
+                    </button>
+
+                    <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
+                        Next
+                    </button>
+                </section>
+            </section>
+        </section>
+    </section>
+
+
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script src="/js/navbar.js"></script>
+<script src="/js/locality-search.js"></script></body>
+</html>

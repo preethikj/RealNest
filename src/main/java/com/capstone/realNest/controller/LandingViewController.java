@@ -16,4 +16,9 @@ public class LandingViewController {
         return "customer/property-details";
     }
 
+    @GetMapping("/properties")
+    public String propertyList() {
+        return "customer/property-list";
+    }
+
 }
