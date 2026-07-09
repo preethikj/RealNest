@@ -1,0 +1,44 @@
+
+<!--* search.js-->
+<!--*-->
+<!--* Responsibilities:-->
+<!-- - Validate the search form before submission.-->
+<!-- - Highlight invalid inputs.-->
+<!-- - Improve the search user experience.-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<form id="propertySearchForm"
+      th:fragment="searchBar"
+      action="/properties"
+      method="get"
+      class="bg-white/10 backdrop-blur-xl border border-white/15 rounded-3xl p-4 shadow-2xl">
+
+    <fieldset class="grid md:grid-cols-4 gap-3">
+        <legend class="sr-only">Search properties</legend>
+
+        <label for="searchCity" class="sr-only">City</label>
+        <input id="searchCity"
+               name="city"
+               type="text"
+               placeholder="Enter city"
+               class="md:col-span-2 px-4 py-4 rounded-2xl bg-white text-slate-900 outline-none">
+
+        <label for="listingType" class="sr-only">Listing Type</label>
+        <select id="listingType"
+                name="listingType"
+                class="px-4 py-4 rounded-2xl bg-white text-slate-900 outline-none">
+            <option value="SALE">Buy</option>
+            <option value="RENT">Rent</option>
+        </select>
+
+        <button th:replace="~{fragments/buttons :: primaryButton('Search', 'submit')}"></button>
+    </fieldset>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RealNest | Property Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-white font-sans">
+
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<main class="m-5 p-4">
+    <th:block th:replace="~{fragments/property-gallery :: propertyGallery}"></th:block>
+
+    <section class="max-w-7xl mx-auto px-6 py-12">
+        <section class="grid gap-10 lg:grid-cols-3">
+
+            <section class="lg:col-span-2">
+                <p class="text-sm font-semibold uppercase tracking-widest text-emerald-400">
+                    Premium Villa
+                </p>
+
+                <h1 class="mt-3 text-3xl font-bold md:text-5xl">
+                    Luxury Villa with Private Pool
+                </h1>
+
+                <p class="mt-4 text-slate-400">
+                    Indiranagar, Bangalore
+                </p>
+
+                <p class="mt-6 text-4xl font-bold text-emerald-400">
+                    ₹2.4 Cr
+                </p>
+
+                <!--    Specs-->
+                <section class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
+
+                    <article class="rounded-2xl border border-white/10 bg-slate-900 p-5">
+                        <p class="text-sm text-slate-400">Bedrooms</p>
+                        <h3 class="mt-2 text-xl font-bold">3 BHK</h3>
+                    </article>
+
+                    <article class="rounded-2xl border border-white/10 bg-slate-900 p-5">
+                        <p class="text-sm text-slate-400">Bathrooms</p>
+                        <h3 class="mt-2 text-xl font-bold">2</h3>
+                    </article>
+
+                    <article class="rounded-2xl border border-white/10 bg-slate-900 p-5">
+                        <p class="text-sm text-slate-400">Area</p>
+                        <h3 class="mt-2 text-xl font-bold">1450 sqft</h3>
+                    </article>
+
+                    <article class="rounded-2xl border border-white/10 bg-slate-900 p-5">
+                        <p class="text-sm text-slate-400">Parking</p>
+                        <h3 class="mt-2 text-xl font-bold">2 Cars</h3>
+                    </article>
+
+                </section>
+
+<!--                Description & Amenities-->
+                <section class="mt-12 rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h2 class="text-2xl font-bold">Property Description</h2>
+
+                    <p class="mt-4 leading-7 text-slate-400">
+                        Experience premium living in this beautifully designed luxury villa located in
+                        the heart of Indiranagar. The home features spacious interiors, natural lighting,
+                        modern finishes, and a private pool perfect for family living.
+                    </p>
+                </section>
+
+                <section class="mt-8 rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h2 class="text-2xl font-bold">Amenities</h2>
+
+                    <section class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Swimming Pool</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Gym</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Parking</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Lift</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">24/7 Security</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Garden</p>
+                    </section>
+                </section>
+
+<!--                Property Features-->
+                <section class="mt-8 rounded-3xl border border-white/10 bg-slate-900 p-6">
+                    <h2 class="text-2xl font-bold">Property Features</h2>
+
+                    <section class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Ready to Move</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">East Facing</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Semi Furnished</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Built in 2024</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">Gated Community</p>
+                        <p class="rounded-2xl bg-white/5 px-4 py-3 text-slate-300">RERA Approved</p>
+                    </section>
+                </section>
+            </section>
+
+<!--            Contact card-->
+            <aside class="self-start rounded-3xl border border-white/10 bg-slate-900 p-6">
+
+                <h2 class="text-xl font-bold">Interested in this property?</h2>
+
+                <p class="mt-2 text-sm leading-6 text-slate-400">
+                    Contact our verified agent for visit scheduling and price details.
+                </p>
+
+                <section class="mt-6 flex items-center gap-4 rounded-2xl bg-white/5 p-4">
+                    <img src="/images/agent-1.png"
+                         alt="Agent profile"
+                         class="h-14 w-14 rounded-full object-cover">
+
+                    <section>
+                        <h3 class="font-bold">Arjun Mehta</h3>
+                        <p class="text-sm text-slate-400">RealNest Property Advisor</p>
+                    </section>
+                </section>
+
+                <section class="mt-6 space-y-3">
+                    <th:block th:replace="~{fragments/buttons :: primaryLink('Contact Agent', '/contact')}"></th:block>
+                </section>
+
+            </aside>
+
+        </section>
+    </section>
+<!--    Similar Properties-->
+    <section class="max-w-7xl mx-auto px-6 pb-20">
+        <th:block th:replace="~{fragments/section-header ::
+        sectionHeader(
+        'SIMILAR PROPERTIES',
+        'You May Also Like',
+        'Explore more verified homes with similar features and locations.',
+        'View All',
+        '/properties'
+        )}">
+        </th:block>
+
+        <section class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+            <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+            <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+        </section>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script src="/js/navbar.js"></script>
+<script src="/js/property-gallery.js"></script>
+</body>
+</html>

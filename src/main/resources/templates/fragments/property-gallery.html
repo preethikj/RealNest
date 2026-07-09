@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<section th:fragment="propertyGallery"
+         class="max-w-7xl mx-auto px-6 pt-10">
+
+    <section class="grid gap-4 lg:grid-cols-4 lg:grid-rows-2">
+
+        <img id="mainPropertyImage"
+             src="/images/property-1.jpg"
+             alt="Property main view"
+             class="h-[420px] w-full rounded-3xl object-cover lg:col-span-3 lg:row-span-2">
+
+        <img src="/images/property-2.jpg"
+             data-gallery-image="/images/property-2.jpg"
+             alt="Property interior view"
+             class="gallery-thumbnail hidden h-[202px] w-full cursor-pointer rounded-2xl object-cover lg:block">
+
+        <div class="gallery-thumbnail relative hidden h-[202px] cursor-pointer overflow-hidden rounded-2xl lg:block"
+             data-gallery-image="/images/property-3.jpg">
+
+            <img src="/images/property-3.jpg"
+                 alt="More property photos"
+                 class="h-full w-full object-cover">
+
+            <div class="absolute inset-0 flex items-center justify-center bg-slate-950/65">
+                <span class="rounded-full bg-white/15 px-5 py-2 text-sm font-bold text-white backdrop-blur">
+                    +12 Photos
+                </span>
+            </div>
+        </div>
+
+    </section>
+
+</section>
+</body>
+</html>

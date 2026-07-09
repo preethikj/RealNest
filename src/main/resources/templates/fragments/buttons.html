@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<a th:fragment="primaryLink(label, href)"
+   th:href="${href}"
+   th:text="${label}"
+   class="inline-flex items-center justify-center
+   rounded-full bg-emerald-500
+   px-6 py-3 text-sm font-semibold text-slate-950
+   shadow-lg shadow-emerald-500/20
+   transition hover:bg-emerald-400">
+</a>
+
+<button th:fragment="primaryButton(label, type)"
+        th:type="${type}"
+        th:text="${label}"
+        class="inline-flex items-center justify-center
+        rounded-full bg-emerald-500
+        px-6 py-3 text-sm font-semibold text-slate-950
+        shadow-lg shadow-emerald-500/20
+        transition hover:bg-emerald-400">
+</button>
+
+<a th:fragment="secondaryLink(label, href)"
+   th:href="${href}"
+   th:text="${label}"
+   class="inline-flex items-center justify-center
+   rounded-full border border-white/15
+   px-6 py-3 text-sm font-semibold text-slate-200
+   transition hover:border-emerald-400
+   hover:text-emerald-400">
+</a>
+
+<button th:fragment="secondaryButton(label, type)"
+        th:type="${type}"
+        th:text="${label}"
+        class="inline-flex items-center justify-center
+        rounded-full border border-white/15
+        px-6 py-3 text-sm font-semibold text-slate-200
+        transition hover:border-emerald-400
+        hover:text-emerald-400">
+</button>
+
+<button th:fragment="dangerButton(label, type)"
+        th:type="${type}"
+        th:text="${label}"
+        class="inline-flex items-center justify-center
+        rounded-full bg-red-500
+        px-6 py-3 text-sm font-semibold text-white
+        transition hover:bg-red-400">
+</button>
+
+<button th:fragment="iconButton(label, icon)"
+        type="button"
+        th:attr="aria-label=${label}"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-slate-950/70 text-slate-300 backdrop-blur transition hover:border-emerald-400 hover:text-emerald-400">
+    <th:block th:replace="${icon}"></th:block>
+</button>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<header th:fragment="hero"
+        class="relative min-h-screen overflow-hidden bg-slate-950 pt-28">
+
+    <section class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.20),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(99,102,241,0.18),_transparent_35%)]">
+    </section>
+
+    <section class="relative max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-12 items-center">
+
+        <section>
+            <p class="mb-4 inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300">
+                Verified homes • Smart search • Trusted listings
+            </p>
+
+            <h1 class="max-w-3xl text-5xl md:text-7xl font-bold leading-tight tracking-tight text-white">
+                Find your dream home with
+                <span class="text-emerald-400">RealNest</span>
+            </h1>
+
+            <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+                Search verified homes for sale and rent with smart filters,
+                premium listings, and a smoother property discovery experience.
+            </p>
+
+            <section class="mt-8 max-w-3xl">
+                <th:block th:replace="~{fragments/search-bar :: searchBar}"></th:block>
+            </section>
+
+            <section class="mt-10 grid grid-cols-3 gap-4 max-w-xl">
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                    <p class="text-2xl font-bold text-white">25K+</p>
+                    <p class="mt-1 text-sm text-slate-400">Properties</p>
+                </article>
+
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                    <p class="text-2xl font-bold text-white">12K+</p>
+                    <p class="mt-1 text-sm text-slate-400">Happy Users</p>
+                </article>
+
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                    <p class="text-2xl font-bold text-white">500+</p>
+                    <p class="mt-1 text-sm text-slate-400">Builders</p>
+                </article>
+            </section>
+        </section>
+
+        <section class="relative hidden lg:block">
+            <section class="absolute -top-8 -left-8 h-40 w-40 rounded-full bg-emerald-400/20 blur-3xl"></section>
+            <section class="absolute -bottom-8 -right-8 h-48 w-48 rounded-full bg-indigo-500/20 blur-3xl"></section>
+
+            <article class="relative rounded-[2rem] border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl">
+                <img src="/images/hero-home.jpg"
+                     alt="Luxury Home"
+                     class="h-[520px] w-full rounded-[1.5rem] object-cover">
+
+                <section class="absolute bottom-8 left-8 right-8 rounded-3xl border border-white/15 bg-slate-950/80 p-5 backdrop-blur-xl">
+                    <p class="text-sm text-slate-400">Featured Property</p>
+
+                    <section class="mt-2 flex items-end justify-between gap-4">
+                        <section>
+                            <h2 class="text-xl font-bold text-white">Luxury Villa</h2>
+                            <p class="mt-1 text-sm text-slate-300">Whitefield, Bangalore</p>
+                        </section>
+
+                        <p class="text-xl font-bold text-emerald-400">₹2.4 Cr</p>
+                    </section>
+                </section>
+            </article>
+        </section>
+
+    </section>
+
+</header>
+
+</body>
+</html>
