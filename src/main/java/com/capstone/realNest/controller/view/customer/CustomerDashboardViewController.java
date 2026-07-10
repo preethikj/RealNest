@@ -37,4 +37,23 @@ public class CustomerDashboardViewController {
 
         return "customer/post-property";
     }
+
+    @GetMapping("/profile")
+    public String showProfilePage(Model model) {
+
+        model.addAttribute("activeMenu", "profile");
+        model.addAttribute("pageTitle", "Profile Details");
+        model.addAttribute(
+                "pageSubtitle",
+                "Manage your personal and contact information."
+        );
+
+        // Temporary static values for UI development
+        model.addAttribute("customerName", "Preethi KJ");
+        model.addAttribute("customerEmail", "preethi@example.com");
+        model.addAttribute("customerPhone", "9876543210");
+        model.addAttribute("customerAddress", "Bengaluru, Karnataka");
+
+        return "customer/profile-details";
+    }
 }

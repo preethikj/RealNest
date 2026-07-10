@@ -229,37 +229,7 @@
                     </a>
                 </li>
 
-
-                <!-- My Listings -->
-                <li>
-                    <a th:href="@{/customer/dashboard#my-listings}"
-                       class="flex items-center gap-3 rounded-xl px-4 py-3
-                              text-sm font-semibold transition"
-                       th:classappend="${activeMenu == 'listings'}
-                           ? ' bg-emerald-500 text-slate-950'
-                           : ' hover:bg-white/10 hover:text-white'">
-
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             fill="none"
-                             viewBox="0 0 24 24"
-                             stroke-width="1.8"
-                             stroke="currentColor"
-                             class="h-5 w-5">
-
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="M8.25 6.75h7.5
-                                     M8.25 12h7.5
-                                     m-7.5 5.25h7.5
-                                     M4.5 4.5h15v15h-15v-15Z"/>
-                        </svg>
-
-                        <span>My Listings</span>
-                    </a>
-                </li>
-
-
-                <!-- Post Property -->
+               <!-- Post Property -->
                 <li>
                     <a th:href="@{/customer/property/create}"
                        class="flex items-center gap-3 rounded-xl px-4 py-3
@@ -268,7 +238,7 @@
                            ? ' bg-emerald-500 text-slate-950'
                            : ' hover:bg-white/10 hover:text-white'">
 
-                        <svg xmlns="http://www.w3.org/2000/svg"
+                        <svg mlns="http://www.w3.org/2000/svg"
                              fill="none"
                              viewBox="0 0 24 24"
                              stroke-width="1.8"
