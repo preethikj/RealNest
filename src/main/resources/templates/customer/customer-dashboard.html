@@ -12,9 +12,10 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900">
 
-<header th:replace="~{fragments/navbar :: navbar}"></header>
+<header th:replace="~{fragments/navbar :: navbar(true, ${activeMenu})}"></header>
 
 <aside th:replace="~{fragments/customer-sidebar :: customerSidebar(${activeMenu})}"></aside>
+
 
 <main class="min-h-screen pt-24 lg:ml-64">
 
@@ -249,6 +250,6 @@
   </section>
 
 </main>
-
+<script th:src="@{/js/navbar.js}"></script>
 </body>
 </html>

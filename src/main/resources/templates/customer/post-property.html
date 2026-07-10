@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title th:text="${pageTitle}">List Your Property</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+
+<header th:replace="~{fragments/navbar :: navbar(true, ${activeMenu})}"></header>
+
+<aside th:replace="~{fragments/customer-sidebar ::
+        customerSidebar(${activeMenu})}">
+</aside>
+
+<main class="min-h-screen pt-24 lg:ml-64">
+
+  <section class="mx-auto max-w-6xl px-6 py-8">
+
+    <header class="mb-8">
+
+      <p class="text-sm font-semibold uppercase tracking-[0.2em]
+                      text-emerald-600">
+        Property Submission
+      </p>
+
+      <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-950"
+          th:text="${pageTitle}">
+        List Your Property
+      </h1>
+
+      <p class="mt-2 max-w-2xl text-slate-600"
+         th:text="${pageSubtitle}">
+        Share your property details and submit the listing for admin approval.
+      </p>
+
+    </header>
+
+    <form th:action="@{/customer/property/save}"
+          method="post"
+          enctype="multipart/form-data"
+          class="space-y-6">
+
+      <!-- Property Details -->
+      <th:block th:replace="~{fragments/forms/property-details :: propertyDetails}"></th:block>
+
+      <!-- Listing Information -->
+      <th:block th:replace="~{fragments/forms/listing-information :: listingInformation}"></th:block>
+
+      <!-- Location -->
+      <th:block th:replace="~{fragments/forms/location-details :: locationDetails}"></th:block>
+
+      <!-- Property Features -->
+      <th:block th:replace="~{fragments/forms/property-features :: propertyFeatures}"></th:block>
+
+      <!-- Images -->
+      <th:block th:replace="~{fragments/forms/property-images::propertyImages}"></th:block>
+      <p id="imageUploadMessage"
+         role="alert"
+         aria-live="polite"
+         class="mt-4 hidden rounded-xl border px-4 py-3 text-sm font-medium">
+      </p>
+
+      <!-- Form Actions -->
+      <th:block
+              th:replace="~{fragments/forms/form-actions :: formActions}">
+      </th:block>
+    </form>
+
+  </section>
+
+</main>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/property-images.js}"></script>
+</body>
+</html>

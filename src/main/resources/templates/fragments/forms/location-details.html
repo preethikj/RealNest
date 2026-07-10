@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<section th:fragment="locationDetails"
+         class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+
+    <header class="mb-6">
+
+        <p class="text-sm font-semibold uppercase tracking-[0.2em]
+                  text-emerald-600">
+            Location
+        </p>
+
+        <h2 class="mt-2 text-xl font-bold text-slate-950">
+            Property Location
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Help buyers find your property easily.
+        </p>
+
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2">
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textInput(
+                'address',
+                'address',
+                'Address',
+                'Street address',
+                'text',
+                true
+            )}">
+        </th:block>
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textInput(
+                'city',
+                'city',
+                'City',
+                'Enter city',
+                'text',
+                true
+            )}">
+        </th:block>
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textInput(
+                'state',
+                'state',
+                'State',
+                'Enter state',
+                'text',
+                true
+            )}">
+        </th:block>
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textInput(
+                'pincode',
+                'pincode',
+                'Pincode',
+                'Enter pincode',
+                'text',
+                true
+            )}">
+        </th:block>
+
+    </div>
+
+</section>
+
+</body>
+</html>

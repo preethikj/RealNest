@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<section th:fragment="propertyDetails"
+         class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+
+    <header class="mb-6">
+
+        <p class="text-sm font-semibold uppercase tracking-[0.2em]
+                  text-emerald-600">
+            Basic Information
+        </p>
+
+        <h2 class="mt-2 text-xl font-bold text-slate-950">
+            Property Details
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Add a clear title and description for your property.
+        </p>
+
+    </header>
+
+    <div class="space-y-6">
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textInput(
+                'title',
+                'title',
+                'Property Title',
+                'Example: Modern 3BHK Villa in Whitefield',
+                'text',
+                true
+            )}">
+        </th:block>
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textarea(
+                'description',
+                'description',
+                'Description',
+                'Describe the property, nearby landmarks, neighbourhood and other important details...',
+                6,
+                true,
+                'Include useful details that help buyers or tenants understand the property.'
+            )}">
+        </th:block>
+
+    </div>
+
+</section>
+
+</body>
+</html>

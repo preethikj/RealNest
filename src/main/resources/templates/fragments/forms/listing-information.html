@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<section th:fragment="listingInformation"
+         class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+
+    <header class="mb-6">
+
+        <p class="text-sm font-semibold uppercase tracking-[0.2em]
+                  text-emerald-600">
+            Listing Information
+        </p>
+
+        <h2 class="mt-2 text-xl font-bold text-slate-950">
+            Listing Details
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Choose the listing type and basic pricing information.
+        </p>
+
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-3">
+
+        <!-- Listing Type -->
+        <div>
+
+            <label class="mb-2 block text-sm font-semibold text-slate-700">
+                Listing Type
+                <span class="text-rose-500">*</span>
+            </label>
+
+            <select
+                    class="w-full rounded-2xl border border-slate-300
+                           px-4 py-3 outline-none transition
+                           focus:border-emerald-500
+                           focus:ring-4 focus:ring-emerald-500/10">
+
+                <option selected disabled>Select Listing Type</option>
+                <option>Sale</option>
+                <option>Rent</option>
+
+            </select>
+
+        </div>
+
+        <!-- Property Type -->
+        <div>
+
+            <label class="mb-2 block text-sm font-semibold text-slate-700">
+                Property Type
+                <span class="text-rose-500">*</span>
+            </label>
+
+            <select
+                    class="w-full rounded-2xl border border-slate-300
+                           px-4 py-3 outline-none transition
+                           focus:border-emerald-500
+                           focus:ring-4 focus:ring-emerald-500/10">
+
+                <option selected disabled>Select Property Type</option>
+                <option>Apartment</option>
+                <option>Villa</option>
+                <option>Independent House</option>
+                <option>Plot</option>
+                <option>Commercial</option>
+
+            </select>
+
+        </div>
+
+        <!-- Price -->
+        <div>
+            <th:block th:replace="~{fragments/forms/form-controls ::
+                    textInput(
+                        'title',
+                        'title',
+                        'Property Title',
+                        'Example: Modern 3BHK Villa in Whitefield',
+                        'text',
+                        true
+                    )}">
+            </th:block>
+        </div>
+
+    </div>
+
+</section>
+
+</body>
+</html>
