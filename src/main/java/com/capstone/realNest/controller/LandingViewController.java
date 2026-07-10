@@ -21,4 +21,6 @@ public class LandingViewController {
         return "customer/property-list";
     }
 
+
+
 }
