@@ -12,7 +12,7 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900">
 
-<header th:replace="~{fragments/navbar :: navbar(true, ${activeMenu})}"></header>
+<header th:replace="~{fragments/navbar :: navbar('CUSTOMER', ${activeMenu})}"></header>
 
 <aside th:replace="~{fragments/customer-sidebar :: customerSidebar(${activeMenu})}"></aside>
 
@@ -101,82 +101,45 @@
 
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
-        <!-- Total Listings -->
-        <article class="rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+        <th:block th:replace="~{fragments/dashboard-stat-card ::
+            dashboardStatCard(
+                'Total Listings',
+                ${totalListings},
+                'Properties you have posted',
+                'slate'
+            )}">
+        </th:block>
 
-          <p class="text-sm font-medium text-slate-500">
-            Total Listings
-          </p>
+        <th:block th:replace="~{fragments/dashboard-stat-card ::
+            dashboardStatCard(
+                'Pending Approval',
+                ${pendingListings},
+                'Waiting for admin review',
+                'amber'
+            )}">
+        </th:block>
 
-          <h2 class="mt-3 text-4xl font-bold text-slate-900"
-              th:text="${totalListings}">
-            8
-          </h2>
+        <th:block th:replace="~{fragments/dashboard-stat-card ::
+            dashboardStatCard(
+                'Approved',
+                ${approvedListings},
+                'Live on RealNest',
+                'emerald'
+            )}">
+        </th:block>
 
-          <p class="mt-2 text-sm text-slate-500">
-            Properties you've posted
-          </p>
-
-        </article>
-
-        <!-- Pending -->
-        <article class="rounded-2xl bg-white p-6 shadow-sm border border-amber-200">
-
-          <p class="text-sm font-medium text-amber-600">
-            Pending Approval
-          </p>
-
-          <h2 class="mt-3 text-4xl font-bold text-amber-500"
-              th:text="${pendingListings}">
-            3
-          </h2>
-
-          <p class="mt-2 text-sm text-slate-500">
-            Waiting for admin review
-          </p>
-
-        </article>
-
-        <!-- Approved -->
-        <article class="rounded-2xl bg-white p-6 shadow-sm border border-emerald-200">
-
-          <p class="text-sm font-medium text-emerald-600">
-            Approved
-          </p>
-
-          <h2 class="mt-3 text-4xl font-bold text-emerald-500"
-              th:text="${approvedListings}">
-            4
-          </h2>
-
-          <p class="mt-2 text-sm text-slate-500">
-            Live on RealNest
-          </p>
-
-        </article>
-
-        <!-- Rejected -->
-        <article class="rounded-2xl bg-white p-6 shadow-sm border border-rose-200">
-
-          <p class="text-sm font-medium text-rose-600">
-            Rejected
-          </p>
-
-          <h2 class="mt-3 text-4xl font-bold text-rose-500"
-              th:text="${rejectedListings}">
-            1
-          </h2>
-
-          <p class="mt-2 text-sm text-slate-500">
-            Needs corrections
-          </p>
-
-        </article>
+        <th:block th:replace="~{fragments/dashboard-stat-card ::
+            dashboardStatCard(
+                'Rejected',
+                ${rejectedListings},
+                'Needs corrections',
+                'rose'
+            )}">
+        </th:block>
 
       </div>
 
     </section>
-
     <!-- My Listings -->
 
     <section id="my-listings" class="mt-10">

@@ -12,7 +12,7 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900">
 
-<header th:replace="~{fragments/navbar :: navbar(true, ${activeMenu})}"></header>
+<header th:replace="~{fragments/navbar :: navbar('CUSTOMER', ${activeMenu})}"></header>
 
 <aside th:replace="~{fragments/customer-sidebar ::
         customerSidebar(${activeMenu})}">

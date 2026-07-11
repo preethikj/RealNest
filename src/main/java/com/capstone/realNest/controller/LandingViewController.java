@@ -8,17 +8,17 @@ public class LandingViewController {
 
     @GetMapping("/")
     public String landingPage() {
-        return "customer/landing";
+        return "public/landing";
     }
 
     @GetMapping("/properties/{id}")
     public String propertyDetails() {
-        return "customer/property-details";
+        return "public/property-details";
     }
 
     @GetMapping("/properties")
     public String propertyList() {
-        return "customer/property-list";
+        return "public/property-list";
     }
 
 

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${pageTitle}">
+        Pending Approvals
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+
+<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
+</header>
+
+<aside th:replace="~{fragments/admin-sidebar ::
+        adminSidebar(${activeMenu})}">
+</aside>
+
+<main class="min-h-screen pt-24 lg:ml-64">
+
+    <section class="mx-auto max-w-7xl px-6 py-8">
+
+        <!-- Page Heading -->
+        <header class="flex flex-col gap-4
+                       sm:flex-row sm:items-end sm:justify-between">
+
+            <div>
+
+                <p class="mb-2 text-sm font-semibold uppercase
+                          tracking-[0.2em] text-emerald-600">
+                    Property Management
+                </p>
+
+                <h1 class="text-3xl font-bold tracking-tight text-slate-950">
+                    Pending Approvals
+                </h1>
+
+                <p class="mt-2 text-slate-600"
+                   th:text="${pageSubtitle}">
+                    Review properties submitted by customers.
+                </p>
+
+            </div>
+
+            <div class="inline-flex w-fit items-center gap-2
+                        rounded-xl border border-amber-200
+                        bg-amber-50 px-4 py-3">
+
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+
+                <span class="text-sm font-semibold text-amber-700">
+
+                    <span th:text="${pendingPropertyCount}">
+                        6
+                    </span>
+
+                    properties waiting
+
+                </span>
+
+            </div>
+
+        </header>
+        <!-- Pending Property Cards -->
+        <section class="mt-10">
+
+            <div class="mb-5">
+
+                <h2 class="text-xl font-bold text-slate-950">
+                    Submitted Properties
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-600">
+                    Select Review to inspect and take action on a property.
+                </p>
+
+            </div>
+
+            <div class="space-y-4">
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
+                        'Modern villa',
+                        'Modern 3BHK Villa',
+                        'Whitefield, Bengaluru',
+                        'SALE',
+                        '₹1.25 Crore',
+                        'PENDING',
+                        'Rohan Mehta',
+                        '10 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80',
+                        'Independent family house',
+                        'Independent Family House',
+                        'HSR Layout, Bengaluru',
+                        'RENT',
+                        '₹45,000 / month',
+                        'PENDING',
+                        'Sneha Iyer',
+                        '9 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
+                        'Spacious apartment',
+                        'Spacious 2BHK Apartment',
+                        'Indiranagar, Bengaluru',
+                        'SALE',
+                        '₹92 Lakh',
+                        'PENDING',
+                        'Arun Kumar',
+                        '8 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80',
+                        'Luxury apartment',
+                        'Premium 3BHK Apartment',
+                        'Koramangala, Bengaluru',
+                        'RENT',
+                        '₹62,000 / month',
+                        'PENDING',
+                        'Meera Nair',
+                        '7 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<script th:src="@{/js/navbar.js}"></script>
+
+</body>
+</html>

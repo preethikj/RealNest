@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${pageTitle}">
+        Customers
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+
+<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
+</header>
+
+<aside th:replace="~{fragments/admin-sidebar ::
+        adminSidebar(${activeMenu})}">
+</aside>
+
+<main class="min-h-screen pt-24 lg:ml-64">
+
+    <section class="mx-auto max-w-7xl px-6 py-8">
+
+        <!-- Page Header -->
+        <header>
+
+            <p class="mb-2 text-sm font-semibold uppercase
+                      tracking-[0.2em] text-emerald-600">
+                User Management
+            </p>
+
+            <h1 class="text-3xl font-bold tracking-tight text-slate-950">
+                Customers
+            </h1>
+
+            <p class="mt-2 text-slate-600"
+               th:text="${pageSubtitle}">
+                View customers registered with RealNest.
+            </p>
+
+        </header>
+
+        <!-- Customer Summary -->
+        <section class="mt-10">
+
+            <th:block th:replace="~{fragments/dashboard-stat-card ::
+                dashboardStatCard(
+                    'Registered Customers',
+                    ${registeredCustomers},
+                    'Customers registered on RealNest',
+                    'emerald'
+                )}">
+            </th:block>
+
+        </section>
+
+        <!-- Customer List -->
+        <section class="mt-10">
+
+            <div class="mb-5">
+
+                <h2 class="text-xl font-bold text-slate-950">
+                    Registered Customers
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-600">
+                    View customer information and listing activity.
+                </p>
+
+            </div>
+
+            <div class="space-y-4">
+
+                <!-- Customer 1 -->
+                <article class="rounded-2xl border border-slate-200
+                                bg-white p-5 shadow-sm transition
+                                hover:border-emerald-200 hover:shadow-md">
+
+                    <div class="flex flex-col gap-5
+                                lg:flex-row lg:items-center">
+
+                        <!-- Customer -->
+                        <section class="flex min-w-0 items-center gap-4
+                                        lg:flex-[1.5]">
+
+                            <div class="inline-flex h-14 w-14 shrink-0
+                                        items-center justify-center rounded-full
+                                        bg-emerald-100 text-lg font-bold
+                                        text-emerald-700">
+                                RM
+                            </div>
+
+                            <div class="min-w-0">
+
+                                <h2 class="truncate text-lg font-bold
+                                           text-slate-950">
+                                    Rohan Mehta
+                                </h2>
+
+                                <p class="mt-1 truncate text-sm text-slate-500">
+                                    rohan@example.com
+                                </p>
+
+                            </div>
+
+                        </section>
+
+                        <!-- Phone -->
+                        <section class="min-w-0 lg:flex-1">
+
+                            <p class="text-xs font-semibold uppercase
+                                      tracking-wide text-slate-400">
+                                Phone
+                            </p>
+
+                            <p class="mt-1 text-sm font-semibold text-slate-800">
+                                +91 98765 43210
+                            </p>
+
+                        </section>
+
+                        <!-- Properties -->
+                        <section class="min-w-0 lg:flex-1">
+
+                            <p class="text-xs font-semibold uppercase
+                                      tracking-wide text-slate-400">
+                                Properties
+                            </p>
+
+                            <p class="mt-1 text-sm font-semibold text-slate-800">
+                                3 listings
+                            </p>
+
+                        </section>
+
+                        <!-- Joined -->
+                        <section class="min-w-0 lg:w-40 lg:shrink-0">
+
+                            <p class="text-xs font-semibold uppercase
+                                      tracking-wide text-slate-400">
+                                Joined
+                            </p>
+
+                            <p class="mt-1 text-sm font-semibold text-slate-800">
+                                5 July 2026
+                            </p>
+
+                        </section>
+
+                        <!-- Action -->
+                        <section class="shrink-0 border-t border-slate-100
+                                        pt-4 lg:border-l lg:border-t-0
+                                        lg:pl-5 lg:pt-0">
+
+                            <th:block th:replace="~{fragments/buttons ::
+                                    primaryLink('View Details', '#')}">
+                            </th:block>
+
+                        </section>
+
+                    </div>
+
+                </article>
+
+                <!-- Customer 2 -->
+                <article class="rounded-2xl border border-slate-200
+                                bg-white p-5 shadow-sm transition
+                                hover:border-emerald-200 hover:shadow-md">
+
+                    <div class="flex flex-col gap-5
+                                lg:flex-row lg:items-center">
+
+                        <section class="flex min-w-0 items-center gap-4
+                                        lg:flex-[1.5]">
+
+                            <div class="inline-flex h-14 w-14 shrink-0
+                                        items-center justify-center rounded-full
+                                        bg-emerald-100 text-lg font-bold
+                                        text-emerald-700">
+                                SI
+                            </div>
+
+                            <div class="min-w-0">
+
+                                <h2 class="truncate text-lg font-bold
+                                           text-slate-950">
+                                    Sneha Iyer
+                                </h2>
+
+                                <p class="mt-1 truncate text-sm text-slate-500">
+                                    sneha@example.com
+                                </p>
+
+                            </div>
+
+                        </section>
+
+                        <section class="min-w-0 lg:flex-1">
+
+                            <p class="text-xs font-semibold uppercase
+                                      tracking-wide text-slate-400">
+                                Phone
+                            </p>
+
+                            <p class="mt-1 text-sm font-semibold text-slate-800">
+                                +91 99887 76655
+                            </p>
+
+                        </section>
+
+                        <section class="min-w-0 lg:flex-1">
+
+                            <p class="text-xs font-semibold uppercase
+                                      tracking-wide text-slate-400">
+                                Properties
+                            </p>
+
+                            <p class="mt-1 text-sm font-semibold text-slate-800">
+                                2 listings
+                            </p>
+
+                        </section>
+
+                        <section class="min-w-0 lg:w-40 lg:shrink-0">
+
+                            <p class="text-xs font-semibold uppercase
+                                      tracking-wide text-slate-400">
+                                Joined
+                            </p>
+
+                            <p class="mt-1 text-sm font-semibold text-slate-800">
+                                7 July 2026
+                            </p>
+
+                        </section>
+
+                        <section class="shrink-0 border-t border-slate-100
+                                        pt-4 lg:border-l lg:border-t-0
+                                        lg:pl-5 lg:pt-0">
+
+                            <th:block th:replace="~{fragments/buttons ::
+                                    primaryLink('View Details', '#')}">
+                            </th:block>
+
+                        </section>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<script th:src="@{/js/navbar.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${pageTitle}">
+        Customer Details
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+
+<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
+</header>
+
+<aside th:replace="~{fragments/admin-sidebar ::
+        adminSidebar(${activeMenu})}">
+</aside>
+
+<main class="min-h-screen pt-24 lg:ml-64">
+
+    <section class="mx-auto max-w-7xl px-6 py-8">
+
+        <!-- Back Navigation -->
+        <a th:href="@{/admin/customers}"
+           class="inline-flex items-center gap-2 text-sm font-semibold
+                  text-slate-600 transition hover:text-emerald-600">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke-width="1.8"
+                 stroke="currentColor"
+                 class="h-4 w-4">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m15 18-6-6 6-6"/>
+            </svg>
+
+            Back to Customers
+        </a>
+
+        <!-- Page Header -->
+        <header class="mt-6">
+
+            <p class="mb-2 text-sm font-semibold uppercase
+                      tracking-[0.2em] text-emerald-600">
+                User Management
+            </p>
+
+            <h1 class="text-3xl font-bold tracking-tight text-slate-950">
+                Customer Details
+            </h1>
+
+            <p class="mt-2 text-slate-600">
+                View customer information and submitted properties.
+            </p>
+
+        </header>
+
+        <!-- Customer Profile -->
+        <section class="mt-10 rounded-3xl border border-slate-200
+                        bg-white p-6 shadow-sm">
+
+            <div class="flex flex-col gap-6
+                        lg:flex-row lg:items-center">
+
+                <!-- Identity -->
+                <div class="flex min-w-0 items-center gap-5 lg:flex-[1.5]">
+
+                    <div class="inline-flex h-20 w-20 shrink-0
+                                items-center justify-center rounded-full
+                                bg-emerald-100 text-2xl font-bold
+                                text-emerald-700">
+                        RM
+                    </div>
+
+                    <div class="min-w-0">
+
+                        <h2 class="truncate text-2xl font-bold
+                                   text-slate-950">
+                            Rohan Mehta
+                        </h2>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Registered Customer
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- Email -->
+                <div class="min-w-0 lg:flex-1">
+
+                    <p class="text-xs font-semibold uppercase tracking-wide
+                              text-slate-400">
+                        Email
+                    </p>
+
+                    <p class="mt-1 break-all text-sm font-semibold
+                              text-slate-800">
+                        rohan@example.com
+                    </p>
+
+                </div>
+
+                <!-- Phone -->
+                <div class="min-w-0 lg:flex-1">
+
+                    <p class="text-xs font-semibold uppercase tracking-wide
+                              text-slate-400">
+                        Phone
+                    </p>
+
+                    <p class="mt-1 text-sm font-semibold text-slate-800">
+                        +91 98765 43210
+                    </p>
+
+                </div>
+
+                <!-- Joined -->
+                <div class="min-w-0 lg:w-40 lg:shrink-0">
+
+                    <p class="text-xs font-semibold uppercase tracking-wide
+                              text-slate-400">
+                        Joined
+                    </p>
+
+                    <p class="mt-1 text-sm font-semibold text-slate-800">
+                        5 July 2026
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Customer Statistics -->
+        <section class="mt-8">
+
+            <div class="grid grid-cols-1 gap-5
+                        sm:grid-cols-2 xl:grid-cols-4">
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Total Listings',
+                        3,
+                        'Properties submitted',
+                        'slate'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Pending',
+                        1,
+                        'Waiting for review',
+                        'amber'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Approved',
+                        1,
+                        'Published properties',
+                        'emerald'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Rejected',
+                        1,
+                        'Properties requiring correction',
+                        'rose'
+                    )}">
+                </th:block>
+
+            </div>
+
+        </section>
+
+        <!-- Customer Properties -->
+        <section class="mt-10">
+
+            <div class="mb-5">
+
+                <p class="text-sm font-semibold uppercase
+                    tracking-[0.2em] text-emerald-600">
+                    Customer Properties
+                </p>
+
+                <h2 class="mt-1 text-2xl font-bold text-slate-950">
+                    Properties Submitted by This Customer
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-600">
+                    Review the property listings submitted by this customer.
+                </p>
+
+            </div>
+
+            <div class="space-y-4">
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
+                        'Modern villa',
+                        'Modern 3BHK Villa',
+                        'Whitefield, Bengaluru',
+                        'SALE',
+                        '₹1.25 Crore',
+                        'PENDING',
+                        'Rohan Mehta',
+                        '10 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80',
+                        'Independent house',
+                        'Independent Family House',
+                        'HSR Layout, Bengaluru',
+                        'RENT',
+                        '₹45,000 / month',
+                        'APPROVED',
+                        'Rohan Mehta',
+                        '8 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
+                        'Spacious apartment',
+                        'Spacious 2BHK Apartment',
+                        'Indiranagar, Bengaluru',
+                        'SALE',
+                        '₹92 Lakh',
+                        'REJECTED',
+                        'Rohan Mehta',
+                        '6 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<script th:src="@{/js/navbar.js}"></script>
+
+</body>
+</html>

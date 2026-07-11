@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<article th:fragment="dashboardStatCard(label, value, description, tone)"
+         class="rounded-2xl border bg-white p-6 shadow-sm"
+         th:classappend="${tone == 'amber'} ? 'border-amber-300' :
+                         (${tone == 'emerald'} ? 'border-emerald-300' :
+                         (${tone == 'rose'} ? 'border-rose-300' :
+                         (${tone == 'sky'} ? 'border-sky-300' :
+                         'border-slate-200')))">
+
+    <p class="text-sm font-medium"
+       th:classappend="${tone == 'amber'} ? 'text-amber-600' :
+                       (${tone == 'emerald'} ? 'text-emerald-600' :
+                       (${tone == 'rose'} ? 'text-rose-600' :
+                       (${tone == 'sky'} ? 'text-sky-600' :
+                       'text-slate-500')))"
+       th:text="${label}">
+        Statistic
+    </p>
+
+    <h2 class="mt-3 text-4xl font-bold"
+        th:classappend="${tone == 'amber'} ? 'text-amber-500' :
+                        (${tone == 'emerald'} ? 'text-emerald-500' :
+                        (${tone == 'rose'} ? 'text-rose-500' :
+                        (${tone == 'sky'} ? 'text-sky-500' :
+                        'text-slate-900')))"
+        th:text="${value}">
+        0
+    </h2>
+
+    <p class="mt-2 text-sm text-slate-500"
+       th:text="${description}">
+        Statistic description
+    </p>
+
+</article>
+
+</body>
+</html>

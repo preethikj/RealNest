@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${pageTitle}">
+        Admin Dashboard
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+
+<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
+</header>
+
+<aside th:replace="~{fragments/admin-sidebar ::
+        adminSidebar(${activeMenu})}">
+</aside>
+
+<main class="min-h-screen pt-24 lg:ml-64">
+
+    <section class="mx-auto max-w-7xl px-6 py-8">
+
+        <!-- Page Heading -->
+        <div>
+
+            <p class="mb-2 text-sm font-semibold uppercase
+                      tracking-[0.2em] text-emerald-600">
+                Admin Portal
+            </p>
+
+            <h1 class="text-3xl font-bold tracking-tight text-slate-950">
+                Good morning, Admin!
+            </h1>
+
+            <p class="mt-2 text-slate-600"
+               th:text="${pageSubtitle}">
+                Monitor property listings and platform activity.
+            </p>
+
+        </div>
+
+        <!-- Dashboard Statistics -->
+        <section class="mt-10">
+
+            <div class="grid grid-cols-1 gap-6
+                        sm:grid-cols-2 xl:grid-cols-4">
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Total Properties',
+                        ${totalProperties},
+                        'All properties on the platform',
+                        'slate'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Pending Approval',
+                        ${pendingProperties},
+                        'Waiting for admin review',
+                        'amber'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Approved',
+                        ${approvedProperties},
+                        'Published property listings',
+                        'emerald'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/dashboard-stat-card ::
+                    dashboardStatCard(
+                        'Registered Customers',
+                        ${registeredCustomers},
+                        'Customers registered on RealNest',
+                        'sky'
+                    )}">
+                </th:block>
+
+            </div>
+
+        </section>
+
+        <!-- Pending Properties -->
+        <section class="mt-10">
+
+            <div class="mb-6 flex flex-col gap-4
+                        sm:flex-row sm:items-end sm:justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold uppercase
+                              tracking-[0.2em] text-emerald-600">
+                        Property Review
+                    </p>
+
+                    <h2 class="mt-1 text-2xl font-bold text-slate-950">
+                        Properties Awaiting Approval
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-600">
+                        Review recently submitted property listings.
+                    </p>
+
+                </div>
+
+                <a th:href="@{/admin/properties/pending}"
+                   class="inline-flex items-center justify-center gap-2
+                          rounded-xl border border-emerald-300 bg-white
+                          px-5 py-3 text-sm font-semibold text-emerald-700
+                          shadow-sm transition hover:bg-emerald-50">
+
+                    View All
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.8"
+                         stroke="currentColor"
+                         class="h-4 w-4">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="m9 18 6-6-6-6"/>
+                    </svg>
+
+                </a>
+
+            </div>
+
+            <!-- Temporary static cards -->
+            <div class="space-y-4">
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
+                        'Modern villa',
+                        'Modern 3BHK Villa',
+                        'Whitefield, Bengaluru',
+                        'SALE',
+                        '₹1.25 Crore',
+                        'PENDING',
+                        'Rohan Mehta',
+                        '10 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80',
+                        'Independent house',
+                        'Independent Family House',
+                        'HSR Layout, Bengaluru',
+                        'RENT',
+                        '₹45,000 / month',
+                        'PENDING',
+                        'Sneha Iyer',
+                        '9 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+                <th:block th:replace="~{fragments/property-card ::
+                    adminPropertyCard(
+                        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
+                        'Luxury apartment',
+                        'Spacious 2BHK Apartment',
+                        'Indiranagar, Bengaluru',
+                        'SALE',
+                        '₹92 Lakh',
+                        'PENDING',
+                        'Arun Kumar',
+                        '8 July 2026',
+                        '#',
+                        '#'
+                    )}">
+                </th:block>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<script th:src="@{/js/navbar.js}"></script>
+
+</body>
+</html>
