@@ -7,13 +7,18 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record PropertyRequest(
+
         @NotBlank(message = "Title is required")
         String title,
 
         String description,
 
         @NotNull(message = "Price is required")
-        @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
+        @DecimalMin(
+                value = "0.0",
+                inclusive = false,
+                message = "Price must be greater than zero"
+        )
         BigDecimal price,
 
         @NotBlank(message = "Property type is required")
@@ -21,9 +26,6 @@ public record PropertyRequest(
 
         @NotBlank(message = "Listing type is required")
         String listingType,
-
-        @NotBlank(message = "Status is required")
-        String status,
 
         Integer bedrooms,
 
@@ -48,9 +50,6 @@ public record PropertyRequest(
 
         BigDecimal latitude,
 
-        BigDecimal longitude,
-
-        @NotNull(message = "Owner id is required")
-        Long ownerId
+        BigDecimal longitude
 ) {
 }
