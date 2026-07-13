@@ -1,9 +1,11 @@
 package com.capstone.realNest.repository;
 
 import com.capstone.realNest.entity.User;
+import com.capstone.realNest.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,4 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String phone);
+
+    List<User> findByRoleOrderByCreatedAtDesc(Role role);
+
+    boolean existsByEmailAndIdNot(String email, Long userId);
+
+    boolean existsByPhoneAndIdNot(String phone, Long userId);
+
+    long countByRole(Role role);
 }
