@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long>{
@@ -21,6 +22,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long>{
             Long ownerId,
             String status
     );
+
+    Optional<Property> findByIdAndStatus(Long propertyId, String status);
 
     long countByStatus(String status);
 

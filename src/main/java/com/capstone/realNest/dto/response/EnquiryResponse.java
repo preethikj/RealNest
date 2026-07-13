@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 public record EnquiryResponse(
         Long id,
         Long propertyId,
-        Long customerId,
+        String propertyTitle,
+        String name,
+        String email,
+        String phone,
         String message,
-        String status,
         LocalDateTime createdAt
 ) {
 }
