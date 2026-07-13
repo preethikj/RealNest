@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -20,18 +21,20 @@ import java.util.List;
 public class PropertyService {
 
     private static final String PENDING_STATUS = "PENDING";
+    private static final String APPROVED_STATUS = "APPROVED";
+    private static final String REJECTED_STATUS = "REJECTED";
 
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
     private final PropertyMapper propertyMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Transactional
     public PropertyResponse createProperty(PropertyRequest request, Long ownerId) {
 
         User owner = userRepository.findById(ownerId)
                 .orElseThrow(() ->
-                        new UserNotFoundException(ownerId)
-                );
+                        new UserNotFoundException(ownerId));
 
         Property property = propertyMapper.toEntity(request, owner);
 
@@ -80,5 +83,85 @@ public class PropertyService {
                 .orElseThrow(() ->
                         new PropertyNotFoundException(propertyId)
                 );
+    }
+
+    @Transactional
+    public PropertyResponse approveProperty(Long propertyId) {
+
+        return updatePropertyStatus(
+                propertyId,
+                APPROVED_STATUS
+        );
+    }
+
+    @Transactional
+    public PropertyResponse rejectProperty(Long propertyId) {
+
+        return updatePropertyStatus(
+                propertyId,
+                REJECTED_STATUS
+        );
+    }
+
+    private PropertyResponse updatePropertyStatus(
+            Long propertyId,
+            String status
+    ) {
+
+        Property property = findPropertyById(propertyId);
+
+        property.setStatus(status);
+
+        Property updatedProperty =
+                propertyRepository.save(property);
+
+        return propertyMapper.toResponse(updatedProperty);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PropertyResponse> searchApprovedProperties(String listingType, String location,
+                                                            BigDecimal minPrice, BigDecimal maxPrice) {
+
+        String normalizedListingType = normalizeFilter(listingType);
+        String normalizedLocation = normalizeFilter(location);
+
+        return propertyRepository.
+                searchProperties(APPROVED_STATUS, normalizedListingType,
+                        normalizedLocation, minPrice, maxPrice)
+                .stream()
+                .map(propertyMapper::toResponse)
+                .toList();
+    }
+
+    private String normalizeFilter(String value) {
+
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value.trim();
+    }
+
+    @Transactional
+    public PropertyResponse updateProperty(Long propertyId, PropertyRequest request) {
+
+        Property property = findPropertyById(propertyId);
+
+        propertyMapper.updateEntity(property, request);
+
+        property.setStatus(PENDING_STATUS);
+
+        Property updatedProperty = propertyRepository.save(property);
+
+        return propertyMapper.toResponse(updatedProperty);
+    }
+
+    @Transactional
+    public void deleteProperty(Long propertyId) {
+
+        Property property = findPropertyById(propertyId);
+
+        property.getImages().forEach(propertyImage ->
+                cloudinaryService.deleteImage(propertyImage.getPublicId()));
+        propertyRepository.delete(property);
     }
 }

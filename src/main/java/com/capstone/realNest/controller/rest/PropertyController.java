@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -90,6 +91,52 @@ public class PropertyController {
     public ResponseEntity<Void> deletePropertyImage(@PathVariable Long propertyId, @PathVariable Long imageId) {
 
         propertyImageService.deleteImage(propertyId, imageId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{propertyId}/approve")
+    @Operation(summary = "Approve a property")
+    public ResponseEntity<PropertyResponse> approveProperty(@PathVariable Long propertyId) {
+
+        PropertyResponse response = propertyService.approveProperty(propertyId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{propertyId}/reject")
+    @Operation(summary = "Reject a property")
+    public ResponseEntity<PropertyResponse> rejectProperty(@PathVariable Long propertyId) {
+
+        PropertyResponse response = propertyService.rejectProperty(propertyId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "Search approved properties")
+    public ResponseEntity<List<PropertyResponse>> searchApprovedProperties(
+            @RequestParam(required = false) String listingType,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice) {
+
+        List<PropertyResponse> responses =
+                propertyService.searchApprovedProperties(listingType, location, minPrice, maxPrice);
+        return ResponseEntity.ok(responses);
+    }
+
+    @PutMapping("/{propertyId}")
+    @Operation(summary = "Update a property")
+    public ResponseEntity<PropertyResponse> updateProperty(@PathVariable Long propertyId,
+            @Valid @RequestBody PropertyRequest request) {
+
+        PropertyResponse response = propertyService.updateProperty(propertyId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{propertyId}")
+    @Operation(summary = "Delete a property")
+    public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId) {
+
+        propertyService.deleteProperty(propertyId);
         return ResponseEntity.noContent().build();
     }
 }
