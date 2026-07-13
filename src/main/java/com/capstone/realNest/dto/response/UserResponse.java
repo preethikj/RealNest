@@ -1,9 +1,11 @@
 package com.capstone.realNest.dto.response;
 
 import com.capstone.realNest.enums.Role;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record UserResponse(
         Long id,
         String name,
