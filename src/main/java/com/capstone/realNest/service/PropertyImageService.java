@@ -3,6 +3,7 @@ package com.capstone.realNest.service;
 import com.capstone.realNest.dto.response.PropertyImageResponse;
 import com.capstone.realNest.entity.Property;
 import com.capstone.realNest.entity.PropertyImage;
+import com.capstone.realNest.exception.PropertyImageNotFoundException;
 import com.capstone.realNest.exception.PropertyNotFoundException;
 import com.capstone.realNest.repository.PropertyImageRepository;
 import com.capstone.realNest.repository.PropertyRepository;
@@ -86,6 +87,7 @@ public class PropertyImageService {
         );
     }
 
+    /*Get Images by property ID*/
     @Transactional(readOnly = true)
     public List<PropertyImageResponse> getImagesByPropertyId(Long propertyId) {
 
@@ -98,5 +100,21 @@ public class PropertyImageService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Transactional
+    public void deleteImage(Long propertyId, Long imageId) {
+
+        if (!propertyRepository.existsById(propertyId)) {
+            throw new PropertyNotFoundException(propertyId);
+        }
+
+        PropertyImage propertyImage = propertyImageRepository
+                        .findByIdAndPropertyId(imageId, propertyId)
+                        .orElseThrow(() ->
+                                new PropertyImageNotFoundException(imageId, propertyId));
+
+        cloudinaryService.deleteImage(propertyImage.getPublicId());
+        propertyImageRepository.delete(propertyImage);
     }
 }

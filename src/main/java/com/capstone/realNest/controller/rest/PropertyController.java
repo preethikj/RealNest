@@ -84,4 +84,12 @@ public class PropertyController {
         List<PropertyImageResponse> responses = propertyImageService.getImagesByPropertyId(propertyId);
         return ResponseEntity.ok(responses);
     }
+
+    @DeleteMapping("/{propertyId}/images/{imageId}")
+    @Operation(summary = "Delete a property image")
+    public ResponseEntity<Void> deletePropertyImage(@PathVariable Long propertyId, @PathVariable Long imageId) {
+
+        propertyImageService.deleteImage(propertyId, imageId);
+        return ResponseEntity.noContent().build();
+    }
 }

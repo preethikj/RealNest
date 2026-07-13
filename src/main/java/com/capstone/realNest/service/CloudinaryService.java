@@ -22,14 +22,25 @@ public class CloudinaryService {
                     image.getBytes(),
                     ObjectUtils.asMap(
                             "folder", "realnest/properties",
-                            "resource_type", "image"
-                    )
-            );
+                            "resource_type", "image"));
         } catch (IOException exception) {
             throw new RuntimeException(
                     "Failed to upload image to Cloudinary",
-                    exception
+                    exception);
+        }
+    }
+
+    public void deleteImage(String publicId) {
+
+        try {
+            cloudinary.uploader().destroy(
+                    publicId,
+                    ObjectUtils.emptyMap()
             );
+        } catch (IOException exception) {
+            throw new RuntimeException(
+                    "Failed to delete image from Cloudinary",
+                    exception);
         }
     }
 }
