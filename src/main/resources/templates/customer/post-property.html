@@ -41,7 +41,19 @@
 
     </header>
 
+    <div th:if="${errorMessage}"
+         role="alert"
+         class="mb-6 rounded-2xl border border-rose-200
+            bg-rose-50 px-4 py-3 text-sm text-rose-700">
+
+    <span th:text="${errorMessage}">
+        Unable to submit the property.
+    </span>
+
+    </div>
+
     <form th:action="@{/customer/property/save}"
+          th:object="${propertyRequest}"
           method="post"
           enctype="multipart/form-data"
           class="space-y-6">

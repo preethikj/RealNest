@@ -12,27 +12,37 @@
         required
      )">
 
-  <label th:for="${id}"
-         class="mb-2 block text-sm font-semibold text-slate-700">
+    <label th:for="${id}"
+           class="mb-2 block text-sm font-semibold text-slate-700">
 
-    <span th:text="${label}">Label</span>
+        <span th:text="${label}">Label</span>
 
-    <span th:if="${required}"
-          class="text-rose-500">
-            *
-        </span>
-  </label>
+        <span th:if="${required}"
+              class="text-rose-500">
+      *
+    </span>
 
-  <input th:id="${id}"
-         th:name="${name}"
-         th:type="${type}"
-         th:placeholder="${placeholder}"
-         class="w-full rounded-2xl border border-slate-300
-                  bg-white px-4 py-3 text-slate-900
-                  placeholder:text-slate-400
-                  outline-none transition
-                  focus:border-emerald-500
-                  focus:ring-4 focus:ring-emerald-500/10">
+    </label>
+
+    <input th:field="*{__${name}__}"
+           th:id="${id}"
+           th:type="${type}"
+           th:placeholder="${placeholder}"
+           th:classappend="${#fields.hasErrors(name)}
+                         ? ' border-rose-400 focus:border-rose-500
+                             focus:ring-rose-500/10'
+                         : ' border-slate-300 focus:border-emerald-500
+                             focus:ring-emerald-500/10'"
+           class="w-full rounded-2xl border bg-white
+                px-4 py-3 text-slate-900
+                placeholder:text-slate-400
+                outline-none transition focus:ring-4">
+
+    <p th:if="${#fields.hasErrors(name)}"
+       th:errors="*{__${name}__}"
+       class="mt-2 text-sm text-rose-600">
+        Invalid value
+    </p>
 
 </div>
 
@@ -47,33 +57,45 @@
         helperText
      )">
 
-  <label th:for="${id}"
-         class="mb-2 block text-sm font-semibold text-slate-700">
+    <label th:for="${id}"
+           class="mb-2 block text-sm font-semibold text-slate-700">
 
-    <span th:text="${label}">Label</span>
+        <span th:text="${label}">Label</span>
 
-    <span th:if="${required}"
-          class="text-rose-500">
-            *
-        </span>
-  </label>
+        <span th:if="${required}"
+              class="text-rose-500">
+      *
+    </span>
 
-  <textarea th:id="${id}"
-            th:name="${name}"
-            th:rows="${rows}"
-            th:placeholder="${placeholder}"
-            class="w-full resize-none rounded-2xl
-                     border border-slate-300 bg-white
-                     px-4 py-3 text-slate-900
-                     placeholder:text-slate-400
-                     outline-none transition
-                     focus:border-emerald-500
-                     focus:ring-4 focus:ring-emerald-500/10"></textarea>
+    </label>
 
-  <p th:if="${helperText != null and !#strings.isEmpty(helperText)}"
-     th:text="${helperText}"
-     class="mt-2 text-xs text-slate-500">
-  </p>
+    <textarea th:field="*{__${name}__}"
+              th:id="${id}"
+              th:rows="${rows}"
+              th:placeholder="${placeholder}"
+              th:classappend="${#fields.hasErrors(name)}
+                            ? ' border-rose-400 focus:border-rose-500
+                                focus:ring-rose-500/10'
+                            : ' border-slate-300 focus:border-emerald-500
+                                focus:ring-emerald-500/10'"
+              class="w-full resize-none rounded-2xl border
+                   bg-white px-4 py-3 text-slate-900
+                   placeholder:text-slate-400
+                   outline-none transition focus:ring-4">
+  </textarea>
+
+    <p th:if="${#fields.hasErrors(name)}"
+       th:errors="*{__${name}__}"
+       class="mt-2 text-sm text-rose-600">
+        Invalid value
+    </p>
+
+    <p th:if="${!#fields.hasErrors(name)
+              and helperText != null
+              and !#strings.isEmpty(helperText)}"
+       th:text="${helperText}"
+       class="mt-2 text-xs text-slate-500">
+    </p>
 
 </div>
 

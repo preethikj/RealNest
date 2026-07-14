@@ -4,7 +4,8 @@
 <body>
 
 <section th:fragment="locationDetails"
-         class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+         class="rounded-3xl border border-slate-200
+                bg-white p-6 shadow-sm">
 
     <header class="mb-6">
 
@@ -27,45 +28,36 @@
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
-                'address',
-                'address',
-                'Address',
-                'Street address',
-                'text',
-                true
+                'address', 'address', 'Address',
+                'Street address', 'text', true
             )}">
         </th:block>
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
-                'city',
-                'city',
-                'City',
-                'Enter city',
-                'text',
-                true
+                'city', 'city', 'City',
+                'Enter city', 'text', true
             )}">
         </th:block>
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
-                'state',
-                'state',
-                'State',
-                'Enter state',
-                'text',
-                true
+                'state', 'state', 'State',
+                'Enter state', 'text', true
             )}">
         </th:block>
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
-                'pincode',
-                'pincode',
-                'Pincode',
-                'Enter pincode',
-                'text',
-                true
+                'country', 'country', 'Country',
+                'Enter country', 'text', true
+            )}">
+        </th:block>
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textInput(
+                'pincode', 'pincode', 'Pincode',
+                'Enter pincode', 'text', true
             )}">
         </th:block>
 

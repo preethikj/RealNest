@@ -159,53 +159,45 @@
           </p>
         </div>
 
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div th:if="${!#lists.isEmpty(properties)}"
+           class="grid grid-cols-1 gap-6
+            md:grid-cols-2 xl:grid-cols-3">
 
-        <!-- Property Card 1 -->
-        <th:block th:replace="~{fragments/property-card ::
-          customerPropertyCard(
-              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
-              'Modern villa',
-              'Modern 3BHK Villa',
-              'Whitefield, Bengaluru',
-              'SALE',
-              '₹1.25 Crore',
-              'APPROVED',
-              '#',
-              '#',
-              '#'
-          )}">
+        <th:block th:each="property : ${properties}">
+
+          <th:block th:replace="~{fragments/property-card :: customerPropertyCard(
+                ${!#lists.isEmpty(property.images)
+                    ? property.images[0].imageUrl
+                    : '/images/property-1.jpg'},
+                ${property.title},
+                ${property.title},
+                ${property.city + ', ' + property.state},
+                ${property.listingType},
+                ${'₹' + #numbers.formatDecimal(
+                    property.price, 1, 'COMMA', 0, 'POINT'
+                )},
+                ${property.status},
+                ${'/customer/property/' + property.id},
+                ${'/customer/property/' + property.id + '/edit'},
+                ${'/customer/property/' + property.id + '/delete'}
+            )}">
+          </th:block>
+
         </th:block>
-        <!-- Property Card 2 -->
-        <th:block th:replace="~{fragments/property-card ::
-          customerPropertyCard(
-              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
-              'Modern villa',
-              'Modern 3BHK Villa',
-              'Whitefield, Bengaluru',
-              'SALE',
-              '₹1.25 Crore',
-              'APPROVED',
-              '#',
-              '#',
-              '#'
-          )}">
-        </th:block>
-        <!-- Property Card 3 -->
-        <th:block th:replace="~{fragments/property-card ::
-          customerPropertyCard(
-              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
-              'Modern villa',
-              'Modern 3BHK Villa',
-              'Whitefield, Bengaluru',
-              'SALE',
-              '₹1.25 Crore',
-              'APPROVED',
-              '#',
-              '#',
-              '#'
-          )}">
-        </th:block>
+
+        <div th:if="${#lists.isEmpty(properties)}">
+
+          <th:block th:replace="~{fragments/empty-state ::
+        emptyState(
+            'No properties posted yet',
+            'Start by submitting your first property for admin approval.',
+            'Post Your First Property',
+            '/customer/property/create'
+        )}">
+          </th:block>
+
+        </div>
+
       </div>
 
     </section>

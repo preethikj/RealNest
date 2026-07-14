@@ -25,6 +25,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long>{
 
     Optional<Property> findByIdAndStatus(Long propertyId, String status);
 
+    Optional<Property> findByIdAndOwnerId(Long propertyId, Long ownerId);
+
     long countByStatus(String status);
 
     long countByOwnerId(Long ownerId);

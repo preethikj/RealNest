@@ -3,6 +3,7 @@ package com.capstone.realNest.security;
 import com.capstone.realNest.entity.User;
 import com.capstone.realNest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@NullMarked
+
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -23,10 +26,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email: " + normalizedEmail));
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getRole().name())
-                .build();
+        return new CustomUserPrincipal(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getRole());
     }
 }

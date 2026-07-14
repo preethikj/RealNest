@@ -164,4 +164,48 @@ public class PropertyService {
                 cloudinaryService.deleteImage(propertyImage.getPublicId()));
         propertyRepository.delete(property);
     }
+
+    @Transactional
+    public void deletePropertyByOwner(Long propertyId, Long ownerId) {
+
+        Property property = propertyRepository
+                .findByIdAndOwnerId(propertyId, ownerId)
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
+
+        property.getImages().forEach(propertyImage ->
+                cloudinaryService.deleteImage(propertyImage.getPublicId()));
+        propertyRepository.delete(property);
+    }
+
+    @Transactional(readOnly = true)
+    public PropertyResponse getApprovedPropertyById(
+            Long propertyId
+    ) {
+
+        Property property = propertyRepository
+                .findByIdAndStatus(
+                        propertyId,
+                        APPROVED_STATUS
+                )
+                .orElseThrow(() ->
+                        new PropertyNotFoundException(propertyId)
+                );
+
+        return propertyMapper.toResponse(property);
+    }
+
+    @Transactional(readOnly = true)
+    public PropertyResponse getPropertyByOwner(
+            Long propertyId,
+            Long ownerId
+    ) {
+
+        Property property = propertyRepository
+                .findByIdAndOwnerId(propertyId, ownerId)
+                .orElseThrow(() ->
+                        new PropertyNotFoundException(propertyId)
+                );
+
+        return propertyMapper.toResponse(property);
+    }
 }

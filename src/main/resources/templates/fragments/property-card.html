@@ -116,13 +116,16 @@
             Indiranagar, Bangalore
         </p>
 
-        <div class="mt-6 flex items-center gap-2 border-t border-slate-100 pt-4">
+        <div class="mt-6 flex items-center gap-2
+            border-t border-slate-100 pt-4">
 
-            <th:block th:replace="~{fragments/buttons :: outlineLink('View', '#')}"></th:block>
+            <th:block th:replace="~{fragments/buttons :: outlineLink('View', ${viewUrl})}"></th:block>
 
-            <th:block th:replace="~{fragments/buttons :: outlineLink('Edit', '#')}"></th:block>
+            <th:block th:replace="~{fragments/buttons :: outlineLink('Edit', ${editUrl})}"></th:block>
 
-            <th:block th:replace="~{fragments/buttons :: deleteButton('Delete', 'submit')}"></th:block>
+            <form th:action="${deleteUrl}" method="post">
+                <th:block th:replace="~{fragments/buttons :: deleteButton('Delete', 'submit')}"></th:block>
+            </form>
 
         </div>
 

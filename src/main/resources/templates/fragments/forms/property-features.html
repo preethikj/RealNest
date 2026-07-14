@@ -4,7 +4,8 @@
 <body>
 
 <section th:fragment="propertyFeatures"
-         class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+         class="rounded-3xl border border-slate-200
+                bg-white p-6 shadow-sm">
 
     <header class="mb-6">
 
@@ -23,63 +24,28 @@
 
     </header>
 
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-6 md:grid-cols-3">
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
-                'bedrooms',
-                'bedrooms',
-                'Bedrooms',
-                'e.g. 3',
-                'number',
-                true
+                'bedrooms', 'bedrooms', 'Bedrooms',
+                'e.g. 3', 'number', false
             )}">
         </th:block>
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
-                'bathrooms',
-                'bathrooms',
-                'Bathrooms',
-                'e.g. 2',
-                'number',
-                true
+                'bathrooms', 'bathrooms', 'Bathrooms',
+                'e.g. 2', 'number', false
             )}">
         </th:block>
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
-                'area',
-                'area',
-                'Area (sq.ft)',
-                'e.g. 1450',
-                'number',
-                true
+                'area', 'area', 'Area (sq.ft)',
+                'e.g. 1450', 'number', false
             )}">
         </th:block>
-
-        <div>
-
-            <label class="mb-2 block text-sm font-semibold text-slate-700">
-                Furnishing
-                <span class="text-rose-500">*</span>
-            </label>
-
-            <select
-                    class="w-full rounded-2xl border border-slate-300
-                           bg-white px-4 py-3
-                           outline-none transition
-                           focus:border-emerald-500
-                           focus:ring-4 focus:ring-emerald-500/10">
-
-                <option selected disabled>Select Furnishing</option>
-                <option>Fully Furnished</option>
-                <option>Semi Furnished</option>
-                <option>Unfurnished</option>
-
-            </select>
-
-        </div>
 
     </div>
 

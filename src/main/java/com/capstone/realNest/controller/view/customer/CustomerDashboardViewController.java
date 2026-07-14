@@ -1,41 +1,55 @@
 package com.capstone.realNest.controller.view.customer;
 
+import com.capstone.realNest.dto.response.PropertyResponse;
+import com.capstone.realNest.dto.response.UserResponse;
+import com.capstone.realNest.security.CustomUserPrincipal;
+import com.capstone.realNest.service.PropertyService;
+import com.capstone.realNest.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/customer")
 public class CustomerDashboardViewController {
 
+    private final UserService userService;
+    private final PropertyService propertyService;
+
     @GetMapping("/dashboard")
-    public String showCustomerDashboard(Model model) {
+    public String showCustomerDashboard(@AuthenticationPrincipal CustomUserPrincipal currentUser,
+            Model model) {
 
+        UserResponse customer = userService.getUserById(currentUser.id());
+
+        List<PropertyResponse> properties = propertyService.getPropertiesByOwner(currentUser.id());
+
+        long pendingListings = countByStatus(properties, "PENDING");
+
+        long approvedListings = countByStatus(properties, "APPROVED");
+
+        long rejectedListings = countByStatus(properties, "REJECTED");
+
+        model.addAttribute("activeMenu", "dashboard");
         model.addAttribute("pageTitle", "My Dashboard");
-        model.addAttribute("pageSubtitle", "Manage your properties and track their approval status.");
-
-        //Temporary static values for UI development
-        model.addAttribute("customerName", "Preethi");
-        model.addAttribute("totalListings", 8);
-        model.addAttribute("pendingListings", 3);
-        model.addAttribute("approvedListings", 4);
-        model.addAttribute("rejectedListings", 1);
-
-        return "customer/customer-dashboard";
-    }
-
-    @GetMapping("/create")
-    public String showPostPropertyPage(Model model) {
-
-        model.addAttribute("activeMenu", "post-property");
-        model.addAttribute("pageTitle", "List Your Property");
         model.addAttribute(
                 "pageSubtitle",
-                "Share your property details and submit the listing for admin approval."
-        );
+                "Manage your properties and track their approval status.");
 
-        return "customer/post-property";
+        model.addAttribute("customerName", customer.name());
+        model.addAttribute("totalListings", properties.size());
+        model.addAttribute("pendingListings", pendingListings);
+        model.addAttribute("approvedListings", approvedListings);
+        model.addAttribute("rejectedListings", rejectedListings);
+        model.addAttribute("properties", properties);
+
+        return "customer/customer-dashboard";
     }
 
     @GetMapping("/profile")
@@ -48,12 +62,13 @@ public class CustomerDashboardViewController {
                 "Manage your personal and contact information."
         );
 
-        // Temporary static values for UI development
-        model.addAttribute("customerName", "Preethi KJ");
-        model.addAttribute("customerEmail", "preethi@example.com");
-        model.addAttribute("customerPhone", "9876543210");
-        model.addAttribute("customerAddress", "Bengaluru, Karnataka");
-
         return "customer/profile-details";
+    }
+
+    private long countByStatus(List<PropertyResponse> properties, String status) {
+
+        return properties.stream()
+                .filter(property ->
+                        status.equalsIgnoreCase(property.status())).count();
     }
 }
