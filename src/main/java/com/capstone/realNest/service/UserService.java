@@ -29,6 +29,10 @@ public class UserService {
 
         String phone = request.phone().trim();
 
+        if (!request.password().equals(request.confirmPassword())) {
+            throw new IllegalArgumentException("Password and confirm password do not match");
+        }
+
         if (userRepository.existsByEmail(email)) {
             throw new UserAlreadyExistsException("A user with this email already exists");
         }
@@ -61,12 +65,10 @@ public class UserService {
         String phone = request.phone().trim();
 
         if (userRepository.existsByEmailAndIdNot(email, userId)) {
-
             throw new UserAlreadyExistsException("A user with this email already exists");
         }
 
         if (userRepository.existsByPhoneAndIdNot(phone, userId)) {
-
             throw new UserAlreadyExistsException("A user with this phone number already exists");
         }
 

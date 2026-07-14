@@ -1,5 +1,6 @@
 package com.capstone.realNest.dto.request;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -14,18 +15,26 @@ public record UserRegistrationRequest(
         @Email(message = "Enter a valid email address")
         String email,
 
+        @NotBlank(message = "Phone number is required")
+        @Pattern(regexp = "^\\+?[0-9]{10,15}$",
+                message = "Phone number must contain 10 to 15 digits")
+        String phone,
+
         @NotBlank(message = "Password is required")
-        @Size(
-                min = 6,
-                message = "Password must contain at least 6 characters"
-        )
+        @Size(min = 8,
+                message = "Password must contain at least 8 characters")
         String password,
 
-        @NotBlank(message = "Phone number is required")
-        @Pattern(
-                regexp = "^[0-9]{10,15}$",
-                message = "Phone number must contain 10 to 15 digits"
-        )
-        String phone
-) {
+        @NotBlank(message = "Please confirm your password")
+        String confirmPassword) {
+
+    @AssertTrue(message = "Password and confirm password do not match")
+    public boolean isPasswordMatching() {
+
+        if (password == null || confirmPassword == null) {
+            return true;
+        }
+
+        return password.equals(confirmPassword);
+    }
 }
