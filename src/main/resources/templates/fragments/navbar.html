@@ -1,7 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
+
+<!--
+    REUSABLE NAVBAR
+
+    portalMode controls which page layout is being rendered:
+      PUBLIC   -> landing, property listing and property details pages
+      CUSTOMER -> authenticated customer portal pages
+      ADMIN    -> authenticated admin portal pages
+
+    activeMenu controls the highlighted item in customer/admin mobile menus.
+
+    sec:authorize checks the user stored in the Spring Security session:
+      isAnonymous()       -> no user is logged in
+      hasRole('CUSTOMER') -> logged-in customer
+      hasRole('ADMIN')    -> logged-in admin
+
+    Desktop structure:
+      Logo | Buy/Rent/Sell | role-sensitive actions
+
+    Mobile structure:
+      Hamburger opens exactly one of these, based on portalMode:
+      publicMobileMenu | customerMobileMenu | adminMobileMenu
+-->
 
 <nav id="navbar"
      th:fragment="navbar(portalMode, activeMenu)"
@@ -35,9 +59,9 @@
 
         </a>
 
-        <!-- Desktop Navigation -->
-        <ul class="hidden items-center gap-8
-                   text-sm text-slate-300 lg:flex">
+        <!-- Shared desktop links: visible on public, customer and admin pages -->
+        <ul class="hidden items-center gap-10
+                   text-sm font-semibold text-slate-300 lg:flex">
 
             <li>
                 <a th:href="@{/properties(listingType='SALE')}"
@@ -60,40 +84,94 @@
                 </a>
             </li>
 
-            <li>
-                <a th:href="@{/contact}"
-                   class="transition hover:text-emerald-400">
-                    Contact
-                </a>
-            </li>
-
         </ul>
 
-        <!-- Public Desktop Actions -->
+        <!--
+            PUBLIC PAGE: DESKTOP ACTIONS
+            The page is public, but the visitor may still have an active session.
+            Spring Security decides which one of the following blocks is rendered.
+        -->
+
+        <!-- Public page + anonymous visitor -> Login and Register -->
         <section th:if="${portalMode == 'PUBLIC'}"
+                 sec:authorize="isAnonymous()"
                  class="hidden items-center gap-3 lg:flex">
 
             <a th:href="@{/auth/login}"
                class="px-4 py-2 text-sm text-slate-300
-                      transition hover:text-white">
+              transition hover:text-white">
                 Login
             </a>
 
             <a th:href="@{/auth/register}"
                class="rounded-full bg-emerald-500 px-5 py-2
-                      text-sm font-semibold text-slate-950
-                      transition hover:bg-emerald-400">
+              text-sm font-semibold text-slate-950
+              transition hover:bg-emerald-400">
                 Register
             </a>
 
         </section>
 
-        <!-- Desktop Spacer for Authenticated Portals -->
+        <!-- Public page + logged-in customer -> Customer Dashboard and Logout -->
+        <section th:if="${portalMode == 'PUBLIC'}"
+                 sec:authorize="hasRole('CUSTOMER')"
+                 class="hidden items-center gap-3 lg:flex">
+
+            <a th:href="@{/customer/dashboard}"
+               class="px-4 py-2 text-sm font-semibold text-slate-300
+              transition hover:text-white">
+                Dashboard
+            </a>
+
+            <form th:action="@{/auth/logout}"
+                  method="post">
+
+                <button type="submit"
+                        class="rounded-full border border-white/15
+                       px-5 py-2 text-sm font-semibold
+                       text-slate-200 transition
+                       hover:border-rose-400 hover:text-rose-300">
+                    Logout
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- Public page + logged-in admin -> Admin Dashboard and Logout -->
+        <section th:if="${portalMode == 'PUBLIC'}"
+                 sec:authorize="hasRole('ADMIN')"
+                 class="hidden items-center gap-3 lg:flex">
+
+            <a th:href="@{/admin/dashboard}"
+               class="px-4 py-2 text-sm font-semibold text-slate-300
+              transition hover:text-emerald-400">
+                Admin Dashboard
+            </a>
+
+            <form th:action="@{/auth/logout}"
+                  method="post">
+
+                <button type="submit"
+                        class="rounded-full border border-white/15
+                       px-5 py-2 text-sm font-semibold
+                       text-slate-200 transition
+                       hover:border-rose-400 hover:text-rose-300">
+                    Logout
+                </button>
+
+            </form>
+
+        </section>
+        <!--
+            Customer/admin desktop pages use their sidebars for portal actions.
+            This spacer keeps the logo and shared links visually aligned.
+        -->
         <div th:if="${portalMode != 'PUBLIC'}"
              class="hidden w-24 lg:block">
         </div>
 
-        <!-- Mobile Hamburger -->
+        <!-- Mobile hamburger: navbar.js opens the one mobile menu rendered below -->
         <button id="mobileMenuButton"
                 type="button"
                 aria-label="Open navigation menu"
@@ -118,7 +196,10 @@
 
     </section>
 
-    <!-- Public Mobile Menu -->
+    <!--
+        PUBLIC MOBILE MENU
+        Always contains Buy/Rent/Sell. Account actions vary by session role.
+    -->
     <section id="publicMobileMenu"
              th:if="${portalMode == 'PUBLIC'}"
              class="hidden max-h-[calc(100vh-5rem)]
@@ -156,28 +237,20 @@
                     </a>
                 </li>
 
-                <li>
-                    <a th:href="@{/contact}"
-                       class="block rounded-xl px-4 py-3 text-sm
-                              font-medium transition hover:bg-white/10
-                              hover:text-emerald-400">
-                        Contact
-                    </a>
-                </li>
-
-                <li class="mt-3 border-t border-white/10 pt-4">
+                <li sec:authorize="isAnonymous()"
+                    class="mt-3 border-t border-white/10 pt-4">
 
                     <a th:href="@{/auth/login}"
                        class="block rounded-xl px-4 py-3 text-sm
-                              font-medium transition hover:bg-white/10
+                              font-semibold transition hover:bg-white/10
                               hover:text-white">
                         Login
                     </a>
 
                 </li>
 
-                <li class="pt-2">
-
+                <li sec:authorize="isAnonymous()"
+                    class="pt-2">
                     <a th:href="@{/auth/register}"
                        class="block rounded-full bg-emerald-500
                               px-5 py-3 text-center text-sm font-semibold
@@ -188,13 +261,78 @@
 
                 </li>
 
+                <!-- Public mobile page + logged-in customer -->
+                <li sec:authorize="hasRole('CUSTOMER')"
+                    class="mt-3 border-t border-white/10 pt-4">
+
+                    <a th:href="@{/customer/dashboard}"
+                       class="block rounded-xl px-4 py-3
+              text-sm font-medium transition
+              hover:bg-white/10 hover:text-white">
+                        Dashboard
+                    </a>
+
+                </li>
+
+                <li sec:authorize="hasRole('CUSTOMER')">
+
+                    <form th:action="@{/auth/logout}"
+                          method="post">
+
+                        <button type="submit"
+                                class="block w-full rounded-xl
+                       px-4 py-3 text-left text-sm
+                       font-medium text-rose-400
+                       transition hover:bg-rose-500/10
+                       hover:text-rose-300">
+                            Logout
+                        </button>
+
+                    </form>
+
+                </li>
+
+                <!-- Public mobile page + logged-in admin -->
+                <li sec:authorize="hasRole('ADMIN')"
+                    class="mt-3 border-t border-white/10 pt-4">
+
+                    <a th:href="@{/admin/dashboard}"
+                       class="block rounded-xl px-4 py-3
+              text-sm font-medium transition
+              hover:bg-white/10 hover:text-emerald-400">
+                        Admin Dashboard
+                    </a>
+
+                </li>
+
+                <li sec:authorize="hasRole('ADMIN')">
+
+                    <form th:action="@{/auth/logout}"
+                          method="post">
+
+                        <button type="submit"
+                                class="block w-full rounded-xl
+                       px-4 py-3 text-left text-sm
+                       font-medium text-rose-400
+                       transition hover:bg-rose-500/10
+                       hover:text-rose-300">
+                            Logout
+                        </button>
+
+                    </form>
+
+                </li>
             </ul>
 
         </nav>
 
     </section>
 
-    <!-- Customer Mobile Menu -->
+    <!--
+        CUSTOMER MOBILE MENU
+        Rendered only when a customer portal page passes portalMode='CUSTOMER'.
+        Replaces the desktop customer sidebar on small screens.
+    -->
     <section id="customerMobileMenu"
              th:if="${portalMode == 'CUSTOMER'}"
              class="hidden max-h-[calc(100vh-5rem)]
@@ -221,7 +359,7 @@
                               px-4 py-3 text-sm font-semibold transition"
                        th:classappend="${activeMenu == 'dashboard'}
                            ? ' bg-emerald-500 text-slate-950'
-                           : ' hover:bg-white/10 hover:text-white'">
+                           : ' hover:bg-white/10 hover:text-emerald-400'">
 
                         <svg xmlns="http://www.w3.org/2000/svg"
                              fill="none"
@@ -333,7 +471,11 @@
 
     </section>
 
-    <!-- Admin Mobile Menu -->
+    <!--
+        ADMIN MOBILE MENU
+        Rendered only when an admin portal page passes portalMode='ADMIN'.
+        Replaces the desktop admin sidebar on small screens.
+    -->
     <section id="adminMobileMenu"
              th:if="${portalMode == 'ADMIN'}"
              class="hidden max-h-[calc(100vh-5rem)]

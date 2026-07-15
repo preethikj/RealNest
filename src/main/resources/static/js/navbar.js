@@ -12,10 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const adminMobileMenu =
         document.getElementById("adminMobileMenu");
 
-    const mobileMenu =
-        publicMobileMenu ||
-        customerMobileMenu ||
-        adminMobileMenu;
+    const mobileMenu = publicMobileMenu || customerMobileMenu || adminMobileMenu;
 
     if (!mobileMenuButton || !mobileMenu) {
         return;
