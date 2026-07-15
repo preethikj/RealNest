@@ -11,10 +11,10 @@ public class LandingViewController {
         return "public/landing";
     }
 
-    @GetMapping("/properties/{id}")
-    public String propertyDetails() {
-        return "public/property-details";
-    }
+//    @GetMapping("/properties/{id}")
+//    public String propertyDetails() {
+//        return "public/property-details";
+//    }
 
     @GetMapping("/properties")
     public String propertyList() {
