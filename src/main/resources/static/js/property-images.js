@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const maxImages = 8;
+    const existingImageCount = Number(fileInput.dataset.existingCount || 0);
+    const maxImages = Math.max(0, 8 - existingImageCount);
     const maxFileSize = 10 * 1024 * 1024;
 
     const allowedTypes = [

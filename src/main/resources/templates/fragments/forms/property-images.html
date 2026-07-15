@@ -4,12 +4,14 @@
 <body>
 
 <section th:fragment="propertyImages"
-         class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+         class="rounded-3xl border border-slate-200
+                bg-white p-6 shadow-sm">
 
-    <header class="mb-6">
+    <!-- Heading -->
+    <header class="mb-5">
 
-        <p class="text-sm font-semibold uppercase tracking-[0.2em]
-                  text-emerald-600">
+        <p class="text-sm font-semibold uppercase
+                  tracking-[0.2em] text-emerald-600">
             Property Images
         </p>
 
@@ -23,38 +25,64 @@
 
     </header>
 
+    <!-- Compact image picker -->
     <label for="propertyImages"
-           class="group flex min-h-64 cursor-pointer flex-col items-center
-                  justify-center rounded-3xl border-2 border-dashed
-                  border-slate-300 bg-slate-50 px-6 py-10 text-center
-                  transition hover:border-emerald-400 hover:bg-emerald-50/40">
+           class="group flex cursor-pointer flex-col gap-5
+                  rounded-2xl border-2 border-dashed
+                  border-slate-300 bg-slate-50 p-5
+                  transition hover:border-emerald-400
+                  hover:bg-emerald-50/40
+                  sm:flex-row sm:items-center
+                  sm:justify-between">
 
-        <div class="flex h-16 w-16 items-center justify-center rounded-2xl
-                    bg-emerald-100 text-emerald-700 transition
-                    group-hover:scale-105">
+        <div class="flex items-center gap-4">
 
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke-width="1.8"
-                 stroke="currentColor"
-                 class="h-8 w-8">
+            <div class="flex h-12 w-12 shrink-0
+                        items-center justify-center
+                        rounded-xl bg-emerald-100
+                        text-emerald-700 transition
+                        group-hover:scale-105">
 
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 16.5V18a2.25 2.25 0 0 0 2.25 2.25h13.5A2.25 2.25 0 0 0 21 18v-1.5M16.5 8.25 12 3.75m0 0L7.5 8.25M12 3.75V15"/>
-            </svg>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="1.8"
+                     stroke="currentColor"
+                     class="h-6 w-6">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M3 16.5V18a2.25 2.25 0 0 0
+                             2.25 2.25h13.5A2.25 2.25 0 0 0
+                             21 18v-1.5M16.5 8.25
+                             12 3.75m0 0L7.5 8.25
+                             M12 3.75V15"/>
+
+                </svg>
+
+            </div>
+
+            <div>
+
+                <h3 class="font-bold text-slate-950">
+                    Select property photos
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    JPG, PNG or WEBP · Maximum 8 images ·
+                    10 MB each
+                </p>
+
+            </div>
 
         </div>
 
-        <h3 class="mt-5 text-lg font-bold text-slate-950">
-            Click to browse files from your device
-        </h3>
-
-        <span class="mt-5 inline-flex items-center justify-center rounded-full
-                     bg-emerald-500 px-5 py-2.5 text-sm font-semibold
-                     text-slate-950 shadow-lg shadow-emerald-500/20
-                     transition group-hover:bg-emerald-400">
+        <span class="inline-flex shrink-0 items-center
+                     justify-center rounded-full
+                     bg-emerald-500 px-5 py-2.5
+                     text-sm font-semibold text-slate-950
+                     shadow-sm transition
+                     group-hover:bg-emerald-400">
             Browse Files
         </span>
 
@@ -63,40 +91,38 @@
                type="file"
                accept="image/png,image/jpeg,image/webp"
                multiple
+               th:attr="data-existing-count=
+                        ${existingImageCount != null
+                          ? existingImageCount
+                          : 0}"
                class="sr-only">
 
     </label>
 
-    <div class="mt-4 flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:justify-between">
-
-        <p>
-            Supported formats: JPG, PNG and WEBP
-        </p>
-
-        <p>
-            Upload up to 8 images
-        </p>
-
-    </div>
-
+    <!-- Selected image preview -->
     <section id="imagePreviewSection"
              class="mt-6 hidden">
 
-        <div class="mb-4 flex items-center justify-between">
+        <div class="mb-4 flex items-center justify-between
+                    gap-4">
 
             <div>
+
                 <h3 class="font-bold text-slate-950">
                     Image Preview
                 </h3>
 
                 <p class="mt-1 text-xs text-slate-500">
-                    The first image will be used as the cover photo.
+                    The first newly selected image will follow
+                    the existing property images.
                 </p>
+
             </div>
 
             <button id="clearImagesButton"
                     type="button"
-                    class="text-sm font-semibold text-rose-600 transition
+                    class="shrink-0 text-sm font-semibold
+                           text-rose-600 transition
                            hover:text-rose-700">
                 Clear all
             </button>
@@ -104,7 +130,8 @@
         </div>
 
         <div id="imagePreviewGrid"
-             class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+             class="grid grid-cols-2 gap-4
+                    sm:grid-cols-3 lg:grid-cols-4">
         </div>
 
     </section>
@@ -112,4 +139,5 @@
 </section>
 
 </body>
+
 </html>

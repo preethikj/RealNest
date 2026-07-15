@@ -4,26 +4,30 @@
 <body>
 
 <section th:fragment="formActions"
-         class="flex flex-col-reverse gap-4 border-t border-slate-200 pt-8
+         class="flex flex-col-reverse gap-4
+                border-t border-slate-200 pt-8
                 sm:flex-row sm:justify-end">
 
-    <th:block
-            th:replace="~{fragments/buttons ::
-            outlineLink(
-                'Cancel',
-                '/customer/dashboard'
-            )}">
+    <th:block th:replace="~{fragments/buttons ::
+        outlineLink(
+            'Cancel',
+            '/customer/dashboard'
+        )}">
     </th:block>
 
-    <th:block
-            th:replace="~{fragments/buttons ::
-            primaryButton(
-                'Submit for Approval',
-                'submit'
-            )}">
+    <th:block th:replace="~{fragments/buttons ::
+        loadingSubmitButton(
+            ${editMode
+                ? 'Update Property'
+                : 'Submit for Approval'},
+            ${editMode
+                ? 'Updating...'
+                : 'Submitting...'}
+        )}">
     </th:block>
 
 </section>
 
 </body>
+
 </html>

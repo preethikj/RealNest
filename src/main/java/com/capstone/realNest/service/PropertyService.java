@@ -142,9 +142,10 @@ public class PropertyService {
     }
 
     @Transactional
-    public PropertyResponse updateProperty(Long propertyId, PropertyRequest request) {
+    public PropertyResponse updateProperty(Long propertyId, Long ownerId, PropertyRequest request) {
 
-        Property property = findPropertyById(propertyId);
+        Property property = propertyRepository.findByIdAndOwnerId(propertyId, ownerId)
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
 
         propertyMapper.updateEntity(property, request);
 

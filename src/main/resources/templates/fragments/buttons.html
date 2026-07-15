@@ -68,5 +68,44 @@
           transition hover:border-emerald-400
           hover:bg-emerald-50 hover:text-emerald-700">
 </a>
+
+
+<button th:fragment="loadingSubmitButton(
+            label,
+            loadingText
+        )"
+        type="submit"
+        data-loading-submit
+        th:attr="data-loading-text=${loadingText}"
+        class="inline-flex items-center justify-center
+               rounded-full bg-emerald-500 px-6 py-3
+               text-sm font-semibold text-slate-950
+               shadow-lg shadow-emerald-500/20
+               transition hover:bg-emerald-400
+               focus:outline-none focus:ring-4
+               focus:ring-emerald-400/20
+               disabled:cursor-not-allowed
+               disabled:opacity-70">
+
+    <span data-button-text
+          th:text="${label}">
+        Submit
+    </span>
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke-width="2"
+         stroke="currentColor"
+         class="ml-2 hidden h-4 w-4 animate-spin"
+         data-loading-icon>
+
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 3a9 9 0 1 0 9 9"/>
+
+    </svg>
+
+</button>
 </body>
 </html>

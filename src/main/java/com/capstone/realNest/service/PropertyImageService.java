@@ -26,15 +26,18 @@ public class PropertyImageService {
     private final PropertyRepository propertyRepository;
     private final CloudinaryService cloudinaryService;
 
+    //Rest API
     @Transactional
-    public List<PropertyImageResponse> uploadImages(Long propertyId, List<MultipartFile> images) {
+    public List<PropertyImageResponse> uploadImages(
+            Long propertyId,
+            Long ownerId,
+            List<MultipartFile> images) {
 
-        Property property = propertyRepository.findById(propertyId)
-                .orElseThrow(() ->
-                        new PropertyNotFoundException(propertyId)
-                );
+        Property property = propertyRepository.findByIdAndOwnerId(propertyId, ownerId)
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
 
-        List<PropertyImage> existingImages = propertyImageRepository.findByPropertyIdOrderByDisplayOrderAsc(propertyId);
+        List<PropertyImage> existingImages =
+                propertyImageRepository.findByPropertyIdOrderByDisplayOrderAsc(propertyId);
 
         int remainingSlots = MAX_IMAGES - existingImages.size();
 
@@ -61,21 +64,22 @@ public class PropertyImageService {
 
             Map<?, ?> uploadResult = cloudinaryService.uploadImage(image);
 
-            PropertyImage propertyImage = new PropertyImage();
-            propertyImage.setProperty(property);
-            propertyImage.setImageUrl(uploadResult.get("secure_url").toString());
-            propertyImage.setPublicId(uploadResult.get("public_id").toString());
-            propertyImage.setDisplayOrder(nextDisplayOrder++);
+            PropertyImage propertyImage =
+                    PropertyImage.builder().property(property)
+                            .imageUrl(uploadResult.get("secure_url").toString())
+                            .publicId(uploadResult.get("public_id").toString())
+                            .displayOrder(nextDisplayOrder++)
+                            .build();
 
             uploadedImages.add(propertyImage);
         }
 
-        return propertyImageRepository.saveAll(uploadedImages)
+        return propertyImageRepository
+                .saveAll(uploadedImages)
                 .stream()
                 .map(this::toResponse)
                 .toList();
     }
-
     private PropertyImageResponse toResponse(PropertyImage propertyImage) {
 
         return new PropertyImageResponse(
@@ -87,7 +91,7 @@ public class PropertyImageService {
         );
     }
 
-    /*Get Images by property ID*/
+    /*Get Images by property ID - Rest API*/
     @Transactional(readOnly = true)
     public List<PropertyImageResponse> getImagesByPropertyId(Long propertyId) {
 
@@ -103,16 +107,25 @@ public class PropertyImageService {
     }
 
     @Transactional
-    public void deleteImage(Long propertyId, Long imageId) {
+    public void deleteImage(Long propertyId, Long imageId, Long ownerId) {
 
-        if (!propertyRepository.existsById(propertyId)) {
-            throw new PropertyNotFoundException(propertyId);
+        propertyRepository.findByIdAndOwnerId(propertyId, ownerId)
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
+
+        long imageCount = propertyImageRepository.countByPropertyId(propertyId);
+
+        if (imageCount <= 1) {
+            throw new IllegalStateException(
+                    "A property must have at least one image");
         }
 
-        PropertyImage propertyImage = propertyImageRepository
+        PropertyImage propertyImage =
+                propertyImageRepository
                         .findByIdAndPropertyId(imageId, propertyId)
                         .orElseThrow(() ->
-                                new PropertyImageNotFoundException(imageId, propertyId));
+                                new PropertyImageNotFoundException(
+                                        imageId,
+                                        propertyId));
 
         cloudinaryService.deleteImage(propertyImage.getPublicId());
         propertyImageRepository.delete(propertyImage);

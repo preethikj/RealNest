@@ -3,6 +3,7 @@ package com.capstone.realNest.controller.rest;
 import com.capstone.realNest.dto.request.PropertyRequest;
 import com.capstone.realNest.dto.response.PropertyImageResponse;
 import com.capstone.realNest.dto.response.PropertyResponse;
+import com.capstone.realNest.security.CustomUserPrincipal;
 import com.capstone.realNest.service.PropertyImageService;
 import com.capstone.realNest.service.PropertyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,11 +45,11 @@ public class PropertyController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload images for a property")
     public ResponseEntity<List<PropertyImageResponse>> uploadImages(@PathVariable Long propertyId,
-            @RequestPart("images") List<MultipartFile> images) {
+            @RequestPart("images") List<MultipartFile> images,
+            @AuthenticationPrincipal CustomUserPrincipal currentUser) {
 
-        List<PropertyImageResponse> responses = propertyImageService.uploadImages(
-                        propertyId,
-                        images);
+        List<PropertyImageResponse> responses =
+                propertyImageService.uploadImages(propertyId, currentUser.id(), images);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responses);
     }
@@ -88,9 +90,11 @@ public class PropertyController {
 
     @DeleteMapping("/{propertyId}/images/{imageId}")
     @Operation(summary = "Delete a property image")
-    public ResponseEntity<Void> deletePropertyImage(@PathVariable Long propertyId, @PathVariable Long imageId) {
+    public ResponseEntity<Void> deletePropertyImage(
+            @PathVariable Long propertyId, @PathVariable Long imageId,
+            @AuthenticationPrincipal CustomUserPrincipal currentUser) {
 
-        propertyImageService.deleteImage(propertyId, imageId);
+        propertyImageService.deleteImage(propertyId, imageId, currentUser.id());
         return ResponseEntity.noContent().build();
     }
 
@@ -126,9 +130,10 @@ public class PropertyController {
     @PutMapping("/{propertyId}")
     @Operation(summary = "Update a property")
     public ResponseEntity<PropertyResponse> updateProperty(@PathVariable Long propertyId,
-            @Valid @RequestBody PropertyRequest request) {
+            @Valid @RequestBody PropertyRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal currentUser) {
 
-        PropertyResponse response = propertyService.updateProperty(propertyId, request);
+        PropertyResponse response = propertyService.updateProperty(propertyId, currentUser.id(), request);
         return ResponseEntity.ok(response);
     }
 
