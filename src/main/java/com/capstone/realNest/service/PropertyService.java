@@ -88,32 +88,22 @@ public class PropertyService {
     @Transactional
     public PropertyResponse approveProperty(Long propertyId) {
 
-        return updatePropertyStatus(
-                propertyId,
-                APPROVED_STATUS
-        );
+        return updatePropertyStatus(propertyId, APPROVED_STATUS);
     }
 
     @Transactional
     public PropertyResponse rejectProperty(Long propertyId) {
 
-        return updatePropertyStatus(
-                propertyId,
-                REJECTED_STATUS
-        );
+        return updatePropertyStatus(propertyId, REJECTED_STATUS);
     }
 
-    private PropertyResponse updatePropertyStatus(
-            Long propertyId,
-            String status
-    ) {
+    private PropertyResponse updatePropertyStatus(Long propertyId, String status) {
 
         Property property = findPropertyById(propertyId);
 
         property.setStatus(status);
 
-        Property updatedProperty =
-                propertyRepository.save(property);
+        Property updatedProperty = propertyRepository.save(property);
 
         return propertyMapper.toResponse(updatedProperty);
     }
@@ -179,34 +169,60 @@ public class PropertyService {
     }
 
     @Transactional(readOnly = true)
-    public PropertyResponse getApprovedPropertyById(
-            Long propertyId
-    ) {
+    public PropertyResponse getApprovedPropertyById(Long propertyId) {
 
         Property property = propertyRepository
-                .findByIdAndStatus(
-                        propertyId,
-                        APPROVED_STATUS
-                )
-                .orElseThrow(() ->
-                        new PropertyNotFoundException(propertyId)
-                );
+                .findByIdAndStatus(propertyId, APPROVED_STATUS)
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
 
         return propertyMapper.toResponse(property);
     }
 
     @Transactional(readOnly = true)
-    public PropertyResponse getPropertyByOwner(
-            Long propertyId,
-            Long ownerId
-    ) {
+    public PropertyResponse getPropertyByOwner(Long propertyId, Long ownerId) {
 
         Property property = propertyRepository
                 .findByIdAndOwnerId(propertyId, ownerId)
-                .orElseThrow(() ->
-                        new PropertyNotFoundException(propertyId)
-                );
-
+                .orElseThrow(() -> new PropertyNotFoundException(propertyId));
         return propertyMapper.toResponse(property);
+    }
+
+
+    /* Dashboard methods */
+    @Transactional(readOnly = true)
+    public long countAllProperties() {
+        return propertyRepository.count();
+    }
+
+    @Transactional(readOnly = true)
+    public long countPropertiesByStatus(String status) {
+        return propertyRepository.countByStatus(status);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PropertyResponse> getLatestPendingProperties(int limit) {
+
+        return propertyRepository
+                .findByStatusOrderByCreatedAtDesc(PENDING_STATUS)
+                .stream()
+                .limit(limit)
+                .map(propertyMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PropertyResponse> getAllProperties() {
+
+        return propertyRepository
+                .findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(propertyMapper::toResponse)
+                .toList();
+    }
+
+    //Customer list
+    @Transactional(readOnly = true)
+    public long countPropertiesByOwner(Long ownerId) {
+        return propertyRepository.countByOwnerId(ownerId);
     }
 }

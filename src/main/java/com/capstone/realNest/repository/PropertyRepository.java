@@ -20,12 +20,13 @@ public interface PropertyRepository extends JpaRepository<Property, Long>{
 
     List<Property> findByOwnerIdAndStatusOrderByCreatedAtDesc(
             Long ownerId,
-            String status
-    );
+            String status);
 
     Optional<Property> findByIdAndStatus(Long propertyId, String status);
 
     Optional<Property> findByIdAndOwnerId(Long propertyId, Long ownerId);
+
+    List<Property> findAllByOrderByCreatedAtDesc();
 
     long countByStatus(String status);
 

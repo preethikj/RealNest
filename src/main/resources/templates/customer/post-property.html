@@ -78,8 +78,8 @@
     </div>
 
     <!-- Existing images: edit mode only -->
-    <section th:if="${editMode
-                     and !#lists.isEmpty(existingImages)}"
+    <section th:if="${editMode == true
+                 and !#lists.isEmpty(existingImages)}">
              class="mb-6 rounded-3xl border border-slate-200
                     bg-white p-6 shadow-sm">
 
@@ -191,15 +191,16 @@
       </th:block>
 
       <!-- Image upload -->
-      <th:block th:if="${!editMode
+      <th:block th:if="${editMode != true
                         or existingImageCount < 8}"
                 th:replace="~{fragments/forms/property-images ::
                     propertyImages}">
       </th:block>
 
       <!-- JavaScript image validation message -->
-      <p th:if="${!editMode
-                 or existingImageCount < 8}"
+      <p th:if="${editMode != true
+         or (existingImageCount != null
+             and existingImageCount < 8)}"
          id="imageUploadMessage"
          role="alert"
          aria-live="polite"
@@ -208,7 +209,7 @@
       </p>
 
       <!-- Maximum image message -->
-      <p th:if="${editMode and existingImageCount >= 8}"
+      <p th:if="${editMode == true and existingImageCount >= 8}"
          class="rounded-2xl border border-amber-200
                 bg-amber-50 px-5 py-4 text-sm
                 text-amber-700">

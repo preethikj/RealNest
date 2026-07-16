@@ -246,8 +246,12 @@
                 border-t border-slate-100 pt-4
                 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
 
-            <th:block th:replace="~{fragments/buttons ::
-                outlineLink('View', ${viewUrl})}">
+            <th:block th:if="${status != 'PENDING'}">
+
+                <th:block th:replace="~{fragments/buttons ::
+                    outlineLink('View', ${viewUrl})}">
+                </th:block>
+
             </th:block>
 
             <th:block th:if="${status == 'PENDING'}">

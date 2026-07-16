@@ -61,74 +61,55 @@
 
             </div>
 
-            <div class="space-y-4">
+            <div th:if="${!#lists.isEmpty(properties)}"
+                 class="space-y-4">
 
-                <th:block th:replace="~{fragments/property-card ::
-                        adminPropertyCard(
-                            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
-                            'Modern villa',
-                            'Modern 3BHK Villa',
-                            'Whitefield, Bengaluru',
-                            'SALE',
-                            '₹1.25 Crore',
-                            'PENDING',
-                            'Rohan Mehta',
-                            '10 July 2026',
-                            '#',
-                            '#'
-                        )}">
-                </th:block>
+                <th:block th:each="property : ${properties}">
 
-                <th:block th:replace="~{fragments/property-card ::
-                        adminPropertyCard(
-                            'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80',
-                            'Independent family house',
-                            'Independent Family House',
-                            'HSR Layout, Bengaluru',
-                            'RENT',
-                            '₹45,000 / month',
-                            'APPROVED',
-                            'Sneha Iyer',
-                            '9 July 2026',
-                            '#',
-                            '#'
-                        )}">
-                </th:block>
-
-                <th:block th:replace="~{fragments/property-card ::
-                        adminPropertyCard(
-                            'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
-                            'Spacious apartment',
-                            'Spacious 2BHK Apartment',
-                            'Indiranagar, Bengaluru',
-                            'SALE',
-                            '₹92 Lakh',
-                            'REJECTED',
-                            'Arun Kumar',
-                            '8 July 2026',
-                            '#',
-                            '#'
-                        )}">
-                </th:block>
-
-                <th:block th:replace="~{fragments/property-card ::
-                    adminPropertyCard(
-                        'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80',
-                        'Premium apartment',
-                        'Premium 3BHK Apartment',
-                        'Koramangala, Bengaluru',
-                        'RENT',
-                        '₹62,000 / month',
-                        'APPROVED',
-                        'Meera Nair',
-                        '7 July 2026',
-                        '#',
-                        '#'
-                    )}">
+                    <th:block th:replace="~{fragments/property-card ::
+                            adminPropertyCard(
+                                ${#lists.isEmpty(property.images)
+                                    ? '/images/property-placeholder.png'
+                                    : property.images[0].imageUrl},
+                                ${property.title},
+                                ${property.title},
+                                ${property.city + ', ' + property.state},
+                                ${property.listingType},
+                                ${'₹' + #numbers.formatDecimal(
+                                    property.price,
+                                    1,
+                                    'COMMA',
+                                    0,
+                                    'POINT'
+                                )},
+                                ${property.status},
+                                ${property.ownerName},
+                                ${#temporals.format(
+                                    property.createdAt,
+                                    'dd MMMM yyyy'
+                                )},
+                                ${'/admin/properties/' + property.id},
+                                ${'/admin/properties/' + property.id + '/review'}
+                            )}">
+                    </th:block>
                 </th:block>
 
             </div>
 
+<!--            Empty Card-->
+            <div th:if="${#lists.isEmpty(properties)}"
+                 class="rounded-2xl border border-dashed border-slate-300
+            bg-white px-6 py-14 text-center">
+
+                <h3 class="text-lg font-bold text-slate-950">
+                    No properties available
+                </h3>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Property submissions will appear here.
+                </p>
+
+            </div>
         </section>
 
     </section>

@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -17,7 +18,8 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900">
 
-<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
+<header th:replace="~{fragments/navbar ::
+        navbar('ADMIN', ${activeMenu})}">
 </header>
 
 <aside th:replace="~{fragments/admin-sidebar ::
@@ -30,8 +32,9 @@
 
         <!-- Back Navigation -->
         <a th:href="@{/admin/customers}"
-           class="inline-flex items-center gap-2 text-sm font-semibold
-                  text-slate-600 transition hover:text-emerald-600">
+           class="inline-flex items-center gap-2
+                  text-sm font-semibold text-slate-600
+                  transition hover:text-emerald-600">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                  fill="none"
@@ -39,12 +42,15 @@
                  stroke-width="1.8"
                  stroke="currentColor"
                  class="h-4 w-4">
+
                 <path stroke-linecap="round"
                       stroke-linejoin="round"
                       d="m15 18-6-6 6-6"/>
+
             </svg>
 
             Back to Customers
+
         </a>
 
         <!-- Page Header -->
@@ -55,7 +61,8 @@
                 User Management
             </p>
 
-            <h1 class="text-3xl font-bold tracking-tight text-slate-950">
+            <h1 class="text-3xl font-bold tracking-tight
+                       text-slate-950">
                 Customer Details
             </h1>
 
@@ -66,27 +73,40 @@
         </header>
 
         <!-- Customer Profile -->
-        <section class="mt-10 rounded-3xl border border-slate-200
+        <section class="mt-10 rounded-3xl
+                        border border-slate-200
                         bg-white p-6 shadow-sm">
 
             <div class="flex flex-col gap-6
                         lg:flex-row lg:items-center">
 
                 <!-- Identity -->
-                <div class="flex min-w-0 items-center gap-5 lg:flex-[1.5]">
+                <div class="flex min-w-0 items-center gap-5
+                            lg:flex-[1.5]">
 
                     <div class="inline-flex h-20 w-20 shrink-0
-                                items-center justify-center rounded-full
-                                bg-emerald-100 text-2xl font-bold
-                                text-emerald-700">
-                        RM
+                                items-center justify-center
+                                rounded-full bg-emerald-100
+                                text-2xl font-bold text-emerald-700">
+
+                        <span th:text="${#strings.toUpperCase(
+                                #strings.substring(
+                                    customer.name,
+                                    0,
+                                    1
+                                )
+                              )}">
+                            C
+                        </span>
+
                     </div>
 
                     <div class="min-w-0">
 
                         <h2 class="truncate text-2xl font-bold
-                                   text-slate-950">
-                            Rohan Mehta
+                                   text-slate-950"
+                            th:text="${customer.name}">
+                            Customer name
                         </h2>
 
                         <p class="mt-1 text-sm text-slate-500">
@@ -100,14 +120,15 @@
                 <!-- Email -->
                 <div class="min-w-0 lg:flex-1">
 
-                    <p class="text-xs font-semibold uppercase tracking-wide
-                              text-slate-400">
+                    <p class="text-xs font-semibold uppercase
+                              tracking-wide text-slate-400">
                         Email
                     </p>
 
                     <p class="mt-1 break-all text-sm font-semibold
-                              text-slate-800">
-                        rohan@example.com
+                              text-slate-800"
+                       th:text="${customer.email}">
+                        Customer email
                     </p>
 
                 </div>
@@ -115,13 +136,15 @@
                 <!-- Phone -->
                 <div class="min-w-0 lg:flex-1">
 
-                    <p class="text-xs font-semibold uppercase tracking-wide
-                              text-slate-400">
+                    <p class="text-xs font-semibold uppercase
+                              tracking-wide text-slate-400">
                         Phone
                     </p>
 
-                    <p class="mt-1 text-sm font-semibold text-slate-800">
-                        +91 98765 43210
+                    <p class="mt-1 text-sm font-semibold
+                              text-slate-800"
+                       th:text="${customer.phone}">
+                        Customer phone
                     </p>
 
                 </div>
@@ -129,13 +152,18 @@
                 <!-- Joined -->
                 <div class="min-w-0 lg:w-40 lg:shrink-0">
 
-                    <p class="text-xs font-semibold uppercase tracking-wide
-                              text-slate-400">
+                    <p class="text-xs font-semibold uppercase
+                              tracking-wide text-slate-400">
                         Joined
                     </p>
 
-                    <p class="mt-1 text-sm font-semibold text-slate-800">
-                        5 July 2026
+                    <p class="mt-1 text-sm font-semibold
+                              text-slate-800"
+                       th:text="${#temporals.format(
+                            customer.createdAt,
+                            'dd MMMM yyyy'
+                       )}">
+                        Joined date
                     </p>
 
                 </div>
@@ -153,7 +181,7 @@
                 <th:block th:replace="~{fragments/dashboard-stat-card ::
                     dashboardStatCard(
                         'Total Listings',
-                        3,
+                        ${totalListings},
                         'Properties submitted',
                         'slate'
                     )}">
@@ -162,7 +190,7 @@
                 <th:block th:replace="~{fragments/dashboard-stat-card ::
                     dashboardStatCard(
                         'Pending',
-                        1,
+                        ${pendingListings},
                         'Waiting for review',
                         'amber'
                     )}">
@@ -171,7 +199,7 @@
                 <th:block th:replace="~{fragments/dashboard-stat-card ::
                     dashboardStatCard(
                         'Approved',
-                        1,
+                        ${approvedListings},
                         'Published properties',
                         'emerald'
                     )}">
@@ -180,7 +208,7 @@
                 <th:block th:replace="~{fragments/dashboard-stat-card ::
                     dashboardStatCard(
                         'Rejected',
-                        1,
+                        ${rejectedListings},
                         'Properties requiring correction',
                         'rose'
                     )}">
@@ -196,11 +224,12 @@
             <div class="mb-5">
 
                 <p class="text-sm font-semibold uppercase
-                    tracking-[0.2em] text-emerald-600">
+                          tracking-[0.2em] text-emerald-600">
                     Customer Properties
                 </p>
 
-                <h2 class="mt-1 text-2xl font-bold text-slate-950">
+                <h2 class="mt-1 text-2xl font-bold
+                           text-slate-950">
                     Properties Submitted by This Customer
                 </h2>
 
@@ -210,55 +239,58 @@
 
             </div>
 
-            <div class="space-y-4">
+            <!-- Property List -->
+            <div th:if="${!#lists.isEmpty(properties)}"
+                 class="space-y-4">
 
-                <th:block th:replace="~{fragments/property-card ::
-                    adminPropertyCard(
-                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
-                        'Modern villa',
-                        'Modern 3BHK Villa',
-                        'Whitefield, Bengaluru',
-                        'SALE',
-                        '₹1.25 Crore',
-                        'PENDING',
-                        'Rohan Mehta',
-                        '10 July 2026',
-                        '#',
-                        '#'
-                    )}">
+                <th:block th:each="property : ${properties}">
+
+                    <th:block th:replace="~{fragments/property-card ::
+                        adminPropertyCard(
+                            ${#lists.isEmpty(property.images)
+                                ? '/images/property-placeholder.png'
+                                : property.images[0].imageUrl},
+                            ${property.title},
+                            ${property.title},
+                            ${property.city + ', ' + property.state},
+                            ${property.listingType},
+                            ${'₹' + #numbers.formatDecimal(
+                                property.price,
+                                1,
+                                'COMMA',
+                                0,
+                                'POINT'
+                            )},
+                            ${property.status},
+                            ${property.ownerName},
+                            ${#temporals.format(
+                                property.createdAt,
+                                'dd MMMM yyyy'
+                            )},
+                            ${'/admin/properties/' + property.id},
+                            ${'/admin/properties/'
+                                + property.id
+                                + '/review'}
+                        )}">
+                    </th:block>
+
                 </th:block>
 
-                <th:block th:replace="~{fragments/property-card ::
-                    adminPropertyCard(
-                        'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80',
-                        'Independent house',
-                        'Independent Family House',
-                        'HSR Layout, Bengaluru',
-                        'RENT',
-                        '₹45,000 / month',
-                        'APPROVED',
-                        'Rohan Mehta',
-                        '8 July 2026',
-                        '#',
-                        '#'
-                    )}">
-                </th:block>
+            </div>
 
-                <th:block th:replace="~{fragments/property-card ::
-                    adminPropertyCard(
-                        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
-                        'Spacious apartment',
-                        'Spacious 2BHK Apartment',
-                        'Indiranagar, Bengaluru',
-                        'SALE',
-                        '₹92 Lakh',
-                        'REJECTED',
-                        'Rohan Mehta',
-                        '6 July 2026',
-                        '#',
-                        '#'
-                    )}">
-                </th:block>
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(properties)}"
+                 class="rounded-2xl border
+                        border-dashed border-slate-300
+                        bg-white px-6 py-14 text-center">
+
+                <h3 class="text-lg font-bold text-slate-950">
+                    No properties submitted
+                </h3>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    This customer has not submitted any properties yet.
+                </p>
 
             </div>
 
@@ -271,4 +303,5 @@
 <script th:src="@{/js/navbar.js}"></script>
 
 </body>
+
 </html>

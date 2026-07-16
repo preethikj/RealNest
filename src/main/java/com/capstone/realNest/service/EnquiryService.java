@@ -4,6 +4,7 @@ import com.capstone.realNest.dto.request.EnquiryRequest;
 import com.capstone.realNest.dto.response.EnquiryResponse;
 import com.capstone.realNest.entity.Enquiry;
 import com.capstone.realNest.entity.Property;
+import com.capstone.realNest.exception.EnquiryNotFoundException;
 import com.capstone.realNest.exception.PropertyNotFoundException;
 import com.capstone.realNest.exception.UserNotFoundException;
 import com.capstone.realNest.repository.EnquiryRepository;
@@ -90,5 +91,27 @@ public class EnquiryService {
                 enquiry.getPhone(),
                 enquiry.getMessage(),
                 enquiry.getCreatedAt());
+    }
+
+    @Transactional(readOnly = true)
+    public List<EnquiryResponse> getAllEnquiries() {
+
+        return enquiryRepository
+                .findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public EnquiryResponse getEnquiryById(Long enquiryId) {
+
+        Enquiry enquiry = enquiryRepository
+                .findById(enquiryId)
+                .orElseThrow(() ->
+                        new EnquiryNotFoundException(enquiryId)
+                );
+
+        return toResponse(enquiry);
     }
 }

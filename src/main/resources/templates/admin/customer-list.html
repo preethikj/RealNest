@@ -76,36 +76,42 @@
 
             </div>
 
-            <div class="space-y-4">
+            <div th:if="${!#lists.isEmpty(customers)}"
+                 class="space-y-4">
 
-                <!-- Customer 1 -->
-                <article class="rounded-2xl border border-slate-200
-                                bg-white p-5 shadow-sm transition
-                                hover:border-emerald-200 hover:shadow-md">
+                <article th:each="customer : ${customers}"
+                         class="rounded-2xl border border-slate-200
+                    bg-white p-5 shadow-sm transition
+                    hover:border-emerald-200 hover:shadow-md">
 
                     <div class="flex flex-col gap-5
-                                lg:flex-row lg:items-center">
+                    lg:flex-row lg:items-center">
 
                         <!-- Customer -->
                         <section class="flex min-w-0 items-center gap-4
-                                        lg:flex-[1.5]">
+                            lg:flex-[1.5]">
 
                             <div class="inline-flex h-14 w-14 shrink-0
-                                        items-center justify-center rounded-full
-                                        bg-emerald-100 text-lg font-bold
-                                        text-emerald-700">
-                                RM
+                            items-center justify-center rounded-full
+                            bg-emerald-100 text-lg font-bold
+                            text-emerald-700"
+                                 th:text="${#strings.toUpperCase(
+                        #strings.substring(customer.name, 0, 1)
+                     )}">
+                                C
                             </div>
 
                             <div class="min-w-0">
 
                                 <h2 class="truncate text-lg font-bold
-                                           text-slate-950">
-                                    Rohan Mehta
+                               text-slate-950"
+                                    th:text="${customer.name}">
+                                    Customer name
                                 </h2>
 
-                                <p class="mt-1 truncate text-sm text-slate-500">
-                                    rohan@example.com
+                                <p class="mt-1 truncate text-sm text-slate-500"
+                                   th:text="${customer.email}">
+                                    Customer email
                                 </p>
 
                             </div>
@@ -116,12 +122,13 @@
                         <section class="min-w-0 lg:flex-1">
 
                             <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
+                          tracking-wide text-slate-400">
                                 Phone
                             </p>
 
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                +91 98765 43210
+                            <p class="mt-1 text-sm font-semibold text-slate-800"
+                               th:text="${customer.phone}">
+                                Customer phone
                             </p>
 
                         </section>
@@ -130,12 +137,15 @@
                         <section class="min-w-0 lg:flex-1">
 
                             <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
+                          tracking-wide text-slate-400">
                                 Properties
                             </p>
 
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                3 listings
+                            <p class="mt-1 text-sm font-semibold text-slate-800"
+                               th:text="${propertyCounts[customer.id] == 1
+                                        ? '1 listing'
+                                        : propertyCounts[customer.id] + ' listings'}">
+                                0 listings
                             </p>
 
                         </section>
@@ -144,109 +154,29 @@
                         <section class="min-w-0 lg:w-40 lg:shrink-0">
 
                             <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
+                          tracking-wide text-slate-400">
                                 Joined
                             </p>
 
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                5 July 2026
+                            <p class="mt-1 text-sm font-semibold text-slate-800"
+                                       th:text="${#temporals.format(
+                                            customer.createdAt,
+                                             'dd MMMM yyyy')}">
+                                Joined date
                             </p>
 
                         </section>
 
                         <!-- Action -->
                         <section class="shrink-0 border-t border-slate-100
-                                        pt-4 lg:border-l lg:border-t-0
-                                        lg:pl-5 lg:pt-0">
+                            pt-4 lg:border-l lg:border-t-0
+                            lg:pl-5 lg:pt-0">
 
                             <th:block th:replace="~{fragments/buttons ::
-                                    primaryLink('View Details', '#')}">
-                            </th:block>
-
-                        </section>
-
-                    </div>
-
-                </article>
-
-                <!-- Customer 2 -->
-                <article class="rounded-2xl border border-slate-200
-                                bg-white p-5 shadow-sm transition
-                                hover:border-emerald-200 hover:shadow-md">
-
-                    <div class="flex flex-col gap-5
-                                lg:flex-row lg:items-center">
-
-                        <section class="flex min-w-0 items-center gap-4
-                                        lg:flex-[1.5]">
-
-                            <div class="inline-flex h-14 w-14 shrink-0
-                                        items-center justify-center rounded-full
-                                        bg-emerald-100 text-lg font-bold
-                                        text-emerald-700">
-                                SI
-                            </div>
-
-                            <div class="min-w-0">
-
-                                <h2 class="truncate text-lg font-bold
-                                           text-slate-950">
-                                    Sneha Iyer
-                                </h2>
-
-                                <p class="mt-1 truncate text-sm text-slate-500">
-                                    sneha@example.com
-                                </p>
-
-                            </div>
-
-                        </section>
-
-                        <section class="min-w-0 lg:flex-1">
-
-                            <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
-                                Phone
-                            </p>
-
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                +91 99887 76655
-                            </p>
-
-                        </section>
-
-                        <section class="min-w-0 lg:flex-1">
-
-                            <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
-                                Properties
-                            </p>
-
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                2 listings
-                            </p>
-
-                        </section>
-
-                        <section class="min-w-0 lg:w-40 lg:shrink-0">
-
-                            <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
-                                Joined
-                            </p>
-
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                7 July 2026
-                            </p>
-
-                        </section>
-
-                        <section class="shrink-0 border-t border-slate-100
-                                        pt-4 lg:border-l lg:border-t-0
-                                        lg:pl-5 lg:pt-0">
-
-                            <th:block th:replace="~{fragments/buttons ::
-                                    primaryLink('View Details', '#')}">
+                                    primaryLink(
+                                        'View Details',
+                                        ${'/admin/customers/' + customer.id}
+                                    )}">
                             </th:block>
 
                         </section>
@@ -257,6 +187,19 @@
 
             </div>
 
+            <div th:if="${#lists.isEmpty(customers)}"
+                 class="rounded-2xl border border-dashed border-slate-300
+            bg-white px-6 py-14 text-center">
+
+                <h3 class="text-lg font-bold text-slate-950">
+                    No customers registered
+                </h3>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Newly registered customers will appear here.
+                </p>
+
+            </div>
         </section>
 
     </section>

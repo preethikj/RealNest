@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -17,7 +18,8 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900">
 
-<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
+<header th:replace="~{fragments/navbar ::
+        navbar('ADMIN', ${activeMenu})}">
 </header>
 
 <aside th:replace="~{fragments/admin-sidebar ::
@@ -30,8 +32,9 @@
 
         <!-- Back Navigation -->
         <a th:href="@{/admin/enquiries}"
-           class="inline-flex items-center gap-2 text-sm font-semibold
-                  text-slate-600 transition hover:text-emerald-600">
+           class="inline-flex items-center gap-2
+                  text-sm font-semibold text-slate-600
+                  transition hover:text-emerald-600">
 
             <svg xmlns="http://www.w3.org/2000/svg"
                  fill="none"
@@ -39,39 +42,33 @@
                  stroke-width="1.8"
                  stroke="currentColor"
                  class="h-4 w-4">
+
                 <path stroke-linecap="round"
                       stroke-linejoin="round"
                       d="m15 18-6-6 6-6"/>
+
             </svg>
 
             Back to Enquiries
+
         </a>
 
         <!-- Page Header -->
-        <header class="mt-6 flex flex-col gap-4
-                       sm:flex-row sm:items-end sm:justify-between">
+        <header class="mt-6">
 
-            <div>
+            <p class="mb-2 text-sm font-semibold uppercase
+                      tracking-[0.2em] text-emerald-600">
+                Customer Communication
+            </p>
 
-                <p class="mb-2 text-sm font-semibold uppercase
-                          tracking-[0.2em] text-emerald-600">
-                    Customer Communication
-                </p>
+            <h1 class="text-3xl font-bold tracking-tight
+                       text-slate-950">
+                Enquiry Details
+            </h1>
 
-                <h1 class="text-3xl font-bold tracking-tight text-slate-950">
-                    Enquiry Details
-                </h1>
-
-                <p class="mt-2 text-slate-600">
-                    Review the customer’s property enquiry.
-                </p>
-
-            </div>
-
-            <span class="w-fit rounded-full bg-emerald-100
-                         px-4 py-2 text-xs font-bold text-emerald-700">
-                NEW
-            </span>
+            <p class="mt-2 text-slate-600">
+                Review the customer’s property enquiry.
+            </p>
 
         </header>
 
@@ -91,8 +88,10 @@
 
                     <div class="mt-5 flex flex-col gap-5 sm:flex-row">
 
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80"
-                             alt="Modern villa"
+                        <img th:src="${#lists.isEmpty(property.images)
+                                ? '/images/property-placeholder.jpg'
+                                : property.images[0].imageUrl}"
+                             th:alt="${property.title}"
                              class="h-48 w-full rounded-2xl object-cover
                                     sm:h-32 sm:w-40 sm:shrink-0">
 
@@ -102,28 +101,51 @@
 
                                 <span class="rounded-full bg-slate-950
                                              px-3 py-1 text-[10px]
-                                             font-bold text-white">
+                                             font-bold text-white"
+                                      th:text="${property.listingType == 'SALE'
+                                            ? 'FOR SALE'
+                                            : 'FOR RENT'}">
                                     FOR SALE
                                 </span>
 
-                                <span class="rounded-full bg-emerald-100
-                                             px-3 py-1 text-[10px]
-                                             font-bold text-emerald-700">
+                                <span class="rounded-full px-3 py-1
+                                             text-[10px] font-bold"
+                                      th:text="${property.status}"
+                                      th:classappend="${property.status
+                                            == 'APPROVED'}
+                                                ? ' bg-emerald-100 text-emerald-700'
+                                                : (${property.status
+                                                    == 'PENDING'}
+                                                    ? ' bg-amber-100 text-amber-700'
+                                                    : ' bg-rose-100 text-rose-700')">
                                     APPROVED
                                 </span>
 
                             </div>
 
-                            <h2 class="mt-3 text-xl font-bold text-slate-950">
-                                Modern 3BHK Villa
+                            <h2 class="mt-3 text-xl font-bold
+                                       text-slate-950"
+                                th:text="${property.title}">
+                                Property title
                             </h2>
 
-                            <p class="mt-1 text-sm text-slate-500">
-                                Whitefield, Bengaluru
+                            <p class="mt-1 text-sm text-slate-500"
+                               th:text="${property.city + ', '
+                                        + property.state}">
+                                Property location
                             </p>
 
-                            <p class="mt-3 text-xl font-bold text-emerald-600">
-                                ₹1.25 Crore
+                            <p class="mt-3 text-xl font-bold
+                                      text-emerald-600"
+                               th:text="${'₹'
+                                    + #numbers.formatDecimal(
+                                        property.price,
+                                        1,
+                                        'COMMA',
+                                        0,
+                                        'POINT'
+                                    )}">
+                                ₹0
                             </p>
 
                         </div>
@@ -133,7 +155,10 @@
                     <div class="mt-5 border-t border-slate-100 pt-5">
 
                         <th:block th:replace="~{fragments/buttons ::
-                            outlineLink('View Property', '#')}">
+                            outlineLink(
+                                'View Property',
+                                ${'/admin/properties/' + property.id}
+                            )}">
                         </th:block>
 
                     </div>
@@ -150,13 +175,13 @@
                     </p>
 
                     <h2 class="mt-2 text-xl font-bold text-slate-950">
-                        Interested in scheduling a property visit
+                        Enquiry Message
                     </h2>
 
-                    <p class="mt-5 max-w-3xl leading-7 text-slate-600">
-                        I am interested in this property and would like to schedule a visit
-                        this weekend. Please share the available time slots and any additional
-                        price details.
+                    <p class="mt-5 max-w-3xl whitespace-pre-line
+                              leading-7 text-slate-600"
+                       th:text="${enquiry.message}">
+                        Customer enquiry message
                     </p>
 
                 </article>
@@ -164,8 +189,10 @@
             </section>
 
             <!-- Customer Information -->
-            <aside class="self-start rounded-3xl border border-slate-200
-                          bg-white p-6 shadow-sm lg:sticky lg:top-28">
+            <aside class="self-start rounded-3xl
+                          border border-slate-200
+                          bg-white p-6 shadow-sm
+                          lg:sticky lg:top-28">
 
                 <p class="text-xs font-semibold uppercase
                           tracking-[0.18em] text-emerald-600">
@@ -177,25 +204,35 @@
                     <div class="inline-flex h-14 w-14 shrink-0
                                 items-center justify-center rounded-full
                                 bg-emerald-100 text-lg font-bold
-                                text-emerald-700">
-                        AK
+                                text-emerald-700"
+                         th:text="${#strings.toUpperCase(
+                            #strings.substring(
+                                enquiry.name,
+                                0,
+                                1
+                            )
+                         )}">
+                        E
                     </div>
 
                     <div class="min-w-0">
 
-                        <h2 class="truncate text-lg font-bold text-slate-950">
-                            Arun Kumar
+                        <h2 class="truncate text-lg font-bold
+                                   text-slate-950"
+                            th:text="${enquiry.name}">
+                            Enquirer name
                         </h2>
 
                         <p class="mt-1 text-sm text-slate-500">
-                            Registered Customer
+                            Interested Customer
                         </p>
 
                     </div>
 
                 </div>
 
-                <dl class="mt-6 space-y-5 border-t border-slate-200 pt-6">
+                <dl class="mt-6 space-y-5
+                           border-t border-slate-200 pt-6">
 
                     <div>
 
@@ -205,8 +242,9 @@
                         </dt>
 
                         <dd class="mt-1 break-all text-sm font-semibold
-                                   text-slate-800">
-                            arun@example.com
+                                   text-slate-800"
+                            th:text="${enquiry.email}">
+                            Customer email
                         </dd>
 
                     </div>
@@ -218,8 +256,10 @@
                             Phone
                         </dt>
 
-                        <dd class="mt-1 text-sm font-semibold text-slate-800">
-                            +91 98765 43210
+                        <dd class="mt-1 text-sm font-semibold
+                                   text-slate-800"
+                            th:text="${enquiry.phone}">
+                            Customer phone
                         </dd>
 
                     </div>
@@ -231,8 +271,13 @@
                             Received
                         </dt>
 
-                        <dd class="mt-1 text-sm font-semibold text-slate-800">
-                            10 July 2026
+                        <dd class="mt-1 text-sm font-semibold
+                                   text-slate-800"
+                            th:text="${#temporals.format(
+                                enquiry.createdAt,
+                                'dd MMMM yyyy, hh:mm a'
+                            )}">
+                            Received date
                         </dd>
 
                     </div>
@@ -240,21 +285,31 @@
                 </dl>
 
                 <!-- Contact Actions -->
-                <div class="mt-6 space-y-3 border-t border-slate-200 pt-6">
+                <div class="mt-6 space-y-3
+                            border-t border-slate-200 pt-6">
 
-                    <a href="mailto:arun@example.com"
-                       class="inline-flex w-full items-center justify-center
-                              rounded-xl bg-emerald-500 px-5 py-3
+                    <a th:href="${'mailto:' + enquiry.email}"
+                       class="inline-flex w-full items-center
+                              justify-center rounded-xl
+                              bg-emerald-500 px-5 py-3
                               text-sm font-semibold text-slate-950
-                              shadow-sm transition hover:bg-emerald-400">
+                              shadow-sm transition
+                              hover:bg-emerald-400">
                         Send Email
                     </a>
 
-                    <a href="tel:+919876543210"
-                       class="inline-flex w-full items-center justify-center
-                              rounded-xl border border-slate-300 bg-white
-                              px-5 py-3 text-sm font-semibold text-slate-700
-                              transition hover:bg-slate-100">
+                    <a th:href="${'tel:'
+                            + #strings.replace(
+                                enquiry.phone,
+                                ' ',
+                                ''
+                            )}"
+                       class="inline-flex w-full items-center
+                              justify-center rounded-xl
+                              border border-slate-300 bg-white
+                              px-5 py-3 text-sm font-semibold
+                              text-slate-700 transition
+                              hover:bg-slate-100">
                         Call Customer
                     </a>
 
@@ -271,4 +326,5 @@
 <script th:src="@{/js/navbar.js}"></script>
 
 </body>
+
 </html>

@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -17,8 +18,10 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900">
 
-<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
+<header th:replace="~{fragments/navbar ::
+        navbar('ADMIN', ${activeMenu})}">
 </header>
+
 <aside th:replace="~{fragments/admin-sidebar ::
         adminSidebar(${activeMenu})}">
 </aside>
@@ -35,7 +38,8 @@
                 Customer Communication
             </p>
 
-            <h1 class="text-3xl font-bold tracking-tight text-slate-950">
+            <h1 class="text-3xl font-bold tracking-tight
+                       text-slate-950">
                 Enquiries
             </h1>
 
@@ -45,6 +49,20 @@
             </p>
 
         </header>
+
+        <!-- Enquiry Summary -->
+        <section class="mt-10">
+
+            <th:block th:replace="~{fragments/dashboard-stat-card ::
+                dashboardStatCard(
+                    'Total Enquiries',
+                    ${enquiryCount},
+                    'Enquiries received for property listings',
+                    'emerald'
+                )}">
+            </th:block>
+
+        </section>
 
         <!-- Enquiry List -->
         <section class="mt-10">
@@ -61,46 +79,49 @@
 
             </div>
 
-            <div class="space-y-4">
+            <!-- Dynamic Enquiry Cards -->
+            <div th:if="${!#lists.isEmpty(enquiries)}"
+                 class="space-y-4">
 
-                <!-- Enquiry 1 -->
-                <article class="rounded-2xl border border-slate-200
+                <article th:each="enquiry : ${enquiries}"
+                         class="rounded-2xl border border-slate-200
                                 bg-white p-5 shadow-sm transition
-                                hover:border-emerald-200 hover:shadow-md">
+                                hover:border-emerald-200
+                                hover:shadow-md">
 
                     <div class="flex flex-col gap-5
                                 lg:flex-row lg:items-center">
 
-                        <!-- Customer -->
+                        <!-- Enquirer -->
                         <section class="flex min-w-0 items-center gap-4
                                         lg:flex-[1.3]">
 
                             <div class="inline-flex h-14 w-14 shrink-0
-                                        items-center justify-center rounded-full
-                                        bg-emerald-100 text-lg font-bold
-                                        text-emerald-700">
-                                AK
+                                        items-center justify-center
+                                        rounded-full bg-emerald-100
+                                        text-lg font-bold text-emerald-700"
+                                 th:text="${#strings.toUpperCase(
+                                    #strings.substring(
+                                        enquiry.name,
+                                        0,
+                                        1
+                                    )
+                                 )}">
+                                E
                             </div>
 
                             <div class="min-w-0">
 
-                                <div class="flex flex-wrap items-center gap-2">
+                                <h2 class="truncate text-lg font-bold
+                                           text-slate-950"
+                                    th:text="${enquiry.name}">
+                                    Enquirer name
+                                </h2>
 
-                                    <h2 class="truncate text-lg font-bold
-                                               text-slate-950">
-                                        Arun Kumar
-                                    </h2>
-
-                                    <span class="rounded-full bg-emerald-100
-                                                 px-3 py-1 text-[10px]
-                                                 font-bold text-emerald-700">
-                                        NEW
-                                    </span>
-
-                                </div>
-
-                                <p class="mt-1 truncate text-sm text-slate-500">
-                                    arun@example.com
+                                <p class="mt-1 truncate text-sm
+                                          text-slate-500"
+                                   th:text="${enquiry.email}">
+                                    Enquirer email
                                 </p>
 
                             </div>
@@ -116,8 +137,9 @@
                             </p>
 
                             <p class="mt-1 truncate text-sm font-semibold
-                                      text-slate-800">
-                                Modern 3BHK Villa
+                                      text-slate-800"
+                               th:text="${enquiry.propertyTitle}">
+                                Property title
                             </p>
 
                         </section>
@@ -130,13 +152,15 @@
                                 Phone
                             </p>
 
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                +91 98765 43210
+                            <p class="mt-1 text-sm font-semibold
+                                      text-slate-800"
+                               th:text="${enquiry.phone}">
+                                Phone number
                             </p>
 
                         </section>
 
-                        <!-- Date -->
+                        <!-- Received Date -->
                         <section class="min-w-0 lg:w-40 lg:shrink-0">
 
                             <p class="text-xs font-semibold uppercase
@@ -144,19 +168,28 @@
                                 Received
                             </p>
 
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                10 July 2026
+                            <p class="mt-1 text-sm font-semibold
+                                      text-slate-800"
+                               th:text="${#temporals.format(
+                                    enquiry.createdAt,
+                                    'dd MMMM yyyy'
+                               )}">
+                                Received date
                             </p>
 
                         </section>
 
                         <!-- Action -->
-                        <section class="shrink-0 border-t border-slate-100
-                                        pt-4 lg:border-l lg:border-t-0
+                        <section class="shrink-0
+                                        border-t border-slate-100 pt-4
+                                        lg:border-l lg:border-t-0
                                         lg:pl-5 lg:pt-0">
 
                             <th:block th:replace="~{fragments/buttons ::
-                                primaryLink('View Details', '#')}">
+                                primaryLink(
+                                    'View Details',
+                                    ${'/admin/enquiries/' + enquiry.id}
+                                )}">
                             </th:block>
 
                         </section>
@@ -165,92 +198,44 @@
 
                 </article>
 
-                <!-- Enquiry 2 -->
-                <article class="rounded-2xl border border-slate-200
-                                bg-white p-5 shadow-sm transition
-                                hover:border-emerald-200 hover:shadow-md">
+            </div>
 
-                    <div class="flex flex-col gap-5
-                                lg:flex-row lg:items-center">
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(enquiries)}"
+                 class="rounded-2xl border
+                        border-dashed border-slate-300
+                        bg-white px-6 py-14 text-center">
 
-                        <section class="flex min-w-0 items-center gap-4
-                                        lg:flex-[1.3]">
+                <div class="mx-auto flex h-14 w-14
+                            items-center justify-center rounded-full
+                            bg-emerald-50 text-emerald-600">
 
-                            <div class="inline-flex h-14 w-14 shrink-0
-                                        items-center justify-center rounded-full
-                                        bg-slate-100 text-lg font-bold
-                                        text-slate-600">
-                                MN
-                            </div>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.8"
+                         stroke="currentColor"
+                         class="h-7 w-7">
 
-                            <div class="min-w-0">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M21.75 6.75v10.5A2.25 2.25 0 0 1
+                                 19.5 19.5h-15a2.25 2.25 0 0 1
+                                 -2.25-2.25V6.75m19.5 0A2.25
+                                 2.25 0 0 0 19.5 4.5h-15a2.25
+                                 2.25 0 0 0-2.25 2.25m19.5 0
+                                 -9.75 6.75L2.25 6.75"/>
+                    </svg>
 
-                                <h2 class="truncate text-lg font-bold
-                                           text-slate-950">
-                                    Meera Nair
-                                </h2>
+                </div>
 
-                                <p class="mt-1 truncate text-sm text-slate-500">
-                                    meera@example.com
-                                </p>
+                <h3 class="mt-4 text-lg font-bold text-slate-950">
+                    No enquiries received
+                </h3>
 
-                            </div>
-
-                        </section>
-
-                        <section class="min-w-0 lg:flex-[1.3]">
-
-                            <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
-                                Property
-                            </p>
-
-                            <p class="mt-1 truncate text-sm font-semibold
-                                      text-slate-800">
-                                Independent Family House
-                            </p>
-
-                        </section>
-
-                        <section class="min-w-0 lg:flex-1">
-
-                            <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
-                                Phone
-                            </p>
-
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                +91 99887 76655
-                            </p>
-
-                        </section>
-
-                        <section class="min-w-0 lg:w-40 lg:shrink-0">
-
-                            <p class="text-xs font-semibold uppercase
-                                      tracking-wide text-slate-400">
-                                Received
-                            </p>
-
-                            <p class="mt-1 text-sm font-semibold text-slate-800">
-                                9 July 2026
-                            </p>
-
-                        </section>
-
-                        <section class="shrink-0 border-t border-slate-100
-                                        pt-4 lg:border-l lg:border-t-0
-                                        lg:pl-5 lg:pt-0">
-
-                            <th:block th:replace="~{fragments/buttons ::
-                                primaryLink('View Details', '#')}">
-                            </th:block>
-
-                        </section>
-
-                    </div>
-
-                </article>
+                <p class="mt-2 text-sm text-slate-500">
+                    Enquiries submitted for properties will appear here.
+                </p>
 
             </div>
 
@@ -263,4 +248,5 @@
 <script th:src="@{/js/navbar.js}"></script>
 
 </body>
+
 </html>

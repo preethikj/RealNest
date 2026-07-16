@@ -17,12 +17,9 @@
 
 <body class="min-h-screen bg-slate-100 text-slate-900">
 
-<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}">
-</header>
+<header th:replace="~{fragments/navbar :: navbar('ADMIN', ${activeMenu})}"></header>
 
-<aside th:replace="~{fragments/admin-sidebar ::
-        adminSidebar(${activeMenu})}">
-</aside>
+<aside th:replace="~{fragments/admin-sidebar :: adminSidebar(${activeMenu})}"></aside>
 
 <main class="min-h-screen pt-24 lg:ml-64">
 
@@ -37,7 +34,7 @@
             </p>
 
             <h1 class="text-3xl font-bold tracking-tight text-slate-950">
-                Good morning, Admin!
+                Admin Dashboard
             </h1>
 
             <p class="mt-2 text-slate-600"
@@ -139,59 +136,55 @@
 
             </div>
 
-            <!-- Temporary static cards -->
-            <div class="space-y-4">
+            <!-- Latest pending properties -->
+            <div th:if="${!#lists.isEmpty(latestPendingProperties)}" class="space-y-4">
 
-                <th:block th:replace="~{fragments/property-card ::
-                    adminPropertyCard(
-                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
-                        'Modern villa',
-                        'Modern 3BHK Villa',
-                        'Whitefield, Bengaluru',
-                        'SALE',
-                        '₹1.25 Crore',
-                        'PENDING',
-                        'Rohan Mehta',
-                        '10 July 2026',
-                        '#',
-                        '#'
-                    )}">
-                </th:block>
+                <th:block th:each="property : ${latestPendingProperties}">
 
-                <th:block th:replace="~{fragments/property-card ::
-                    adminPropertyCard(
-                        'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80',
-                        'Independent house',
-                        'Independent Family House',
-                        'HSR Layout, Bengaluru',
-                        'RENT',
-                        '₹45,000 / month',
-                        'PENDING',
-                        'Sneha Iyer',
-                        '9 July 2026',
-                        '#',
-                        '#'
-                    )}">
-                </th:block>
+                    <th:block th:replace="~{fragments/property-card ::
+                            adminPropertyCard(
+                                ${#lists.isEmpty(property.images)
+                                    ? '/images/property-placeholder.png'
+                                    : property.images[0].imageUrl},
+                                ${property.title},
+                                ${property.title},
+                                ${property.city + ', ' + property.state},
+                                ${property.listingType},
+                                ${'₹' + #numbers.formatDecimal(
+                                    property.price,
+                                    1,
+                                    'COMMA',
+                                    0,
+                                    'POINT'
+                                )},
+                                ${property.status},
+                                ${property.ownerName},
+                                ${#temporals.format(
+                                    property.createdAt,
+                                    'dd MMMM yyyy'
+                                )},
+                                ${'/admin/properties/' + property.id},
+                                ${'/admin/properties/' + property.id + '/review'}
+                            )}">
+                    </th:block>
 
-                <th:block th:replace="~{fragments/property-card ::
-                    adminPropertyCard(
-                        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
-                        'Luxury apartment',
-                        'Spacious 2BHK Apartment',
-                        'Indiranagar, Bengaluru',
-                        'SALE',
-                        '₹92 Lakh',
-                        'PENDING',
-                        'Arun Kumar',
-                        '8 July 2026',
-                        '#',
-                        '#'
-                    )}">
                 </th:block>
 
             </div>
 
+            <div th:if="${#lists.isEmpty(latestPendingProperties)}"
+                 class="rounded-2xl border border-dashed border-slate-300
+            bg-white px-6 py-12 text-center">
+
+                <h3 class="text-lg font-bold text-slate-900">
+                    No properties awaiting approval
+                </h3>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    New customer submissions will appear here.
+                </p>
+
+            </div>
         </section>
 
     </section>

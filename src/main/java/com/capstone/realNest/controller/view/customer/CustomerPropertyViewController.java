@@ -34,10 +34,6 @@ public class CustomerPropertyViewController {
                 PropertyRequest.builder().build()
         );
 
-        model.addAttribute("formAction", "/customer/property/save");
-        model.addAttribute("editMode", false);
-        model.addAttribute("existingImageCount", 0);
-
         prepareFormPage(model);
 
         return "customer/post-property";
@@ -45,11 +41,15 @@ public class CustomerPropertyViewController {
 
     //Save action
     @PostMapping("/save")
-    public String saveProperty(@Valid @ModelAttribute("propertyRequest")
-                                   PropertyRequest request,
-            BindingResult bindingResult, @RequestParam(
+    public String saveProperty(
+            @Valid
+            @ModelAttribute("propertyRequest")
+            PropertyRequest request,
+            BindingResult bindingResult,
+            @RequestParam(
                     value = "propertyImages",
-                    required = false)
+                    required = false
+            )
             List<MultipartFile> propertyImages,
             @AuthenticationPrincipal
             CustomUserPrincipal currentUser,
@@ -57,27 +57,28 @@ public class CustomerPropertyViewController {
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
+
             prepareFormPage(model);
+
             return "customer/post-property";
         }
 
-        List<MultipartFile> validImages = propertyImages == null
+        List<MultipartFile> validImages =
+                propertyImages == null
                         ? List.of()
                         : propertyImages.stream()
-                                .filter(image -> !image.isEmpty())
-                                .toList();
-
-        if (validImages.isEmpty()) {
-
-            model.addAttribute("errorMessage", "Please upload at least one property image");
-            prepareFormPage(model);
-
-            return "customer/post-property";
-        }
+                        .filter(image ->
+                                image != null
+                                        && !image.isEmpty()
+                        )
+                        .toList();
 
         if (validImages.size() > 8) {
 
-            model.addAttribute("errorMessage", "A maximum of 8 property images is allowed");
+            model.addAttribute(
+                    "errorMessage",
+                    "A maximum of 8 property images is allowed"
+            );
 
             prepareFormPage(model);
 
@@ -85,10 +86,25 @@ public class CustomerPropertyViewController {
         }
 
         PropertyResponse property =
-                propertyService.createProperty(request, currentUser.id());
-        propertyImageService.uploadImages(property.id(), currentUser.id(), validImages);
-        redirectAttributes.addFlashAttribute("successMessage",
-                "Property submitted successfully for admin approval.");
+                propertyService.createProperty(
+                        request,
+                        currentUser.id()
+                );
+
+        // Upload only when the customer selected images
+        if (!validImages.isEmpty()) {
+
+            propertyImageService.uploadImages(
+                    property.id(),
+                    currentUser.id(),
+                    validImages
+            );
+        }
+
+        redirectAttributes.addFlashAttribute(
+                "successMessage",
+                "Property submitted successfully for admin approval."
+        );
 
         return "redirect:/customer/dashboard";
     }
@@ -247,10 +263,40 @@ public class CustomerPropertyViewController {
     }
     private void prepareFormPage(Model model) {
 
-        model.addAttribute("activeMenu", "post-property");
-        model.addAttribute("pageTitle", "List Your Property");
-        model.addAttribute("pageSubtitle",
+        model.addAttribute(
+                "formAction",
+                "/customer/property/save"
+        );
+
+        model.addAttribute(
+                "editMode",
+                false
+        );
+
+        model.addAttribute(
+                "existingImages",
+                List.of()
+        );
+
+        model.addAttribute(
+                "existingImageCount",
+                0
+        );
+
+        model.addAttribute(
+                "activeMenu",
+                "post-property"
+        );
+
+        model.addAttribute(
+                "pageTitle",
+                "List Your Property"
+        );
+
+        model.addAttribute(
+                "pageSubtitle",
                 "Share your property details and submit the listing "
-                        + "for admin approval.");
+                        + "for admin approval."
+        );
     }
 }
