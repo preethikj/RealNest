@@ -4,32 +4,111 @@
 <body>
 
 <section th:fragment="localitySearch"
-         class="relative rounded-3xl border border-white/10 bg-slate-900 p-5 shadow-xl">
+         class="relative rounded-3xl border border-white/10
+                bg-slate-900 p-5 shadow-xl">
 
-  <p class="text-sm font-semibold uppercase tracking-widest text-emerald-400">
-    Search within Bangalore
+  <p class="text-sm font-semibold uppercase tracking-widest
+              text-emerald-400">
+
+    Search within
+
+    <span th:text="${selectedCity != null
+                        and !selectedCity.isBlank()
+                        ? selectedCity
+                        : 'all cities'}">
+            Bangalore
+        </span>
+
   </p>
 
-  <div class="mt-4 flex items-center rounded-full border border-white/10 bg-slate-950 px-5 py-3">
-    <input id="localityInput"
-           type="text"
-           placeholder="Enter locality or area"
-           class="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500">
-  </div>
+  <form id="localitySearchForm"
+        th:action="@{/properties}"
+        method="get"
+        class="mt-4">
 
-  <section id="localitySuggestions"
-           class="absolute left-0 right-0 top-full z-20 mt-3 hidden overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-2xl">
+    <!-- Preserve the landing-page filters -->
+    <input type="hidden"
+           name="city"
+           th:value="${selectedCity}">
 
-    <p class="px-5 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">
-      Popular Localities
-    </p>
+    <input type="hidden"
+           name="listingType"
+           th:value="${selectedListingType}">
 
-    <button type="button" class="locality-option block w-full px-5 py-3 text-left text-slate-300 hover:bg-emerald-500 hover:text-slate-950">Whitefield</button>
-    <button type="button" class="locality-option block w-full px-5 py-3 text-left text-slate-300 hover:bg-emerald-500 hover:text-slate-950">Indiranagar</button>
-    <button type="button" class="locality-option block w-full px-5 py-3 text-left text-slate-300 hover:bg-emerald-500 hover:text-slate-950">Electronic City</button>
-    <button type="button" class="locality-option block w-full px-5 py-3 text-left text-slate-300 hover:bg-emerald-500 hover:text-slate-950">JP Nagar</button>
-    <button type="button" class="locality-option block w-full px-5 py-3 text-left text-slate-300 hover:bg-emerald-500 hover:text-slate-950">Yelahanka</button>
-  </section>
+    <!-- Preserve budget filters -->
+    <input type="hidden"
+           name="minPrice"
+           th:value="${selectedMinPrice}">
+
+    <input type="hidden"
+           name="maxPrice"
+           th:value="${selectedMaxPrice}">
+
+    <input type="hidden"
+           name="propertyType"
+           th:value="${selectedPropertyType}">
+
+    <input type="hidden"
+           name="bedrooms"
+           th:value="${selectedBedrooms}">
+
+    <div class="flex gap-3">
+
+      <div class="relative flex-1">
+
+        <label for="localityInput" class="sr-only">
+          Locality or area
+        </label>
+
+        <input id="localityInput"
+               name="locality"
+               type="text"
+               th:value="${selectedLocality}"
+               placeholder="Enter locality or area"
+               autocomplete="off"
+               class="w-full rounded-full border border-white/10
+                              bg-slate-950 px-5 py-4 text-sm text-white
+                              outline-none placeholder:text-slate-500
+                              focus:border-emerald-400">
+
+        <!-- Dynamic localities for the selected city -->
+        <section id="localitySuggestions"
+                 th:if="${availableLocalities != null
+                                and !availableLocalities.isEmpty()}"
+                 class="absolute left-0 right-0 top-full z-20
+                                mt-3 hidden overflow-hidden rounded-3xl
+                                border border-white/10 bg-slate-900
+                                shadow-2xl">
+
+          <p class="px-5 py-3 text-xs font-bold uppercase
+                              tracking-widest text-slate-500">
+            Available Localities
+          </p>
+
+          <button th:each="locality : ${availableLocalities}"
+                  type="button"
+                  class="locality-option block w-full px-5 py-3
+                                   text-left text-slate-300 transition
+                                   hover:bg-emerald-500
+                                   hover:text-slate-950"
+                  th:text="${locality}">
+            Locality
+          </button>
+
+        </section>
+
+      </div>
+
+      <button type="submit"
+              class="rounded-full bg-emerald-500 px-7 py-4
+                           text-sm font-bold text-slate-950 transition
+                           hover:bg-emerald-400">
+        Search
+      </button>
+
+    </div>
+
+  </form>
 
 </section>
 

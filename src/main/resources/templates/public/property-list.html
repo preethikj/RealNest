@@ -42,8 +42,12 @@
             </span>
 
             <span class="rounded-full bg-white/5 px-4 py-2
-                 text-sm text-slate-300">
-                    All Localities
+                          text-sm text-slate-300"
+                          th:text="${selectedLocality != null
+                        and !selectedLocality.isBlank()
+                        ? selectedLocality
+                        : 'All Localities'}">
+                All Localities
             </span>
 
             <span th:if="${selectedListingType != null}"
@@ -60,43 +64,283 @@
 <!--Listing layout-->
         <section class="mt-10 grid gap-8 lg:grid-cols-4">
 
-            <aside class="self-start rounded-3xl border border-white/10 bg-slate-900 p-6">
-                <h2 class="text-xl font-bold">Filters</h2>
+            <aside class="self-start rounded-3xl border border-white/10
+              bg-slate-900 p-6">
 
-                <section class="mt-6 space-y-5">
+                <h2 class="text-xl font-bold">
+                    Filters
+                </h2>
+
+                <form id="propertyFilterForm"
+                      th:action="@{/properties}"
+                      method="get"
+                      class="mt-6 space-y-5">
+
+                    <!-- Preserve city, listing type and locality -->
+                    <input type="hidden"
+                           name="city"
+                           th:value="${selectedCity}">
+
+                    <input type="hidden"
+                           name="listingType"
+                           th:value="${selectedListingType}">
+
+                    <input type="hidden"
+                           name="locality"
+                           th:value="${selectedLocality}">
+
+                    <!-- Values filled by filters.js -->
+                    <input id="minPriceFilter"
+                           type="hidden"
+                           name="minPrice"
+                           th:value="${selectedMinPrice}">
+
+                    <input id="maxPriceFilter"
+                           type="hidden"
+                           name="maxPrice"
+                           th:value="${selectedMaxPrice}">
+
+                    <!-- Property type -->
                     <div>
-                        <label class="text-sm text-slate-400">Property Type</label>
-                        <select class="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm outline-none">
-                            <option>All Types</option>
-                            <option>Apartment</option>
-                            <option>Villa</option>
-                            <option>Independent House</option>
-                        </select>
+
+                        <label for="propertyTypeFilter"
+                               class="text-sm text-slate-400">
+                            Property Type
+                        </label>
+
+                        <div class="relative mt-2">
+
+                            <select id="propertyTypeFilter"
+                                    name="propertyType"
+                                    class="w-full appearance-none rounded-xl
+                               border border-white/10 bg-slate-950
+                               px-4 py-3 pr-10 text-sm outline-none">
+
+                                <option value="">
+                                    All Types
+                                </option>
+
+                                <option value="APARTMENT"
+                                        th:selected="${selectedPropertyType
+                                         == 'APARTMENT'}">
+                                    Apartment
+                                </option>
+
+                                <option value="VILLA"
+                                        th:selected="${selectedPropertyType
+                                         == 'VILLA'}">
+                                    Villa
+                                </option>
+
+                                <option value="INDEPENDENT_HOUSE"
+                                        th:selected="${selectedPropertyType
+                                         == 'INDEPENDENT_HOUSE'}">
+                                    Independent House
+                                </option>
+
+                                <option value="PLOT"
+                                        th:selected="${selectedPropertyType
+                                         == 'PLOT'}">
+                                    Plot
+                                </option>
+
+                                <option value="COMMERCIAL"
+                                        th:selected="${selectedPropertyType
+                                         == 'COMMERCIAL'}">
+                                    Commercial
+                                </option>
+
+                            </select>
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2"
+                                 stroke="currentColor"
+                                 aria-hidden="true"
+                                 class="pointer-events-none absolute right-3 top-1/2
+                            h-4 w-4 -translate-y-1/2 text-slate-300">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                            </svg>
+
+                        </div>
+
                     </div>
 
+                    <!-- Bedrooms -->
                     <div>
-                        <label class="text-sm text-slate-400">Bedrooms</label>
-                        <select class="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm outline-none">
-                            <option>Any</option>
-                            <option>1 BHK</option>
-                            <option>2 BHK</option>
-                            <option>3 BHK</option>
-                            <option>4+ BHK</option>
-                        </select>
+
+                        <label for="bedroomsFilter"
+                               class="text-sm text-slate-400">
+                            Bedrooms
+                        </label>
+
+                        <div class="relative mt-2">
+
+                            <select id="bedroomsFilter"
+                                    name="bedrooms"
+                                    class="w-full appearance-none rounded-xl
+                               border border-white/10 bg-slate-950
+                               px-4 py-3 pr-10 text-sm outline-none">
+
+                                <option value="">Any</option>
+
+                                <option value="1"
+                                        th:selected="${selectedBedrooms == 1}">
+                                    1 BHK
+                                </option>
+
+                                <option value="2"
+                                        th:selected="${selectedBedrooms == 2}">
+                                    2 BHK
+                                </option>
+
+                                <option value="3"
+                                        th:selected="${selectedBedrooms == 3}">
+                                    3 BHK
+                                </option>
+
+                                <option value="4"
+                                        th:selected="${selectedBedrooms == 4}">
+                                    4+ BHK
+                                </option>
+
+                            </select>
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2"
+                                 stroke="currentColor"
+                                 aria-hidden="true"
+                                 class="pointer-events-none absolute right-3 top-1/2
+                            h-4 w-4 -translate-y-1/2 text-slate-300">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                            </svg>
+
+                        </div>
+
                     </div>
 
+                    <!-- Budget -->
                     <div>
-                        <label class="text-sm text-slate-400">Budget</label>
-                        <select class="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm outline-none">
-                            <option>Any Budget</option>
-                            <option>Below ₹50 L</option>
-                            <option>₹50 L - ₹1 Cr</option>
-                            <option>Above ₹1 Cr</option>
-                        </select>
+
+                        <label for="budgetFilter"
+                               class="text-sm text-slate-400">
+                            Budget
+                        </label>
+
+                        <div class="relative mt-2">
+
+                            <select id="budgetFilter"
+                                    class="w-full appearance-none rounded-xl
+                               border border-white/10 bg-slate-950
+                               px-4 py-3 pr-10 text-sm outline-none">
+
+                                <option value=""
+                                        data-min=""
+                                        data-max="">
+                                    Any Budget
+                                </option>
+
+                                <!-- Sale budgets -->
+                                <th:block th:if="${selectedListingType == 'SALE'
+                                      or selectedListingType == null}">
+
+                                    <option value="BELOW_50_LAKH"
+                                            data-min=""
+                                            data-max="5000000">
+                                        Below ₹50 L
+                                    </option>
+
+                                    <option value="50_LAKH_TO_1_CRORE"
+                                            data-min="5000000"
+                                            data-max="10000000">
+                                        ₹50 L – ₹1 Cr
+                                    </option>
+
+                                    <option value="ABOVE_1_CRORE"
+                                            data-min="10000000"
+                                            data-max="">
+                                        Above ₹1 Cr
+                                    </option>
+
+                                </th:block>
+
+                                <!-- Rent budgets -->
+                                <th:block th:if="${selectedListingType == 'RENT'}">
+
+                                    <option value="BELOW_20_THOUSAND"
+                                            data-min=""
+                                            data-max="20000">
+                                        Below ₹20,000
+                                    </option>
+
+                                    <option value="20_TO_50_THOUSAND"
+                                            data-min="20000"
+                                            data-max="50000">
+                                        ₹20,000 – ₹50,000
+                                    </option>
+
+                                    <option value="ABOVE_50_THOUSAND"
+                                            data-min="50000"
+                                            data-max="">
+                                        Above ₹50,000
+                                    </option>
+
+                                </th:block>
+
+                            </select>
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2"
+                                 stroke="currentColor"
+                                 aria-hidden="true"
+                                 class="pointer-events-none absolute right-3 top-1/2
+                            h-4 w-4 -translate-y-1/2 text-slate-300">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                            </svg>
+
+                        </div>
+
                     </div>
-                </section>
+
+                    <!-- Actions -->
+                    <div class="space-y-3 border-t border-white/10 pt-5">
+
+                        <button type="submit"
+                                class="w-full rounded-full bg-emerald-500
+                                   px-5 py-3 text-sm font-bold text-slate-950
+                                   transition hover:bg-emerald-400">
+                                    Apply Filters
+                        </button>
+
+                        <a th:href="@{/properties(
+                                city=${selectedCity},
+                                listingType=${selectedListingType},
+                                locality=${selectedLocality}
+                           )}"
+                           class="block w-full rounded-full border
+                      border-white/10 px-5 py-3 text-center
+                      text-sm font-semibold text-slate-300
+                      transition hover:border-emerald-400
+                      hover:text-emerald-400">
+                            Clear Filters
+                        </a>
+
+                    </div>
+
+                </form>
+
             </aside>
-
             <section class="lg:col-span-3">
                 <div class="flex items-center justify-between">
                     <p class="text-slate-400">
@@ -150,11 +394,12 @@
                         Try another city or choose a different listing type.
                     </p>
 
-                    <a href="/"
+                    <a id="searchAgainButton"
+                       href="#localitySearchForm"
                        class="mt-6 inline-flex rounded-full bg-emerald-500
-                      px-6 py-3 font-semibold text-slate-950
-                      transition hover:bg-emerald-400">
-                                Search Again
+                              px-6 py-3 font-semibold text-slate-950
+                              transition hover:bg-emerald-400">
+                        Search Again
                     </a>
 
                 </section>
@@ -168,7 +413,7 @@
 </main>
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
-
+<script th:src="@{/js/property-filters.js}"></script>
 <script src="/js/navbar.js"></script>
 <script src="/js/locality-search.js"></script></body>
 </html>

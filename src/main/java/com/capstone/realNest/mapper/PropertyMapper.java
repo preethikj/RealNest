@@ -14,12 +14,8 @@ import java.util.List;
 @Component
 public class PropertyMapper {
 
-    public Property toEntity(
-            PropertyRequest request,
-            User owner
-    ) {
 
-        Property property = new Property();
+    private void mapRequestToProperty(Property property, PropertyRequest request) {
 
         property.setTitle(request.title());
         property.setDescription(request.description());
@@ -32,6 +28,7 @@ public class PropertyMapper {
         property.setArea(request.area());
 
         property.setAddress(request.address());
+        property.setLocality(request.locality());
         property.setCity(request.city());
         property.setState(request.state());
         property.setCountry(request.country());
@@ -39,35 +36,22 @@ public class PropertyMapper {
 
         property.setLatitude(request.latitude());
         property.setLongitude(request.longitude());
+    }
+
+    public Property toEntity(PropertyRequest request, User owner) {
+
+        Property property = new Property();
+
+        mapRequestToProperty(property, request);
 
         property.setOwner(owner);
 
         return property;
     }
 
-    public void updateEntity(
-            Property property,
-            PropertyRequest request
-    ) {
+    public void updateEntity(Property property, PropertyRequest request) {
 
-        property.setTitle(request.title());
-        property.setDescription(request.description());
-        property.setPrice(request.price());
-        property.setPropertyType(request.propertyType());
-        property.setListingType(request.listingType());
-
-        property.setBedrooms(request.bedrooms());
-        property.setBathrooms(request.bathrooms());
-        property.setArea(request.area());
-
-        property.setAddress(request.address());
-        property.setCity(request.city());
-        property.setState(request.state());
-        property.setCountry(request.country());
-        property.setPincode(request.pincode());
-
-        property.setLatitude(request.latitude());
-        property.setLongitude(request.longitude());
+        mapRequestToProperty(property, request);
     }
 
     public PropertyResponse toResponse(Property property) {
@@ -95,6 +79,7 @@ public class PropertyMapper {
                 property.getBathrooms(),
                 property.getArea(),
                 property.getAddress(),
+                property.getLocality(),
                 property.getCity(),
                 property.getState(),
                 property.getCountry(),

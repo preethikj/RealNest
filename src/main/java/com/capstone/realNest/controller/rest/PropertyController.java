@@ -115,16 +115,20 @@ public class PropertyController {
     }
 
     @GetMapping("/search")
-    @Operation(summary = "Search approved properties")
-    public ResponseEntity<List<PropertyResponse>> searchApprovedProperties(
+    public ResponseEntity<List<PropertyResponse>> searchProperties(
+            @RequestParam(required = false) String city,
             @RequestParam(required = false) String listingType,
-            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String locality,
+            @RequestParam(required = false) String propertyType,
+            @RequestParam(required = false) Integer bedrooms,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice) {
 
-        List<PropertyResponse> responses =
-                propertyService.searchApprovedProperties(listingType, location, minPrice, maxPrice);
-        return ResponseEntity.ok(responses);
+        List<PropertyResponse> properties =
+                propertyService.searchApprovedProperties(city, listingType, locality,
+                        propertyType, bedrooms, minPrice, maxPrice);
+
+        return ResponseEntity.ok(properties);
     }
 
     @PutMapping("/{propertyId}")

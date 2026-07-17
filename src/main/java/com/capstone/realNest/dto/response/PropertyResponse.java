@@ -28,6 +28,8 @@ public record PropertyResponse(
 
         String address,
 
+        String locality,
+
         String city,
 
         String state,

@@ -35,8 +35,15 @@
 
         <th:block th:replace="~{fragments/forms/form-controls ::
             textInput(
+                'locality', 'locality', 'Locality / Area',
+                'Example: Whitefield', 'text', true
+            )}">
+        </th:block>
+
+        <th:block th:replace="~{fragments/forms/form-controls ::
+            textInput(
                 'city', 'city', 'City',
-                'Enter city', 'text', true
+                'Example: Bangalore', 'text', true
             )}">
         </th:block>
 

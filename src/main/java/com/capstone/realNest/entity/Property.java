@@ -63,6 +63,9 @@ public class Property {
     @Column(nullable = false, length = 1000)
     private String address;
 
+    @Column
+    private String locality;
+
     @Column(nullable = false)
     private String city;
 

@@ -101,9 +101,13 @@
 
                 <p class="mt-4 text-slate-600"
                    th:text="${property.address + ', ' +
-                  property.city + ', ' +
-                  property.state + ' - ' +
-                  property.pincode}">
+                      (property.locality != null
+                          and !property.locality.isBlank()
+                          ? property.locality + ', '
+                          : '') +
+                      property.city + ', ' +
+                      property.state + ' - ' +
+                      property.pincode}">
                     Property location
                 </p>
 
@@ -217,6 +221,20 @@
                             <dt class="text-sm text-slate-500">Address</dt>
                             <dd class="mt-1 font-semibold"
                                 th:text="${property.address}"></dd>
+                        </div>
+
+                        <div>
+                            <dt class="text-sm text-slate-500">
+                                Locality / Area
+                            </dt>
+
+                            <dd class="mt-1 font-semibold"
+                                th:text="${property.locality != null
+                                  and !property.locality.isBlank()
+                                  ? property.locality
+                                  : 'Not provided'}">
+                                Locality
+                            </dd>
                         </div>
 
                         <div>

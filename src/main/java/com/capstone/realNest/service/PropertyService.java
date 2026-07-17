@@ -109,15 +109,27 @@ public class PropertyService {
     }
 
     @Transactional(readOnly = true)
-    public List<PropertyResponse> searchApprovedProperties(String listingType, String location,
-                                                            BigDecimal minPrice, BigDecimal maxPrice) {
+    public List<PropertyResponse> searchApprovedProperties(
+            String city,
+            String listingType,
+            String locality,
+            String propertyType,
+            Integer bedrooms,
+            BigDecimal minPrice,
+            BigDecimal maxPrice
+    ) {
 
-        String normalizedListingType = normalizeFilter(listingType);
-        String normalizedLocation = normalizeFilter(location);
-
-        return propertyRepository.
-                searchProperties(APPROVED_STATUS, normalizedListingType,
-                        normalizedLocation, minPrice, maxPrice)
+        return propertyRepository
+                .searchProperties(
+                        APPROVED_STATUS,
+                        normalizeFilter(listingType),
+                        normalizeFilter(propertyType),
+                        bedrooms,
+                        normalizeFilter(city),
+                        normalizeFilter(locality),
+                        minPrice,
+                        maxPrice
+                )
                 .stream()
                 .map(propertyMapper::toResponse)
                 .toList();
@@ -252,22 +264,27 @@ public class PropertyService {
         );
     }
 
-    //Landing page city based search
+    /*
+     * Returns cities that currently contain approved properties.
+     */
     @Transactional(readOnly = true)
-    public List<PropertyResponse> searchApprovedPropertiesByCity(
-            String city,
-            String listingType) {
-
-        String normalizedCity = normalizeFilter(city);
-        String normalizedListingType = normalizeFilter(listingType);
+    public List<String> getApprovedCities() {
 
         return propertyRepository
-                .searchApprovedPropertiesByCity(
+                .findDistinctCitiesByStatus(APPROVED_STATUS);
+    }
+
+
+    /*
+     * Returns approved-property localities belonging to a selected city.
+     */
+    @Transactional(readOnly = true)
+    public List<String> getApprovedLocalitiesByCity(String city) {
+
+        return propertyRepository
+                .findDistinctLocalitiesByStatusAndCity(
                         APPROVED_STATUS,
-                        normalizedCity,
-                        normalizedListingType)
-                .stream()
-                .map(propertyMapper::toResponse)
-                .toList();
+                        normalizeFilter(city)
+                );
     }
 }

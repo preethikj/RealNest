@@ -38,6 +38,9 @@ public record PropertyRequest(
         @NotBlank(message = "Address is required")
         String address,
 
+        @NotBlank(message = "Locality is required")
+        String locality,
+
         @NotBlank(message = "City is required")
         String city,
 
