@@ -32,12 +32,29 @@
 
 <!--        Location chip-->
         <section class="mt-4 flex flex-wrap gap-3">
-            <span class="rounded-full bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400">
+
+            <span class="rounded-full bg-emerald-500/10 px-4 py-2
+                         text-sm font-semibold text-emerald-400"
+                  th:text="${selectedCity != null and !selectedCity.isBlank()
+                            ? selectedCity
+                            : 'All Cities'}">
                 Bangalore
             </span>
-            <span class="rounded-full bg-white/5 px-4 py-2 text-sm text-slate-300">
-                All Localities
+
+            <span class="rounded-full bg-white/5 px-4 py-2
+                 text-sm text-slate-300">
+                    All Localities
             </span>
+
+            <span th:if="${selectedListingType != null}"
+                  class="rounded-full bg-white/5 px-4 py-2
+                 text-sm text-slate-300"
+                  th:text="${selectedListingType == 'SALE'
+                    ? 'For Sale'
+                    : 'For Rent'}">
+                     For Sale
+            </span>
+
         </section>
 
 <!--Listing layout-->
@@ -83,8 +100,25 @@
             <section class="lg:col-span-3">
                 <div class="flex items-center justify-between">
                     <p class="text-slate-400">
-                        Showing <span class="font-semibold text-white">24</span> properties in
-                        <span class="font-semibold text-emerald-400">Bangalore</span>
+                        Showing
+                        <span class="font-semibold text-white"
+                              th:text="${properties.size()}">
+                            0
+                        </span>
+
+                        <span th:text="${properties.size() == 1
+                                        ? ' property in '
+                                        : ' properties in '}">
+                            properties in
+                        </span>
+
+                        <span class="font-semibold text-emerald-400"
+                              th:text="${selectedCity != null and !selectedCity.isBlank()
+                                        ? selectedCity
+                                        : 'all cities'}">
+                            Bangalore
+                        </span>
+
                     </p>
                     <select class="rounded-full border border-white/10 bg-slate-900 px-4 py-3 text-sm outline-none">
                         <option>Sort by Latest</option>
@@ -93,37 +127,39 @@
                     </select>
                 </div>
 
-                <section class="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
-                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
-                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
-                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
-                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
-                    <th:block th:replace="~{fragments/property-card :: propertyCard}"></th:block>
+<!--                Property cards-->
+                <section th:if="${!properties.isEmpty()}"
+                         class="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+
+                    <th:block th:each="property : ${properties}">
+                        <th:block th:replace="~{fragments/property-card :: propertyCard(${property})}">
+                        </th:block>
+                    </th:block>
+
+                </section>
+
+                <section th:if="${properties.isEmpty()}"
+                         class="mt-6 rounded-3xl border border-white/10
+                            bg-slate-900 px-6 py-16 text-center">
+
+                    <h2 class="text-2xl font-bold text-white">
+                        No properties found
+                    </h2>
+
+                    <p class="mt-2 text-slate-400">
+                        Try another city or choose a different listing type.
+                    </p>
+
+                    <a href="/"
+                       class="mt-6 inline-flex rounded-full bg-emerald-500
+                      px-6 py-3 font-semibold text-slate-950
+                      transition hover:bg-emerald-400">
+                                Search Again
+                    </a>
+
                 </section>
 
 <!--                Pagination-->
-                <section class="mt-10 flex items-center justify-center gap-3">
-                    <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
-                        Prev
-                    </button>
-
-                    <button class="h-10 w-10 rounded-full bg-emerald-500 text-sm font-bold text-slate-950">
-                        1
-                    </button>
-
-                    <button class="h-10 w-10 rounded-full border border-white/10 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
-                        2
-                    </button>
-
-                    <button class="h-10 w-10 rounded-full border border-white/10 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
-                        3
-                    </button>
-
-                    <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 hover:border-emerald-400 hover:text-emerald-400">
-                        Next
-                    </button>
-                </section>
             </section>
         </section>
     </section>

@@ -225,4 +225,49 @@ public class PropertyService {
     public long countPropertiesByOwner(Long ownerId) {
         return propertyRepository.countByOwnerId(ownerId);
     }
+
+    //For landing page
+    @Transactional(readOnly = true)
+    public List<PropertyResponse> getFeaturedProperties(int limit) {
+
+        return propertyRepository
+                .findByStatusOrderByCreatedAtDesc(APPROVED_STATUS)
+                .stream()
+                .limit(limit)
+                .map(propertyMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public long countApprovedProperties() {
+        return propertyRepository.countByStatus(APPROVED_STATUS);
+    }
+
+    @Transactional(readOnly = true)
+    public long countApprovedPropertiesByListingType(String listingType) {
+
+        return propertyRepository.countByStatusAndListingType(
+                APPROVED_STATUS,
+                listingType
+        );
+    }
+
+    //Landing page city based search
+    @Transactional(readOnly = true)
+    public List<PropertyResponse> searchApprovedPropertiesByCity(
+            String city,
+            String listingType) {
+
+        String normalizedCity = normalizeFilter(city);
+        String normalizedListingType = normalizeFilter(listingType);
+
+        return propertyRepository
+                .searchApprovedPropertiesByCity(
+                        APPROVED_STATUS,
+                        normalizedCity,
+                        normalizedListingType)
+                .stream()
+                .map(propertyMapper::toResponse)
+                .toList();
+    }
 }

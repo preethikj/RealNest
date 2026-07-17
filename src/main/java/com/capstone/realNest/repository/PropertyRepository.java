@@ -30,6 +30,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long>{
 
     long countByStatus(String status);
 
+    long countByStatusAndListingType(String status, String listingType);
+
     long countByOwnerId(Long ownerId);
 
     @Query("""
@@ -64,5 +66,29 @@ public interface PropertyRepository extends JpaRepository<Property, Long>{
             @Param("location") String location,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice
+    );
+
+
+    //Landing page search
+    @Query("""
+    SELECT property
+    FROM Property property
+    WHERE property.status = :status
+      AND (
+            :city IS NULL
+            OR LOWER(property.city) LIKE
+               LOWER(CONCAT('%', :city, '%'))
+          )
+      AND (
+            :listingType IS NULL
+            OR LOWER(property.listingType) =
+               LOWER(:listingType)
+          )
+    ORDER BY property.createdAt DESC
+    """)
+    List<Property> searchApprovedPropertiesByCity(
+            @Param("status") String status,
+            @Param("city") String city,
+            @Param("listingType") String listingType
     );
 }
