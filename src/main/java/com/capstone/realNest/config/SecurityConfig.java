@@ -61,14 +61,19 @@ public class SecurityConfig {
                 )
 
                 .rememberMe(remember -> remember
-                        .tokenValiditySeconds(7 * 24 * 60 * 60)
-                )
+                        .rememberMeParameter("remember-me")
+                        .rememberMeCookieName("remember-me")
+                        .tokenValiditySeconds(7 * 24 * 60 * 60))
 
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .logoutSuccessUrl("/auth/login?logout")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                        .deleteCookies(
+                                "JSESSIONID",
+                                "remember-me"
+                        )
                         .permitAll());
 
         return http.build();

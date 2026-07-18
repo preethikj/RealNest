@@ -6,6 +6,7 @@ import com.capstone.realNest.entity.Enquiry;
 import com.capstone.realNest.entity.Property;
 import com.capstone.realNest.exception.EnquiryNotFoundException;
 import com.capstone.realNest.exception.PropertyNotFoundException;
+import com.capstone.realNest.exception.SelfEnquiryNotAllowedException;
 import com.capstone.realNest.exception.UserNotFoundException;
 import com.capstone.realNest.repository.EnquiryRepository;
 import com.capstone.realNest.repository.PropertyRepository;
@@ -27,13 +28,19 @@ public class EnquiryService {
     private final UserRepository userRepository;
 
     @Transactional
-    public EnquiryResponse createEnquiry(Long propertyId, EnquiryRequest request) {
+    public EnquiryResponse createEnquiry(Long propertyId, EnquiryRequest request, Long requesterId) {
 
         Property property = propertyRepository
                 .findByIdAndStatus(propertyId, APPROVED_STATUS)
                 .orElseThrow(() -> new PropertyNotFoundException(propertyId));
+
+        if (requesterId != null && property.getOwner().getId().equals(requesterId)) {
+            throw new SelfEnquiryNotAllowedException();
+        }
+
         Enquiry enquiry = toEntity(request, property);
         Enquiry savedEnquiry = enquiryRepository.save(enquiry);
+
         return toResponse(savedEnquiry);
     }
 

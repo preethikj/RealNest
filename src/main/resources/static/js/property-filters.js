@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterForm =
         document.getElementById("propertyFilterForm");
 
+    const listingTypeFilter =
+        document.getElementById("listingTypeFilter");
+
     const budgetFilter =
         document.getElementById("budgetFilter");
 
@@ -14,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
         !filterForm ||
+        !listingTypeFilter ||
         !budgetFilter ||
         !minPriceInput ||
         !maxPriceInput
@@ -23,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
      * Restore the selected budget after the server reloads
-     * the page with minPrice and maxPrice query parameters.
+     * the page with minPrice and maxPrice parameters.
      */
     const restoreSelectedBudget = () => {
 
@@ -35,6 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const matchingOption =
             Array.from(budgetFilter.options).find((option) => {
+
+                if (option.disabled) {
+                    return false;
+                }
 
                 return (
                     option.dataset.min === selectedMin &&
@@ -48,8 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     /*
-     * Convert the selected budget range into the hidden
-     * minPrice and maxPrice fields used by Spring MVC.
+     * Convert the selected budget into the minPrice and
+     * maxPrice parameters expected by the backend.
      */
     const updatePriceInputs = () => {
 
@@ -67,6 +75,20 @@ document.addEventListener("DOMContentLoaded", () => {
         "change",
         updatePriceInputs
     );
+
+    /*
+     * Sale and Rent require different budget ranges.
+     * Clear an old budget and reload immediately when
+     * the listing type changes.
+     */
+    listingTypeFilter.addEventListener("change", () => {
+
+        minPriceInput.value = "";
+        maxPriceInput.value = "";
+        budgetFilter.value = "";
+
+        filterForm.requestSubmit();
+    });
 
     filterForm.addEventListener("submit", () => {
         updatePriceInputs();

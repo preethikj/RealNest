@@ -3,33 +3,76 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RealNest | Property Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-950 text-white font-sans">
+<body class="bg-slate-950 font-sans text-white">
 
 <header th:replace="~{fragments/navbar ::
         navbar(${portalMode}, null)}">
 </header>
 
 <main class="m-5 p-4">
+
+    <!-- Back navigation -->
+    <section class="mx-auto max-w-7xl px-6 pt-20">
+
+        <button id="propertyDetailsBackButton"
+                type="button"
+                th:attr="data-fallback-url=${portalMode == 'CUSTOMER'
+                    ? '/customer/dashboard'
+                    : '/properties'}"
+                class="inline-flex items-center gap-2 text-sm
+                       font-semibold text-slate-400 transition
+                       hover:text-emerald-400">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke-width="1.8"
+                 stroke="currentColor"
+                 aria-hidden="true"
+                 class="h-4 w-4">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m15 18-6-6 6-6"/>
+            </svg>
+
+            <span>Back</span>
+
+        </button>
+
+    </section>
+
+    <!-- Property gallery -->
     <th:block th:replace="~{fragments/property-gallery ::
-    propertyGallery(${property.images}, ${property.title})}">
+        propertyGallery(${property.images}, ${property.title})}">
     </th:block>
 
-    <section class="max-w-7xl mx-auto px-6 py-12">
+    <section class="mx-auto max-w-7xl px-6 py-12">
+
+        <!-- Enquiry submission confirmation -->
+        <div th:if="${enquirySent}"
+             role="status"
+             class="mb-6 rounded-2xl border border-emerald-400/20
+                    bg-emerald-400/10 px-4 py-3 text-emerald-300">
+            Your enquiry was sent successfully.
+        </div>
+
         <section class="grid gap-10 lg:grid-cols-3">
 
+            <!-- Main property information -->
             <section class="lg:col-span-2">
 
                 <p class="text-sm font-semibold uppercase
-              tracking-widest text-emerald-400"
+                          tracking-widest text-emerald-400"
                    th:text="${#strings.replace(
-                    property.propertyType,
-                    '_',
-                    ' '
-                )}">
+                        property.propertyType,
+                        '_',
+                        ' '
+                   )}">
                     Property Type
                 </p>
 
@@ -40,97 +83,91 @@
 
                 <p class="mt-4 text-slate-400"
                    th:text="${property.address + ', '
-                  + property.city + ', '
-                  + property.state}">
+                      + (property.locality != null
+                         and !property.locality.isBlank()
+                            ? property.locality + ', '
+                            : '')
+                      + property.city + ', '
+                      + property.state}">
                     Property location
                 </p>
 
                 <p class="mt-6 text-4xl font-bold text-emerald-400"
                    th:text="${'₹' + #numbers.formatDecimal(
-                    property.price,
-                    1,
-                    'COMMA',
-                    0,
-                    'POINT'
-                )}">
+                        property.price,
+                        1,
+                        'COMMA',
+                        0,
+                        'POINT'
+                   )}">
                     ₹0
                 </p>
 
-                <section class="mt-10 grid grid-cols-1 gap-4
-                    sm:grid-cols-3">
+                <!-- Property specifications -->
+                <section class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
 
                     <article th:if="${property.bedrooms != null}"
                              class="rounded-2xl border border-white/10
-                        bg-slate-900 p-5">
-
-                        <p class="text-sm text-slate-400">
-                            Bedrooms
-                        </p>
-
+                                    bg-slate-900 p-5">
+                        <p class="text-sm text-slate-400">Bedrooms</p>
                         <h3 class="mt-2 text-xl font-bold"
                             th:text="${property.bedrooms}">
                             0
                         </h3>
-
                     </article>
 
                     <article th:if="${property.bathrooms != null}"
                              class="rounded-2xl border border-white/10
-                        bg-slate-900 p-5">
-
-                        <p class="text-sm text-slate-400">
-                            Bathrooms
-                        </p>
-
+                                    bg-slate-900 p-5">
+                        <p class="text-sm text-slate-400">Bathrooms</p>
                         <h3 class="mt-2 text-xl font-bold"
                             th:text="${property.bathrooms}">
                             0
                         </h3>
-
                     </article>
 
                     <article th:if="${property.area != null}"
                              class="rounded-2xl border border-white/10
-                        bg-slate-900 p-5">
-
-                        <p class="text-sm text-slate-400">
-                            Area
-                        </p>
-
+                                    bg-slate-900 p-5">
+                        <p class="text-sm text-slate-400">Area</p>
                         <h3 class="mt-2 text-xl font-bold">
-                <span th:text="${#numbers.formatDecimal(
-                                   property.area,
-                                   1,
-                                   'COMMA',
-                                   0,
-                                   'POINT'
-                               )}">
-                    0
-                </span>
+                            <span th:text="${#numbers.formatDecimal(
+                                property.area,
+                                1,
+                                'COMMA',
+                                0,
+                                'POINT'
+                            )}">
+                                0
+                            </span>
                             <span> sq.ft</span>
                         </h3>
-
                     </article>
 
                 </section>
 
+                <!-- Description -->
                 <section class="mt-12 rounded-3xl border
-                    border-white/10 bg-slate-900 p-6">
+                                border-white/10 bg-slate-900 p-6">
 
                     <h2 class="text-2xl font-bold">
                         Property Description
                     </h2>
 
                     <p class="mt-4 whitespace-pre-line leading-7
-                  text-slate-400"
-                       th:text="${property.description}">
+                              text-slate-400"
+                       th:text="${property.description != null
+                                  and !property.description.isBlank()
+                                  ? property.description
+                                  : 'No description provided.'}">
                         Property description
                     </p>
 
                 </section>
 
+                <!-- Property information -->
                 <section class="mt-8 rounded-3xl border
-                    border-white/10 bg-slate-900 p-6">
+                                border-white/10 bg-slate-900 p-6">
 
                     <h2 class="text-2xl font-bold">
                         Property Information
@@ -142,7 +179,6 @@
                             <dt class="text-sm text-slate-400">
                                 Listing Type
                             </dt>
-
                             <dd class="mt-1 font-semibold"
                                 th:text="${property.listingType}">
                                 SALE
@@ -153,22 +189,31 @@
                             <dt class="text-sm text-slate-400">
                                 Property Type
                             </dt>
-
                             <dd class="mt-1 font-semibold"
                                 th:text="${#strings.replace(
-                                property.propertyType,
-                                '_',
-                                ' '
-                            )}">
+                                    property.propertyType,
+                                    '_',
+                                    ' '
+                                )}">
                                 VILLA
                             </dd>
                         </div>
 
                         <div class="rounded-2xl bg-white/5 px-4 py-3">
                             <dt class="text-sm text-slate-400">
-                                City
+                                Locality / Area
                             </dt>
+                            <dd class="mt-1 font-semibold"
+                                th:text="${property.locality != null
+                                          and !property.locality.isBlank()
+                                          ? property.locality
+                                          : 'Not provided'}">
+                                Locality
+                            </dd>
+                        </div>
 
+                        <div class="rounded-2xl bg-white/5 px-4 py-3">
+                            <dt class="text-sm text-slate-400">City</dt>
                             <dd class="mt-1 font-semibold"
                                 th:text="${property.city}">
                                 City
@@ -176,10 +221,7 @@
                         </div>
 
                         <div class="rounded-2xl bg-white/5 px-4 py-3">
-                            <dt class="text-sm text-slate-400">
-                                Pincode
-                            </dt>
-
+                            <dt class="text-sm text-slate-400">Pincode</dt>
                             <dd class="mt-1 font-semibold"
                                 th:text="${property.pincode}">
                                 Pincode
@@ -191,11 +233,11 @@
                 </section>
 
             </section>
-<!--            Contact card-->
-            <!-- Public visitor -->
+
+            <!-- Public contact card -->
             <aside th:if="${portalMode == 'PUBLIC'}"
                    class="self-start rounded-3xl border border-white/10
-              bg-slate-900 p-6">
+                          bg-slate-900 p-6">
 
                 <h2 class="text-xl font-bold">
                     Interested in this property?
@@ -207,33 +249,41 @@
                 </p>
 
                 <div class="mt-6 rounded-2xl bg-white/5 p-4">
-
-                    <p class="text-sm text-slate-400">
-                        Listed by
-                    </p>
-
+                    <p class="text-sm text-slate-400">Listed by</p>
                     <p class="mt-1 font-bold"
                        th:text="${property.ownerName}">
                         Property owner
                     </p>
+                </div>
+
+                <!-- Shown to anonymous visitors and non-owner customers -->
+                <div th:if="${canSendEnquiry}"
+                     class="mt-6">
+
+                    <th:block th:replace="~{fragments/buttons ::
+                        primaryLink(
+                            'Send Enquiry',
+                            ${'/properties/' + property.id + '/enquiry'}
+                        )}">
+                    </th:block>
 
                 </div>
 
-                <div class="mt-6">
-                    <th:block th:replace="~{fragments/buttons ::
-            primaryLink(
-                'Send Enquiry',
-                ${'/properties/' + property.id + '/enquiry'}
-            )}">
-                    </th:block>
+                <!-- Shown instead of the button to the property owner -->
+                <div th:if="${isOwnProperty}"
+                     class="mt-6 rounded-2xl border border-amber-400/20
+                            bg-amber-400/10 px-4 py-3 text-sm
+                            leading-6 text-amber-300">
+                    This is your property listing. You cannot send an enquiry
+                    for your own property.
                 </div>
 
             </aside>
 
-            <!-- Property owner -->
+            <!-- Property owner view -->
             <aside th:if="${portalMode == 'CUSTOMER'}"
                    class="self-start rounded-3xl border border-white/10
-              bg-slate-900 p-6">
+                          bg-slate-900 p-6">
 
                 <p class="text-sm text-slate-400">
                     Listing Status
@@ -242,10 +292,10 @@
                 <p class="mt-2 text-xl font-bold"
                    th:text="${property.status}"
                    th:classappend="${property.status == 'APPROVED'}
-            ? ' text-emerald-400'
-            : (${property.status == 'PENDING'}
-                ? ' text-amber-400'
-                : ' text-rose-400')">
+                        ? ' text-emerald-400'
+                        : (${property.status == 'PENDING'}
+                            ? ' text-amber-400'
+                            : ' text-rose-400')">
                     PENDING
                 </p>
 
@@ -254,24 +304,29 @@
                 </p>
 
                 <a th:href="@{/customer/property/{id}/edit(
-                    id=${property.id}
-                )}"
+                        id=${property.id}
+                   )}"
                    class="mt-6 inline-flex w-full items-center
-              justify-center rounded-full bg-emerald-500
-              px-5 py-3 text-sm font-bold text-slate-950
-              transition hover:bg-emerald-400">
+                          justify-center rounded-full bg-emerald-500
+                          px-5 py-3 text-sm font-bold text-slate-950
+                          transition hover:bg-emerald-400">
                     Edit Property
                 </a>
 
             </aside>
+
         </section>
+
     </section>
-<!--    Similar Properties-->
+
 </main>
 
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+<footer th:replace="~{fragments/footer :: footer}">
+</footer>
 
-<script src="/js/navbar.js"></script>
-<script src="/js/property-gallery.js"></script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/property-gallery.js}"></script>
+<script th:src="@{/js/property-details-back.js}"></script>
+
 </body>
 </html>

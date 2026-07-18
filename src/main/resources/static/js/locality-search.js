@@ -1,66 +1,159 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const searchForm =
-        document.getElementById("localitySearchForm");
+    const searchForm = document.getElementById("localitySearchForm");
 
-    const localityInput =
-        document.getElementById("localityInput");
+    const cityInput = document.getElementById("listingCityInput");
 
-    const suggestions =
-        document.getElementById("localitySuggestions");
+    const citySuggestions = document.getElementById("listingCitySuggestions");
 
-    const options =
-        document.querySelectorAll(".locality-option");
+    const cityOptions = document.querySelectorAll(".listing-city-option");
 
-    const searchAgainButton =
-        document.getElementById("searchAgainButton");
+    const localityInput = document.getElementById("localityInput");
 
-    if (!searchForm || !localityInput) {
+    const localitySuggestions = document.getElementById("localitySuggestions");
+
+    const localityOptions = document.querySelectorAll(".locality-option");
+
+    const searchAgainButton = document.getElementById("searchAgainButton");
+
+    if (!searchForm || !cityInput || !localityInput) {
         return;
     }
 
-    // Display locality suggestions when the input receives focus.
-    if (suggestions) {
+    const originalCity = (cityInput.dataset.selectedCity || "")
+        .trim()
+        .toLowerCase();
 
-        localityInput.addEventListener("focus", () => {
-            suggestions.classList.remove("hidden");
+    let cityChanged = false;
+
+
+    /*
+     * Display only city suggestions matching the
+     * value currently entered by the user.
+     */
+    const showMatchingCities = () => {
+
+        if (!citySuggestions) {
+            return;
+        }
+
+        const enteredCity = cityInput.value.trim().toLowerCase();
+
+        let matchExists = false;
+
+        cityOptions.forEach((option) => {
+
+            const city = option.textContent.trim().toLowerCase();
+
+            const matches = city.includes(enteredCity);
+
+            option.classList.toggle("hidden", !matches);
+
+            if (matches) {
+                matchExists = true;
+            }
         });
 
-        // Select a suggested locality and submit the search.
-        options.forEach((option) => {
+        citySuggestions.classList.toggle("hidden", !matchExists);
+    };
+
+
+    /*
+     * City suggestions
+     */
+    if (citySuggestions) {
+
+        cityInput.addEventListener("focus", () => {
+            showMatchingCities();
+        });
+
+        cityInput.addEventListener("input", () => {
+
+            const currentCity = cityInput.value.trim().toLowerCase();
+
+            cityChanged = currentCity !== originalCity;
+
+            if (cityChanged) {
+                localityInput.value = "";
+
+                localitySuggestions?.classList.add("hidden");
+            }
+
+            showMatchingCities();
+        });
+
+        cityOptions.forEach((option) => {
+
             option.addEventListener("click", () => {
 
-                localityInput.value =
-                    option.textContent.trim();
+                cityInput.value = option.textContent.trim();
 
-                suggestions.classList.add("hidden");
+                localityInput.value = "";
+
+                citySuggestions.classList.add("hidden");
+
+                /*
+                 * Reload the listing page for the selected city.
+                 * This also loads the correct locality suggestions.
+                 */
+                searchForm.requestSubmit();
+            });
+        });
+    }
+
+
+    /*
+     * Locality suggestions
+     */
+    if (localitySuggestions) {
+
+        localityInput.addEventListener("focus", () => {
+
+            /*
+             * Do not display localities belonging to the old city
+             * if the city has been changed but not submitted yet.
+             */
+            if (!cityChanged) {
+                localitySuggestions.classList.remove("hidden");
+            }
+        });
+
+        localityOptions.forEach((option) => {
+
+            option.addEventListener("click", () => {
+
+                localityInput.value = option.textContent.trim();
+
+                localitySuggestions.classList.add("hidden");
 
                 searchForm.requestSubmit();
             });
         });
-
-        // Close suggestions when clicking outside the search area.
-        document.addEventListener("click", (event) => {
-
-            const clickedInsideInput =
-                localityInput.contains(event.target);
-
-            const clickedInsideSuggestions =
-                suggestions.contains(event.target);
-
-            if (
-                !clickedInsideInput &&
-                !clickedInsideSuggestions
-            ) {
-                suggestions.classList.add("hidden");
-            }
-        });
     }
 
+
     /*
-     * Keep the user on the property-list page when no results
-     * are found. Clear the previous locality and reopen the
-     * available locality suggestions.
+     * Close both suggestion panels when clicking outside them.
+     */
+    document.addEventListener("click", (event) => {
+
+        const clickedInsideCity = cityInput.contains(event.target) || citySuggestions?.contains(event.target);
+
+        const clickedInsideLocality = localityInput.contains(event.target) || localitySuggestions?.contains(event.target);
+
+        if (!clickedInsideCity) {
+            citySuggestions?.classList.add("hidden");
+        }
+
+        if (!clickedInsideLocality) {
+            localitySuggestions?.classList.add("hidden");
+        }
+    });
+
+
+    /*
+     * Clear a failed locality search and keep the user
+     * on the property-list page.
      */
     if (searchAgainButton) {
 
@@ -72,8 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
             localityInput.value = "";
             localityInput.focus();
 
-            if (suggestions) {
-                suggestions.classList.remove("hidden");
+            if (localitySuggestions && !cityChanged) {
+                localitySuggestions.classList.remove("hidden");
             }
         });
     }

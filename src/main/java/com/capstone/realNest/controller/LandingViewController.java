@@ -127,10 +127,9 @@ public class LandingViewController {
         model.addAttribute("selectedBedrooms", bedrooms);
         model.addAttribute("selectedSort", normalizeSort(sort));
 
-        model.addAttribute(
-                "availableLocalities",
-                propertyService.getApprovedLocalitiesByCity(city)
-        );
+
+        model.addAttribute("availableCities", propertyService.getApprovedCities());
+        model.addAttribute("availableLocalities", propertyService.getApprovedLocalitiesByCity(city));
 
         return "public/property-list";
     }

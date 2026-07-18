@@ -8,7 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public record CustomUserPrincipal(Long id, String email, String password, Role role) implements UserDetails {
+public record CustomUserPrincipal(Long id, String name, String email,
+                                  String password, Role role) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

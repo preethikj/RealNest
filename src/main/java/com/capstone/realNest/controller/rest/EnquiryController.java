@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.capstone.realNest.security.CustomUserPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,13 +27,14 @@ public class EnquiryController {
     @PostMapping("/properties/{propertyId}/enquiries")
     @Operation(summary = "Send an enquiry for a property")
     public ResponseEntity<EnquiryResponse> createEnquiry(@PathVariable Long propertyId,
-            @Valid @RequestBody EnquiryRequest request) {
+            @Valid @RequestBody EnquiryRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal) {
+
+        Long requesterId = principal != null ? principal.id() : null;
 
         EnquiryResponse response =
-                enquiryService.createEnquiry(propertyId, request);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+                enquiryService.createEnquiry(propertyId, request, requesterId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/enquiries/owner/{ownerId}")

@@ -4,115 +4,199 @@
 <body>
 
 <section th:fragment="localitySearch"
-         class="relative rounded-3xl border border-white/10
-                bg-slate-900 p-5 shadow-xl">
+         class="relative z-30 rounded-3xl border
+                border-white/10 bg-slate-900 p-5 shadow-xl">
 
-  <p class="text-sm font-semibold uppercase tracking-widest
+    <p class="text-sm font-semibold uppercase tracking-widest
               text-emerald-400">
+        Search Properties
+    </p>
 
-    Search within
+    <form id="localitySearchForm"
+          th:action="@{/properties}"
+          method="get"
+          class="mt-4">
 
-    <span th:text="${selectedCity != null
-                        and !selectedCity.isBlank()
-                        ? selectedCity
-                        : 'all cities'}">
-            Bangalore
-        </span>
+        <!-- Preserve listing and sidebar filters -->
+        <input type="hidden"
+               name="listingType"
+               th:value="${selectedListingType}">
 
-  </p>
+        <input type="hidden"
+               name="minPrice"
+               th:value="${selectedMinPrice}">
 
-  <form id="localitySearchForm"
-        th:action="@{/properties}"
-        method="get"
-        class="mt-4">
+        <input type="hidden"
+               name="maxPrice"
+               th:value="${selectedMaxPrice}">
 
-    <!-- Preserve the landing-page filters -->
-    <input type="hidden"
-           name="city"
-           th:value="${selectedCity}">
+        <input type="hidden"
+               name="propertyType"
+               th:value="${selectedPropertyType}">
 
-    <input type="hidden"
-           name="listingType"
-           th:value="${selectedListingType}">
+        <input type="hidden"
+               name="bedrooms"
+               th:value="${selectedBedrooms}">
 
-    <!-- Preserve budget filters -->
-    <input type="hidden"
-           name="minPrice"
-           th:value="${selectedMinPrice}">
+        <input type="hidden"
+               name="sort"
+               th:value="${selectedSort}">
 
-    <input type="hidden"
-           name="maxPrice"
-           th:value="${selectedMaxPrice}">
+        <!-- A new location search always starts at page zero -->
+        <input type="hidden"
+               name="page"
+               value="0">
 
-    <input type="hidden"
-           name="propertyType"
-           th:value="${selectedPropertyType}">
+        <div class="grid gap-3
+                    md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_auto]">
 
-    <input type="hidden"
-           name="bedrooms"
-           th:value="${selectedBedrooms}">
+            <!-- City search -->
+            <div class="relative">
 
-    <input type="hidden"
-           name="sort"
-           th:value="${selectedSort}">
+                <label for="listingCityInput"
+                       class="sr-only">
+                    City
+                </label>
 
-    <div class="flex gap-3">
-
-      <div class="relative flex-1">
-
-        <label for="localityInput" class="sr-only">
-          Locality or area
-        </label>
-
-        <input id="localityInput"
-               name="locality"
-               type="text"
-               th:value="${selectedLocality}"
-               placeholder="Enter locality or area"
-               autocomplete="off"
-               class="w-full rounded-full border border-white/10
-                              bg-slate-950 px-5 py-4 text-sm text-white
+                <input id="listingCityInput"
+                       name="city"
+                       type="text"
+                       th:value="${selectedCity}"
+                       th:attr="data-selected-city=${selectedCity}"
+                       placeholder="Enter city"
+                       autocomplete="off"
+                       class="w-full rounded-full border
+                              border-white/10 bg-slate-950
+                              px-5 py-4 pr-12 text-sm text-white
                               outline-none placeholder:text-slate-500
                               focus:border-emerald-400">
 
-        <!-- Dynamic localities for the selected city -->
-        <section id="localitySuggestions"
-                 th:if="${availableLocalities != null
-                                and !availableLocalities.isEmpty()}"
-                 class="absolute left-0 right-0 top-full z-20
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="2"
+                     stroke="currentColor"
+                     aria-hidden="true"
+                     class="pointer-events-none absolute right-4 top-1/2
+                            h-4 w-4 -translate-y-1/2 text-slate-400">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                </svg>
+
+                <!-- Dynamic approved-property cities -->
+                <section id="listingCitySuggestions"
+                         th:if="${availableCities != null
+                                  and !availableCities.isEmpty()}"
+                         class="absolute left-0 right-0 top-full z-50
                                 mt-3 hidden overflow-hidden rounded-3xl
                                 border border-white/10 bg-slate-900
                                 shadow-2xl">
 
-          <p class="px-5 py-3 text-xs font-bold uppercase
+                    <p class="px-5 py-3 text-xs font-bold uppercase
                               tracking-widest text-slate-500">
-            Available Localities
-          </p>
+                        Available Cities
+                    </p>
 
-          <button th:each="locality : ${availableLocalities}"
-                  type="button"
-                  class="locality-option block w-full px-5 py-3
-                                   text-left text-slate-300 transition
-                                   hover:bg-emerald-500
+                    <button th:each="city : ${availableCities}"
+                            type="button"
+                            class="listing-city-option block w-full
+                                   px-5 py-3 text-left text-slate-300
+                                   transition hover:bg-emerald-500
                                    hover:text-slate-950"
-                  th:text="${locality}">
-            Locality
-          </button>
+                            th:text="${city}">
+                        City
+                    </button>
 
-        </section>
+                </section>
 
-      </div>
+            </div>
 
-      <button type="submit"
-              class="rounded-full bg-emerald-500 px-7 py-4
-                           text-sm font-bold text-slate-950 transition
-                           hover:bg-emerald-400">
-        Search
-      </button>
+            <!-- Locality search -->
+            <div class="relative">
 
-    </div>
+                <label for="localityInput"
+                       class="sr-only">
+                    Locality or area
+                </label>
 
-  </form>
+                <input id="localityInput"
+                       name="locality"
+                       type="text"
+                       th:value="${selectedLocality}"
+                       placeholder="Enter locality or area"
+                       autocomplete="off"
+                       class="w-full rounded-full border
+                              border-white/10 bg-slate-950
+                              px-5 py-4 pr-12 text-sm text-white
+                              outline-none placeholder:text-slate-500
+                              focus:border-emerald-400">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="2"
+                     stroke="currentColor"
+                     aria-hidden="true"
+                     class="pointer-events-none absolute right-4 top-1/2
+                            h-4 w-4 -translate-y-1/2 text-slate-400">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                </svg>
+
+                <!-- Localities belonging to the selected city -->
+                <section id="localitySuggestions"
+                         th:if="${availableLocalities != null
+                                  and !availableLocalities.isEmpty()}"
+                         class="absolute left-0 right-0 top-full z-50
+                                mt-3 hidden overflow-hidden rounded-3xl
+                                border border-white/10 bg-slate-900
+                                shadow-2xl">
+
+                    <p class="px-5 py-3 text-xs font-bold uppercase
+                              tracking-widest text-slate-500">
+                        Available Localities
+                    </p>
+
+                    <button th:each="locality : ${availableLocalities}"
+                            type="button"
+                            class="locality-option block w-full
+                                   px-5 py-3 text-left text-slate-300
+                                   transition hover:bg-emerald-500
+                                   hover:text-slate-950"
+                            th:text="${locality}">
+                        Locality
+                    </button>
+
+                </section>
+
+            </div>
+
+            <div class="flex gap-3">
+
+                <button type="submit"
+                        class="rounded-full bg-emerald-500 px-7 py-4
+                               text-sm font-bold text-slate-950 transition
+                               hover:bg-emerald-400">
+                    Search
+                </button>
+
+                <a th:href="@{/properties}"
+                   class="inline-flex items-center justify-center rounded-full
+                          border border-white/15 px-6 py-4 text-sm
+                          font-semibold text-slate-300 transition
+                          hover:border-emerald-400 hover:text-emerald-400">
+                    Clear All
+                </a>
+
+            </div>
+
+        </div>
+
+    </form>
 
 </section>
 

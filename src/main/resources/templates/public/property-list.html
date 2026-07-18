@@ -86,10 +86,6 @@
                            th:value="${selectedCity}">
 
                     <input type="hidden"
-                           name="listingType"
-                           th:value="${selectedListingType}">
-
-                    <input type="hidden"
                            name="locality"
                            th:value="${selectedLocality}">
 
@@ -103,6 +99,58 @@
                            type="hidden"
                            name="maxPrice"
                            th:value="${selectedMaxPrice}">
+
+                    <!-- Listing type -->
+                    <div>
+
+                        <label for="listingTypeFilter"
+                               class="text-sm text-slate-400">
+                            Listing Type
+                        </label>
+
+                        <div class="relative mt-2">
+
+                            <select id="listingTypeFilter"
+                                    name="listingType"
+                                    class="w-full appearance-none rounded-xl
+                                           border border-white/10 bg-slate-950
+                                           px-4 py-3 pr-10 text-sm outline-none">
+
+                                <option value=""
+                                        th:selected="${selectedListingType == null
+                                            or selectedListingType.isBlank()}">
+                                    All Listings
+                                </option>
+
+                                <option value="SALE"
+                                        th:selected="${selectedListingType == 'SALE'}">
+                                    For Sale
+                                </option>
+
+                                <option value="RENT"
+                                        th:selected="${selectedListingType == 'RENT'}">
+                                    For Rent
+                                </option>
+
+                            </select>
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2"
+                                 stroke="currentColor"
+                                 aria-hidden="true"
+                                 class="pointer-events-none absolute right-3 top-1/2
+                                        h-4 w-4 -translate-y-1/2 text-slate-300">
+
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                            </svg>
+
+                        </div>
+
+                    </div>
 
                     <!-- Property type -->
                     <div>
@@ -252,8 +300,7 @@
                                 </option>
 
                                 <!-- Sale budgets -->
-                                <th:block th:if="${selectedListingType == 'SALE'
-                                      or selectedListingType == null}">
+                                <th:block th:if="${selectedListingType == 'SALE'}">
 
                                     <option value="BELOW_50_LAKH"
                                             data-min=""
@@ -297,6 +344,13 @@
                                     </option>
 
                                 </th:block>
+
+                                <option th:if="${selectedListingType == null
+                                                or selectedListingType.isBlank()}"
+                                        value="NOT_AVAILABLE"
+                                        disabled>
+                                    Select Sale or Rent for budget
+                                </option>
 
                             </select>
 
@@ -521,29 +575,29 @@
                     <!-- Previous -->
                     <a th:if="${currentPage > 0}"
                        th:href="@{/properties(
-                            city=${selectedCity},
-                            listingType=${selectedListingType},
-                            locality=${selectedLocality},
-                            propertyType=${selectedPropertyType},
-                            bedrooms=${selectedBedrooms},
-                            minPrice=${selectedMinPrice},
-                            maxPrice=${selectedMaxPrice},
-                            sort=${selectedSort},
-                            page=${currentPage - 1}
-                       )}"
+            city=${selectedCity},
+            listingType=${selectedListingType},
+            locality=${selectedLocality},
+            propertyType=${selectedPropertyType},
+            bedrooms=${selectedBedrooms},
+            minPrice=${selectedMinPrice},
+            maxPrice=${selectedMaxPrice},
+            sort=${selectedSort},
+            page=${currentPage - 1}
+       )}"
                        class="rounded-full border border-white/10
-                              px-4 py-2 text-sm text-slate-300 transition
-                              hover:border-emerald-400 hover:text-emerald-400">
-                                        Previous
+              px-4 py-2 text-sm text-slate-300 transition
+              hover:border-emerald-400 hover:text-emerald-400">
+                        Previous
                     </a>
 
                     <span th:if="${currentPage == 0}"
                           aria-disabled="true"
                           class="cursor-not-allowed rounded-full border
-                                 border-white/5 px-4 py-2 text-sm
-                                 text-slate-600">
-                            Previous
-                    </span>
+                 border-white/5 px-4 py-2 text-sm
+                 text-slate-600">
+        Previous
+    </span>
 
                     <!-- Page numbers -->
                     <th:block th:each="pageNumber :
@@ -560,24 +614,24 @@
 
                         <a th:unless="${pageNumber == currentPage}"
                            th:href="@{/properties(
-                                    city=${selectedCity},
-                                    listingType=${selectedListingType},
-                                    locality=${selectedLocality},
-                                    propertyType=${selectedPropertyType},
-                                    bedrooms=${selectedBedrooms},
-                                    minPrice=${selectedMinPrice},
-                                    maxPrice=${selectedMaxPrice},
-                                    sort=${selectedSort},
-                                    page=${pageNumber}
-                               )}"
+                city=${selectedCity},
+                listingType=${selectedListingType},
+                locality=${selectedLocality},
+                propertyType=${selectedPropertyType},
+                bedrooms=${selectedBedrooms},
+                minPrice=${selectedMinPrice},
+                maxPrice=${selectedMaxPrice},
+                sort=${selectedSort},
+                page=${pageNumber}
+           )}"
                            th:text="${pageNumber + 1}"
                            th:attr="aria-label=${'Go to page ' + (pageNumber + 1)}"
                            class="inline-flex h-10 w-10 items-center
-                                  justify-center rounded-full border
-                                  border-white/10 text-sm text-slate-300
-                                  transition hover:border-emerald-400
-                                  hover:text-emerald-400">
-                                            2
+                  justify-center rounded-full border
+                  border-white/10 text-sm text-slate-300
+                  transition hover:border-emerald-400
+                  hover:text-emerald-400">
+                            2
                         </a>
 
                     </th:block>
@@ -585,29 +639,29 @@
                     <!-- Next -->
                     <a th:if="${currentPage + 1 < totalPages}"
                        th:href="@{/properties(
-                                city=${selectedCity},
-                                listingType=${selectedListingType},
-                                locality=${selectedLocality},
-                                propertyType=${selectedPropertyType},
-                                bedrooms=${selectedBedrooms},
-                                minPrice=${selectedMinPrice},
-                                maxPrice=${selectedMaxPrice},
-                                sort=${selectedSort},
-                                page=${currentPage + 1}
-                           )}"
+            city=${selectedCity},
+            listingType=${selectedListingType},
+            locality=${selectedLocality},
+            propertyType=${selectedPropertyType},
+            bedrooms=${selectedBedrooms},
+            minPrice=${selectedMinPrice},
+            maxPrice=${selectedMaxPrice},
+            sort=${selectedSort},
+            page=${currentPage + 1}
+       )}"
                        class="rounded-full border border-white/10
-                              px-4 py-2 text-sm text-slate-300 transition
-                              hover:border-emerald-400 hover:text-emerald-400">
-                                        Next
+              px-4 py-2 text-sm text-slate-300 transition
+              hover:border-emerald-400 hover:text-emerald-400">
+                        Next
                     </a>
 
                     <span th:if="${currentPage + 1 >= totalPages}"
                           aria-disabled="true"
                           class="cursor-not-allowed rounded-full border
-                                 border-white/5 px-4 py-2 text-sm
-                                 text-slate-600">
-                        Next
-                    </span>
+                 border-white/5 px-4 py-2 text-sm
+                 text-slate-600">
+        Next
+    </span>
 
                 </nav>
             </section>

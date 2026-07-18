@@ -255,10 +255,7 @@ public class PropertyService {
     @Transactional(readOnly = true)
     public long countApprovedPropertiesByListingType(String listingType) {
 
-        return propertyRepository.countByStatusAndListingType(
-                APPROVED_STATUS,
-                listingType
-        );
+        return propertyRepository.countByStatusAndListingType(APPROVED_STATUS, listingType);
     }
 
     /*
@@ -267,8 +264,7 @@ public class PropertyService {
     @Transactional(readOnly = true)
     public List<String> getApprovedCities() {
 
-        return propertyRepository
-                .findDistinctCitiesByStatus(APPROVED_STATUS);
+        return propertyRepository.findDistinctCitiesByStatus(APPROVED_STATUS);
     }
 
 
@@ -279,9 +275,6 @@ public class PropertyService {
     public List<String> getApprovedLocalitiesByCity(String city) {
 
         return propertyRepository
-                .findDistinctLocalitiesByStatusAndCity(
-                        APPROVED_STATUS,
-                        normalizeFilter(city)
-                );
+                .findDistinctLocalitiesByStatusAndCity(APPROVED_STATUS, normalizeFilter(city));
     }
 }
