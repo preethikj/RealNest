@@ -1,6 +1,8 @@
 package com.capstone.realNest.repository;
 
 import com.capstone.realNest.entity.Property;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -123,9 +125,8 @@ public interface PropertyRepository
             OR property.price <= :maxPrice
           )
 
-    ORDER BY property.createdAt DESC
     """)
-    List<Property> searchProperties(
+    Page<Property> searchProperties(
             @Param("status") String status,
             @Param("listingType") String listingType,
             @Param("propertyType") String propertyType,
@@ -133,7 +134,8 @@ public interface PropertyRepository
             @Param("city") String city,
             @Param("location") String location,
             @Param("minPrice") BigDecimal minPrice,
-            @Param("maxPrice") BigDecimal maxPrice
+            @Param("maxPrice") BigDecimal maxPrice,
+            Pageable pageable
     );
 
 

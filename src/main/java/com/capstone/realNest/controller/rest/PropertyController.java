@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -115,18 +118,26 @@ public class PropertyController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<PropertyResponse>> searchProperties(
+    public ResponseEntity<Page<PropertyResponse>> searchProperties(
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String listingType,
             @RequestParam(required = false) String locality,
             @RequestParam(required = false) String propertyType,
             @RequestParam(required = false) Integer bedrooms,
             @RequestParam(required = false) BigDecimal minPrice,
-            @RequestParam(required = false) BigDecimal maxPrice) {
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size) {
 
-        List<PropertyResponse> properties =
+        PageRequest pageRequest = PageRequest.of(
+                Math.max(page, 0),
+                Math.min(Math.max(size, 1), 50),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        Page<PropertyResponse> properties =
                 propertyService.searchApprovedProperties(city, listingType, locality,
-                        propertyType, bedrooms, minPrice, maxPrice);
+                        propertyType, bedrooms, minPrice, maxPrice, pageRequest);
 
         return ResponseEntity.ok(properties);
     }

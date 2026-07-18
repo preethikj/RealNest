@@ -25,12 +25,12 @@
             )}">
         </th:block>
 
-<!--        Locality search bar-->
+        <!--        Locality search bar-->
         <div class="mt-10">
             <th:block th:replace="~{fragments/locality-search :: localitySearch}"></th:block>
         </div>
 
-<!--        Location chip-->
+        <!--        Location chip-->
         <section class="mt-4 flex flex-wrap gap-3">
 
             <span class="rounded-full bg-emerald-500/10 px-4 py-2
@@ -43,7 +43,7 @@
 
             <span class="rounded-full bg-white/5 px-4 py-2
                           text-sm text-slate-300"
-                          th:text="${selectedLocality != null
+                  th:text="${selectedLocality != null
                         and !selectedLocality.isBlank()
                         ? selectedLocality
                         : 'All Localities'}">
@@ -61,7 +61,7 @@
 
         </section>
 
-<!--Listing layout-->
+        <!--Listing layout-->
         <section class="mt-10 grid gap-8 lg:grid-cols-4">
 
             <aside class="self-start rounded-3xl border border-white/10
@@ -75,6 +75,10 @@
                       th:action="@{/properties}"
                       method="get"
                       class="mt-6 space-y-5">
+
+                    <input type="hidden"
+                           name="sort"
+                           th:value="${selectedSort}">
 
                     <!-- Preserve city, listing type and locality -->
                     <input type="hidden"
@@ -320,19 +324,20 @@
                                 class="w-full rounded-full bg-emerald-500
                                    px-5 py-3 text-sm font-bold text-slate-950
                                    transition hover:bg-emerald-400">
-                                    Apply Filters
+                            Apply Filters
                         </button>
 
                         <a th:href="@{/properties(
-                                city=${selectedCity},
-                                listingType=${selectedListingType},
-                                locality=${selectedLocality}
-                           )}"
+                                    city=${selectedCity},
+                                    listingType=${selectedListingType},
+                                    locality=${selectedLocality},
+                                    sort=${selectedSort}
+                                    )}"
                            class="block w-full rounded-full border
-                      border-white/10 px-5 py-3 text-center
-                      text-sm font-semibold text-slate-300
-                      transition hover:border-emerald-400
-                      hover:text-emerald-400">
+                                  border-white/10 px-5 py-3 text-center
+                                  text-sm font-semibold text-slate-300
+                                  transition hover:border-emerald-400
+                                  hover:text-emerald-400">
                             Clear Filters
                         </a>
 
@@ -342,36 +347,139 @@
 
             </aside>
             <section class="lg:col-span-3">
-                <div class="flex items-center justify-between">
+
+                <div class="flex flex-col gap-4
+                            sm:flex-row sm:items-center sm:justify-between">
+
+                    <!-- Dynamic result range -->
                     <p class="text-slate-400">
-                        Showing
-                        <span class="font-semibold text-white"
-                              th:text="${properties.size()}">
-                            0
-                        </span>
 
-                        <span th:text="${properties.size() == 1
-                                        ? ' property in '
-                                        : ' properties in '}">
-                            properties in
-                        </span>
+                <span th:if="${totalProperties > 0}">
+                    Showing
 
+                    <span class="font-semibold text-white"
+                          th:text="${resultStart}">
+                        1
+                    </span>
+
+                    –
+
+                    <span class="font-semibold text-white"
+                          th:text="${resultEnd}">
+                        6
+                    </span>
+
+                    of
+
+                    <span class="font-semibold text-white"
+                          th:text="${totalProperties}">
+                        20
+                    </span>
+
+                    properties in
+                </span>
+
+                        <span th:if="${totalProperties == 0}">
+                        Showing 0 properties in
+                </span>
                         <span class="font-semibold text-emerald-400"
-                              th:text="${selectedCity != null and !selectedCity.isBlank()
-                                        ? selectedCity
-                                        : 'all cities'}">
-                            Bangalore
-                        </span>
+                              th:text="${selectedCity != null
+                        and !selectedCity.isBlank()
+                        ? selectedCity
+                        : 'all cities'}">
+                        Bangalore
+                </span>
 
                     </p>
-                    <select class="rounded-full border border-white/10 bg-slate-900 px-4 py-3 text-sm outline-none">
-                        <option>Sort by Latest</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                    </select>
-                </div>
 
-<!--                Property cards-->
+                    <!-- Sort form -->
+                    <form id="propertySortForm"
+                          th:action="@{/properties}"
+                          method="get">
+
+                        <!-- Preserve every active filter -->
+                        <input type="hidden"
+                               name="city"
+                               th:value="${selectedCity}">
+
+                        <input type="hidden"
+                               name="listingType"
+                               th:value="${selectedListingType}">
+
+                        <input type="hidden"
+                               name="locality"
+                               th:value="${selectedLocality}">
+
+                        <input type="hidden"
+                               name="propertyType"
+                               th:value="${selectedPropertyType}">
+
+                        <input type="hidden"
+                               name="bedrooms"
+                               th:value="${selectedBedrooms}">
+
+                        <input type="hidden"
+                               name="minPrice"
+                               th:value="${selectedMinPrice}">
+
+                        <input type="hidden"
+                               name="maxPrice"
+                               th:value="${selectedMaxPrice}">
+
+                        <!-- Reset to the first page after changing sort -->
+                        <input type="hidden"
+                               name="page"
+                               value="0">
+
+                        <div class="relative">
+
+                            <label for="sortFilter" class="sr-only">
+                                Sort properties
+                            </label>
+
+                            <select id="sortFilter"
+                                    name="sort"
+                                    class="appearance-none rounded-full border
+                                           border-white/10 bg-slate-900
+                                           px-5 py-3 pr-11 text-sm outline-none">
+
+                                <option value="LATEST"
+                                        th:selected="${selectedSort == 'LATEST'}">
+                                    Sort by Latest
+                                </option>
+
+                                <option value="PRICE_ASC"
+                                        th:selected="${selectedSort == 'PRICE_ASC'}">
+                                    Price: Low to High
+                                </option>
+
+                                <option value="PRICE_DESC"
+                                        th:selected="${selectedSort == 'PRICE_DESC'}">
+                                    Price: High to Low
+                                </option>
+
+                            </select>
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2"
+                                 stroke="currentColor"
+                                 aria-hidden="true"
+                                 class="pointer-events-none absolute right-4 top-1/2
+                        h-4 w-4 -translate-y-1/2 text-slate-300">
+
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                            </svg>
+
+                        </div>
+
+                    </form>
+
+                </div>
+                <!--                Property cards-->
                 <section th:if="${!properties.isEmpty()}"
                          class="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
 
@@ -404,7 +512,104 @@
 
                 </section>
 
-<!--                Pagination-->
+                <!-- Dynamic pagination -->
+                <nav th:if="${totalPages > 1}"
+                     aria-label="Property result pages"
+                     class="mt-10 flex flex-wrap items-center
+            justify-center gap-3">
+
+                    <!-- Previous -->
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/properties(
+                            city=${selectedCity},
+                            listingType=${selectedListingType},
+                            locality=${selectedLocality},
+                            propertyType=${selectedPropertyType},
+                            bedrooms=${selectedBedrooms},
+                            minPrice=${selectedMinPrice},
+                            maxPrice=${selectedMaxPrice},
+                            sort=${selectedSort},
+                            page=${currentPage - 1}
+                       )}"
+                       class="rounded-full border border-white/10
+                              px-4 py-2 text-sm text-slate-300 transition
+                              hover:border-emerald-400 hover:text-emerald-400">
+                                        Previous
+                    </a>
+
+                    <span th:if="${currentPage == 0}"
+                          aria-disabled="true"
+                          class="cursor-not-allowed rounded-full border
+                                 border-white/5 px-4 py-2 text-sm
+                                 text-slate-600">
+                            Previous
+                    </span>
+
+                    <!-- Page numbers -->
+                    <th:block th:each="pageNumber :
+              ${#numbers.sequence(0, totalPages - 1)}">
+
+        <span th:if="${pageNumber == currentPage}"
+              th:text="${pageNumber + 1}"
+              aria-current="page"
+              class="inline-flex h-10 w-10 items-center
+                     justify-center rounded-full bg-emerald-500
+                     text-sm font-bold text-slate-950">
+            1
+        </span>
+
+                        <a th:unless="${pageNumber == currentPage}"
+                           th:href="@{/properties(
+                                    city=${selectedCity},
+                                    listingType=${selectedListingType},
+                                    locality=${selectedLocality},
+                                    propertyType=${selectedPropertyType},
+                                    bedrooms=${selectedBedrooms},
+                                    minPrice=${selectedMinPrice},
+                                    maxPrice=${selectedMaxPrice},
+                                    sort=${selectedSort},
+                                    page=${pageNumber}
+                               )}"
+                           th:text="${pageNumber + 1}"
+                           th:attr="aria-label=${'Go to page ' + (pageNumber + 1)}"
+                           class="inline-flex h-10 w-10 items-center
+                                  justify-center rounded-full border
+                                  border-white/10 text-sm text-slate-300
+                                  transition hover:border-emerald-400
+                                  hover:text-emerald-400">
+                                            2
+                        </a>
+
+                    </th:block>
+
+                    <!-- Next -->
+                    <a th:if="${currentPage + 1 < totalPages}"
+                       th:href="@{/properties(
+                                city=${selectedCity},
+                                listingType=${selectedListingType},
+                                locality=${selectedLocality},
+                                propertyType=${selectedPropertyType},
+                                bedrooms=${selectedBedrooms},
+                                minPrice=${selectedMinPrice},
+                                maxPrice=${selectedMaxPrice},
+                                sort=${selectedSort},
+                                page=${currentPage + 1}
+                           )}"
+                       class="rounded-full border border-white/10
+                              px-4 py-2 text-sm text-slate-300 transition
+                              hover:border-emerald-400 hover:text-emerald-400">
+                                        Next
+                    </a>
+
+                    <span th:if="${currentPage + 1 >= totalPages}"
+                          aria-disabled="true"
+                          class="cursor-not-allowed rounded-full border
+                                 border-white/5 px-4 py-2 text-sm
+                                 text-slate-600">
+                        Next
+                    </span>
+
+                </nav>
             </section>
         </section>
     </section>
@@ -412,8 +617,13 @@
 
 </main>
 
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+<footer th:replace="~{fragments/footer :: footer}">
+</footer>
+
+<script th:src="@{/js/property-sort.js}"></script>
 <script th:src="@{/js/property-filters.js}"></script>
-<script src="/js/navbar.js"></script>
-<script src="/js/locality-search.js"></script></body>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/locality-search.js}"></script>
+
+</body>
 </html>

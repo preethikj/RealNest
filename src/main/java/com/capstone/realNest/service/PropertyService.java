@@ -12,6 +12,8 @@ import com.capstone.realNest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,8 +35,7 @@ public class PropertyService {
     public PropertyResponse createProperty(PropertyRequest request, Long ownerId) {
 
         User owner = userRepository.findById(ownerId)
-                .orElseThrow(() ->
-                        new UserNotFoundException(ownerId));
+                .orElseThrow(() -> new UserNotFoundException(ownerId));
 
         Property property = propertyMapper.toEntity(request, owner);
 
@@ -109,18 +110,17 @@ public class PropertyService {
     }
 
     @Transactional(readOnly = true)
-    public List<PropertyResponse> searchApprovedProperties(
+    public Page<PropertyResponse> searchApprovedProperties(
             String city,
             String listingType,
             String locality,
             String propertyType,
             Integer bedrooms,
             BigDecimal minPrice,
-            BigDecimal maxPrice
-    ) {
+            BigDecimal maxPrice,
+            Pageable pageable) {
 
-        return propertyRepository
-                .searchProperties(
+        return propertyRepository.searchProperties(
                         APPROVED_STATUS,
                         normalizeFilter(listingType),
                         normalizeFilter(propertyType),
@@ -128,11 +128,8 @@ public class PropertyService {
                         normalizeFilter(city),
                         normalizeFilter(locality),
                         minPrice,
-                        maxPrice
-                )
-                .stream()
-                .map(propertyMapper::toResponse)
-                .toList();
+                        maxPrice,
+                        pageable).map(propertyMapper::toResponse);
     }
 
     private String normalizeFilter(String value) {

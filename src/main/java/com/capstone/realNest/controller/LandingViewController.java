@@ -7,7 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -78,22 +82,42 @@ public class LandingViewController {
      * Locality and budget filters are applied on this page.
      */
     @GetMapping("/properties")
-    public String propertyList(
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) String listingType,
-            @RequestParam(required = false) String locality,
-            @RequestParam(required = false) java.math.BigDecimal minPrice,
-            @RequestParam(required = false) java.math.BigDecimal maxPrice,
-            @RequestParam(required = false) String propertyType,
-            @RequestParam(required = false) Integer bedrooms,
-            Model model) {
+    public String propertyList(@RequestParam(required = false) String city,
+                                @RequestParam(required = false) String listingType,
+                                @RequestParam(required = false) String locality,
+                                @RequestParam(required = false) BigDecimal minPrice,
+                                @RequestParam(required = false) BigDecimal maxPrice,
+                                @RequestParam(required = false) String propertyType,
+                                @RequestParam(required = false) Integer bedrooms,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "LATEST") String sort, Model model) {
 
-        List<PropertyResponse> properties = propertyService.searchApprovedProperties(city, listingType,
-                        locality, propertyType, bedrooms, minPrice, maxPrice);
+        int safePage = Math.max(page, 0);
+        Sort propertySort = getPropertySort(sort);
 
-        model.addAttribute("properties", properties);
+        PageRequest pageRequest = PageRequest.of(safePage, 6, propertySort);
 
-        // Preserve selected filters in the page.
+        Page<PropertyResponse> propertyPage =
+                propertyService.searchApprovedProperties(city, listingType, locality,
+                        propertyType, bedrooms, minPrice, maxPrice, pageRequest);
+
+        long resultStart = propertyPage.isEmpty() ? 0 : (long) propertyPage.getNumber()
+                            * propertyPage.getSize() + 1;
+
+        long resultEnd = propertyPage.isEmpty() ? 0 : resultStart
+                        + propertyPage.getNumberOfElements() - 1;
+
+        model.addAttribute("resultStart", resultStart);
+        model.addAttribute("resultEnd", resultEnd);
+
+        model.addAttribute("properties", propertyPage.getContent());
+
+        model.addAttribute("propertyPage", propertyPage);
+        model.addAttribute("currentPage", propertyPage.getNumber());
+        model.addAttribute("totalPages", propertyPage.getTotalPages());
+        model.addAttribute("totalProperties", propertyPage.getTotalElements());
+
+        // Preserve selected search and filter values.
         model.addAttribute("selectedCity", city);
         model.addAttribute("selectedListingType", listingType);
         model.addAttribute("selectedLocality", locality);
@@ -101,13 +125,69 @@ public class LandingViewController {
         model.addAttribute("selectedMaxPrice", maxPrice);
         model.addAttribute("selectedPropertyType", propertyType);
         model.addAttribute("selectedBedrooms", bedrooms);
+        model.addAttribute("selectedSort", normalizeSort(sort));
 
-        // Locality suggestions change according to the selected city.
         model.addAttribute(
                 "availableLocalities",
                 propertyService.getApprovedLocalitiesByCity(city)
         );
 
         return "public/property-list";
+    }
+
+    /*
+     * Converts the URL sort value into a safe Spring Data Sort.
+     *
+     * Only these three values are supported:
+     * LATEST, PRICE_ASC and PRICE_DESC.
+     */
+    private Sort getPropertySort(String sort) {
+
+        return switch (normalizeSort(sort)) {
+
+            case "PRICE_ASC" ->
+                    Sort.by(
+                            Sort.Direction.ASC,
+                            "price"
+                    ).and(
+                            Sort.by(
+                                    Sort.Direction.DESC,
+                                    "id"
+                            )
+                    );
+
+            case "PRICE_DESC" ->
+                    Sort.by(
+                            Sort.Direction.DESC,
+                            "price"
+                    ).and(
+                            Sort.by(
+                                    Sort.Direction.DESC,
+                                    "id"
+                            )
+                    );
+
+            default ->
+                    Sort.by(
+                            Sort.Direction.DESC,
+                            "createdAt"
+                    );
+        };
+    }
+
+
+    /*
+     * Prevents unsupported sort values from reaching the repository.
+     */
+    private String normalizeSort(String sort) {
+
+        if (
+                "PRICE_ASC".equalsIgnoreCase(sort) ||
+                        "PRICE_DESC".equalsIgnoreCase(sort)
+        ) {
+            return sort.toUpperCase();
+        }
+
+        return "LATEST";
     }
 }
