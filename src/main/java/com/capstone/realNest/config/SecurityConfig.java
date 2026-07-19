@@ -23,7 +23,10 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/favicon.ico",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/api/users/register",
+                                "/api/users/forgot-password",
+                                "/api/users/reset-password"
                         ).permitAll()
 
                         .requestMatchers("/admin/**")

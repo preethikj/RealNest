@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializePasswordToggles();
     initializePasswordMatchValidation();
     initializeAuthenticationForms();
+    initializeForgotPasswordModal();
 });
 
 
@@ -201,5 +202,81 @@ function initializeAuthenticationForms() {
 
             loadingIcon?.classList.remove("hidden");
         });
+    });
+}
+
+function initializeForgotPasswordModal() {
+
+    const openModalButton =
+        document.getElementById("openForgotPasswordModal");
+
+    const closeModalButton =
+        document.getElementById("closeForgotPasswordModal");
+
+    const modal =
+        document.getElementById("forgotPasswordModal");
+
+    const emailInput =
+        document.getElementById("forgotPasswordEmail");
+
+    if (
+        !openModalButton ||
+        !closeModalButton ||
+        !modal
+    ) {
+        return;
+    }
+
+    const openModal = () => {
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        document.body.classList.add("overflow-hidden");
+
+        emailInput?.focus();
+    };
+
+    const closeModal = () => {
+
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+
+        document.body.classList.remove("overflow-hidden");
+
+        openModalButton.focus();
+    };
+
+    openModalButton.addEventListener(
+        "click",
+        openModal
+    );
+
+    closeModalButton.addEventListener(
+        "click",
+        closeModal
+    );
+
+    modal.addEventListener("click", (event) => {
+
+        const clickedOutsideModalContent =
+            event.target === modal;
+
+        if (clickedOutsideModalContent) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+
+        const escapeWasPressed =
+            event.key === "Escape";
+
+        const modalIsOpen =
+            !modal.classList.contains("hidden");
+
+        if (escapeWasPressed && modalIsOpen) {
+            closeModal();
+        }
     });
 }
