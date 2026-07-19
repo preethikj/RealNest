@@ -57,4 +57,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
+
+    @ExceptionHandler(SelfEnquiryNotAllowedException.class)
+    public ResponseEntity<String> handleSelfEnquiryNotAllowedException(SelfEnquiryNotAllowedException exception) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    }
 }
