@@ -37,10 +37,11 @@ public class PropertyController {
 
     @PostMapping
     @Operation(summary = "Create a new property")
-    public ResponseEntity<PropertyResponse> createProperty(@RequestParam Long ownerId,
-                                                           @Valid @RequestBody PropertyRequest request) {
+    public ResponseEntity<PropertyResponse> createProperty(@Valid @RequestBody PropertyRequest request,
+                                                           @AuthenticationPrincipal CustomUserPrincipal currentUser) {
 
-        PropertyResponse response = propertyService.createProperty(request, ownerId);
+        PropertyResponse response = propertyService.createProperty(request, currentUser.id());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -118,6 +119,7 @@ public class PropertyController {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Search approved properties")
     public ResponseEntity<Page<PropertyResponse>> searchProperties(
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String listingType,
