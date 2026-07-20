@@ -42,7 +42,7 @@ app:
   base-url: ${APP_BASE_URL:http://localhost:8080}
 
 server:
-  port: 8080
+  port: ${PORT:8080}
   servlet:
     session:
       timeout: 30m
