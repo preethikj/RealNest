@@ -2,6 +2,7 @@ package com.capstone.realNest.dto.response;
 
 import com.capstone.realNest.enums.Role;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 

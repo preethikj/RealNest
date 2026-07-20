@@ -1,4 +1,4 @@
-package com.capstone.realNest.controller;
+package com.capstone.realNest.controller.view.publicc;
 
 import com.capstone.realNest.dto.response.PropertyResponse;
 import com.capstone.realNest.service.PropertyService;

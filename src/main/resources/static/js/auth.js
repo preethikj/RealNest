@@ -91,15 +91,20 @@ function initializePasswordMatchValidation() {
             confirmPasswordInput.value.length > 0;
 
         const passwordsMatch =
-            passwordInput.value === confirmPasswordInput.value;
+            passwordInput.value ===
+            confirmPasswordInput.value;
 
-        if (confirmationHasValue && !passwordsMatch) {
-
+        if (
+            confirmationHasValue &&
+            !passwordsMatch
+        ) {
             confirmPasswordInput.setCustomValidity(
                 "Passwords do not match."
             );
 
-            passwordMismatchError.classList.remove("hidden");
+            passwordMismatchError.classList.remove(
+                "hidden"
+            );
 
             confirmPasswordInput.classList.add(
                 "border-rose-400"
@@ -110,7 +115,9 @@ function initializePasswordMatchValidation() {
 
         confirmPasswordInput.setCustomValidity("");
 
-        passwordMismatchError.classList.add("hidden");
+        passwordMismatchError.classList.add(
+            "hidden"
+        );
 
         confirmPasswordInput.classList.remove(
             "border-rose-400"
@@ -147,12 +154,15 @@ function initializeAuthenticationForms() {
                 form.querySelector("#confirmPassword");
 
             const passwordMismatchError =
-                form.querySelector("#passwordMismatchError");
+                form.querySelector(
+                    "#passwordMismatchError"
+                );
 
             if (
                 passwordInput &&
                 confirmPasswordInput &&
-                passwordInput.value !== confirmPasswordInput.value
+                passwordInput.value !==
+                confirmPasswordInput.value
             ) {
                 event.preventDefault();
 
@@ -179,45 +189,126 @@ function initializeAuthenticationForms() {
 
             const submitButton =
                 event.submitter ||
-                form.querySelector('button[type="submit"]');
+                form.querySelector(
+                    'button[type="submit"]'
+                );
 
-            if (!submitButton) {
+            if (
+                !submitButton ||
+                submitButton.disabled
+            ) {
                 return;
             }
 
             const buttonText =
-                submitButton.querySelector("[data-button-text]");
+                submitButton.querySelector(
+                    "[data-button-text]"
+                );
 
             const loadingIcon =
-                submitButton.querySelector("[data-loading-icon]");
+                submitButton.querySelector(
+                    "[data-loading-icon]"
+                );
 
             const loadingText =
                 submitButton.dataset.loadingText;
 
             submitButton.disabled = true;
 
-            if (buttonText && loadingText) {
-                buttonText.textContent = loadingText;
+            const cancelControls =
+                document.querySelectorAll(
+                    "[data-submit-cancel], " +
+                    "#closeForgotPasswordModal"
+                );
+
+            disableAuthenticationCancelControls(
+                cancelControls
+            );
+
+            const forgotPasswordModal =
+                form.closest(
+                    "#forgotPasswordModal"
+                );
+
+            if (forgotPasswordModal) {
+                forgotPasswordModal.dataset.submitting =
+                    "true";
             }
 
-            loadingIcon?.classList.remove("hidden");
+            if (buttonText && loadingText) {
+                buttonText.textContent =
+                    loadingText;
+            }
+
+            loadingIcon?.classList.remove(
+                "hidden"
+            );
         });
     });
 }
 
+
+function disableAuthenticationCancelControls(
+    cancelControls
+) {
+
+    cancelControls.forEach((cancelControl) => {
+
+        if ("disabled" in cancelControl) {
+            cancelControl.disabled = true;
+        }
+
+        cancelControl.setAttribute(
+            "aria-disabled",
+            "true"
+        );
+
+        cancelControl.setAttribute(
+            "tabindex",
+            "-1"
+        );
+
+        cancelControl.classList.add(
+            "pointer-events-none",
+            "cursor-not-allowed",
+            "opacity-50"
+        );
+
+        cancelControl.addEventListener(
+            "click",
+            preventDisabledNavigation
+        );
+    });
+}
+
+
+function preventDisabledNavigation(event) {
+
+    event.preventDefault();
+}
+
+
 function initializeForgotPasswordModal() {
 
     const openModalButton =
-        document.getElementById("openForgotPasswordModal");
+        document.getElementById(
+            "openForgotPasswordModal"
+        );
 
     const closeModalButton =
-        document.getElementById("closeForgotPasswordModal");
+        document.getElementById(
+            "closeForgotPasswordModal"
+        );
 
     const modal =
-        document.getElementById("forgotPasswordModal");
+        document.getElementById(
+            "forgotPasswordModal"
+        );
 
     const emailInput =
-        document.getElementById("forgotPasswordEmail");
+        document.getElementById(
+            "forgotPasswordEmail"
+        );
 
     if (
         !openModalButton ||
@@ -232,17 +323,27 @@ function initializeForgotPasswordModal() {
         modal.classList.remove("hidden");
         modal.classList.add("flex");
 
-        document.body.classList.add("overflow-hidden");
+        document.body.classList.add(
+            "overflow-hidden"
+        );
 
         emailInput?.focus();
     };
 
     const closeModal = () => {
 
+        if (
+            modal.dataset.submitting === "true"
+        ) {
+            return;
+        }
+
         modal.classList.add("hidden");
         modal.classList.remove("flex");
 
-        document.body.classList.remove("overflow-hidden");
+        document.body.classList.remove(
+            "overflow-hidden"
+        );
 
         openModalButton.focus();
     };
@@ -267,16 +368,24 @@ function initializeForgotPasswordModal() {
         }
     });
 
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener(
+        "keydown",
+        (event) => {
 
-        const escapeWasPressed =
-            event.key === "Escape";
+            const escapeWasPressed =
+                event.key === "Escape";
 
-        const modalIsOpen =
-            !modal.classList.contains("hidden");
+            const modalIsOpen =
+                !modal.classList.contains(
+                    "hidden"
+                );
 
-        if (escapeWasPressed && modalIsOpen) {
-            closeModal();
+            if (
+                escapeWasPressed &&
+                modalIsOpen
+            ) {
+                closeModal();
+            }
         }
-    });
+    );
 }
