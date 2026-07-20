@@ -4,13 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     forms.forEach((form) => {
 
-        const cancelLinks = form.querySelectorAll("[data-submit-cancel]");
+        const cancelControls = form.querySelectorAll("[data-loading-cancel]");
 
-        cancelLinks.forEach((cancelLink) => {
+        cancelControls.forEach((cancelControl) => {
 
-            cancelLink.addEventListener("click", (event) => {
+            cancelControl.addEventListener("click", (event) => {
 
-                if (cancelLink.getAttribute("aria-disabled") === "true") {
+                const controlIsDisabled = cancelControl.getAttribute("aria-disabled") === "true";
+
+                if (controlIsDisabled) {
                     event.preventDefault();
                 }
             });
@@ -34,24 +36,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 buttonText.textContent = submitButton.dataset.loadingText || "Submitting...";
             }
 
-            if (loadingIcon) {
-                loadingIcon.classList.remove("hidden");
-            }
+            loadingIcon?.classList.remove("hidden");
 
-            disableCancelLinks(cancelLinks);
+            disableCancelControls(cancelControls);
         });
     });
 });
 
 
-function disableCancelLinks(cancelLinks) {
+function disableCancelControls(cancelControls) {
 
-    cancelLinks.forEach((cancelLink) => {
+    cancelControls.forEach((cancelControl) => {
 
-        cancelLink.setAttribute("aria-disabled", "true");
+        cancelControl.setAttribute("aria-disabled", "true");
 
-        cancelLink.setAttribute("tabindex", "-1");
+        cancelControl.setAttribute("tabindex", "-1");
 
-        cancelLink.classList.add("pointer-events-none", "cursor-not-allowed", "opacity-50");
+        cancelControl.classList.add("cursor-not-allowed", "opacity-50");
+
+        /*
+         * Inline pointer-events ensures the link
+         * is blocked even if Tailwind does not detect
+         * a dynamically added class.
+         */
+        cancelControl.style.pointerEvents = "none";
     });
 }
