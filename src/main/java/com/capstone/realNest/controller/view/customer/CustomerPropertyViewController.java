@@ -29,10 +29,7 @@ public class CustomerPropertyViewController {
     @GetMapping("/create")
     public String showPostPropertyPage(Model model) {
 
-        model.addAttribute(
-                "propertyRequest",
-                PropertyRequest.builder().build()
-        );
+        model.addAttribute("propertyRequest", PropertyRequest.builder().build());
 
         prepareFormPage(model);
 
@@ -41,20 +38,7 @@ public class CustomerPropertyViewController {
 
     //Save action
     @PostMapping("/save")
-    public String saveProperty(
-            @Valid
-            @ModelAttribute("propertyRequest")
-            PropertyRequest request,
-            BindingResult bindingResult,
-            @RequestParam(
-                    value = "propertyImages",
-                    required = false
-            )
-            List<MultipartFile> propertyImages,
-            @AuthenticationPrincipal
-            CustomUserPrincipal currentUser,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+    public String saveProperty(@Valid @ModelAttribute("propertyRequest") PropertyRequest request, BindingResult bindingResult, @RequestParam(value = "propertyImages", required = false) List<MultipartFile> propertyImages, @AuthenticationPrincipal CustomUserPrincipal currentUser, Model model, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
 
@@ -63,75 +47,45 @@ public class CustomerPropertyViewController {
             return "customer/post-property";
         }
 
-        List<MultipartFile> validImages =
-                propertyImages == null
-                        ? List.of()
-                        : propertyImages.stream()
-                        .filter(image ->
-                                image != null
-                                        && !image.isEmpty()
-                        )
-                        .toList();
+        List<MultipartFile> validImages = propertyImages == null ? List.of() : propertyImages.stream().filter(image -> image != null && !image.isEmpty()).toList();
 
         if (validImages.size() > 8) {
 
-            model.addAttribute(
-                    "errorMessage",
-                    "A maximum of 8 property images is allowed"
-            );
+            model.addAttribute("errorMessage", "A maximum of 8 property images is allowed");
 
             prepareFormPage(model);
 
             return "customer/post-property";
         }
 
-        PropertyResponse property =
-                propertyService.createProperty(
-                        request,
-                        currentUser.id()
-                );
+        PropertyResponse property = propertyService.createProperty(request, currentUser.id());
 
         // Upload only when the customer selected images
         if (!validImages.isEmpty()) {
 
-            propertyImageService.uploadImages(
-                    property.id(),
-                    currentUser.id(),
-                    validImages
-            );
+            propertyImageService.uploadImages(property.id(), currentUser.id(), validImages);
         }
 
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "Property submitted successfully for admin approval."
-        );
+        redirectAttributes.addFlashAttribute("successMessage", "Property submitted successfully for admin approval.");
 
         return "redirect:/customer/dashboard";
     }
 
     //Delete action
     @PostMapping("/{propertyId}/delete")
-    public String deleteProperty(@PathVariable Long propertyId,
-                                 @AuthenticationPrincipal CustomUserPrincipal currentUser,
-                                 RedirectAttributes redirectAttributes) {
+    public String deleteProperty(@PathVariable Long propertyId, @AuthenticationPrincipal CustomUserPrincipal currentUser, RedirectAttributes redirectAttributes) {
 
         propertyService.deletePropertyByOwner(propertyId, currentUser.id());
 
-        redirectAttributes.addFlashAttribute("successMessage",
-                "Property deleted successfully.");
+        redirectAttributes.addFlashAttribute("successMessage", "Property deleted successfully.");
         return "redirect:/customer/dashboard";
     }
 
     //Show property details page
     @GetMapping("/{propertyId}")
-    public String showCustomerPropertyDetails(@PathVariable Long propertyId,
-            @AuthenticationPrincipal
-            CustomUserPrincipal currentUser,
-            Model model) {
+    public String showCustomerPropertyDetails(@PathVariable Long propertyId, @AuthenticationPrincipal CustomUserPrincipal currentUser, Model model) {
 
-        PropertyResponse property = propertyService.getPropertyByOwner(
-                        propertyId,
-                        currentUser.id());
+        PropertyResponse property = propertyService.getPropertyByOwner(propertyId, currentUser.id());
 
         model.addAttribute("property", property);
         model.addAttribute("portalMode", "CUSTOMER");
@@ -141,29 +95,27 @@ public class CustomerPropertyViewController {
 
     //Show property page for edit
     @GetMapping("/{propertyId}/edit")
-    public String showEditPropertyPage(@PathVariable Long propertyId, @AuthenticationPrincipal
-            CustomUserPrincipal currentUser, Model model) {
+    public String showEditPropertyPage(@PathVariable Long propertyId, @AuthenticationPrincipal CustomUserPrincipal currentUser, Model model) {
 
         PropertyResponse property = propertyService.getPropertyByOwner(propertyId, currentUser.id());
 
-        PropertyRequest propertyRequest =
-                PropertyRequest.builder()
-                        .title(property.title())
-                        .description(property.description())
-                        .price(property.price())
-                        .propertyType(property.propertyType())
-                        .listingType(property.listingType())
-                        .bedrooms(property.bedrooms())
-                        .bathrooms(property.bathrooms())
-                        .area(property.area())
-                        .address(property.address())
-                        .city(property.city())
-                        .state(property.state())
-                        .country(property.country())
-                        .pincode(property.pincode())
-                        .latitude(property.latitude())
-                        .longitude(property.longitude())
-                        .build();
+        PropertyRequest propertyRequest = PropertyRequest.builder()
+                .title(property.title())
+                .description(property.description())
+                .price(property.price())
+                .propertyType(property.propertyType())
+                .listingType(property.listingType())
+                .bedrooms(property.bedrooms())
+                .bathrooms(property.bathrooms())
+                .area(property.area())
+                .address(property.address())
+                .locality(property.locality())
+                .city(property.city())
+                .state(property.state())
+                .country(property.country())
+                .pincode(property.pincode())
+                .latitude(property.latitude())
+                .longitude(property.longitude()).build();
 
         model.addAttribute("propertyRequest", propertyRequest);
 
@@ -176,21 +128,17 @@ public class CustomerPropertyViewController {
 
         model.addAttribute("activeMenu", "post-property");
         model.addAttribute("pageTitle", "Edit Property");
-        model.addAttribute("pageSubtitle",
-                "Update your property details and submit it " + "again for admin approval.");
+        model.addAttribute("pageSubtitle", "Update your property details and submit it " + "again for admin approval.");
 
         return "customer/post-property";
     }
 
     @PostMapping("/{propertyId}/images/{imageId}/delete")
-    public String deletePropertyImage(@PathVariable Long propertyId, @PathVariable Long imageId,
-            @AuthenticationPrincipal CustomUserPrincipal currentUser,
-            RedirectAttributes redirectAttributes) {
+    public String deletePropertyImage(@PathVariable Long propertyId, @PathVariable Long imageId, @AuthenticationPrincipal CustomUserPrincipal currentUser, RedirectAttributes redirectAttributes) {
 
         try {
             propertyImageService.deleteImage(propertyId, imageId, currentUser.id());
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Property image removed successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Property image removed successfully.");
 
         } catch (IllegalStateException ex) {
 
@@ -202,20 +150,13 @@ public class CustomerPropertyViewController {
 
 
     @PostMapping("/{propertyId}/update")
-    public String updateProperty(@PathVariable Long propertyId,
-                                 @Valid @ModelAttribute("propertyRequest") PropertyRequest request,
-                                 BindingResult bindingResult,
-                                 @RequestParam(value = "propertyImages", required = false)
-                                     List<MultipartFile> propertyImages,
-                                 @AuthenticationPrincipal CustomUserPrincipal currentUser,
-                                 Model model, RedirectAttributes redirectAttributes) {
+    public String updateProperty(@PathVariable Long propertyId, @Valid @ModelAttribute("propertyRequest") PropertyRequest request, BindingResult bindingResult, @RequestParam(value = "propertyImages", required = false) List<MultipartFile> propertyImages, @AuthenticationPrincipal CustomUserPrincipal currentUser, Model model, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
 
             PropertyResponse property = propertyService.getPropertyByOwner(propertyId, currentUser.id());
 
-            model.addAttribute("formAction", "/customer/property/"
-                    + propertyId + "/update");
+            model.addAttribute("formAction", "/customer/property/" + propertyId + "/update");
 
             model.addAttribute("editMode", true);
             model.addAttribute("propertyId", propertyId);
@@ -224,79 +165,39 @@ public class CustomerPropertyViewController {
 
             model.addAttribute("activeMenu", "post-property");
             model.addAttribute("pageTitle", "Edit Property");
-            model.addAttribute(
-                    "pageSubtitle",
-                    "Update your property details and submit it "
-                            + "again for admin approval."
-            );
+            model.addAttribute("pageSubtitle", "Update your property details and submit it " + "again for admin approval.");
 
             return "customer/post-property";
         }
 
-        propertyService.updateProperty(
-                propertyId,
-                currentUser.id(),
-                request);
+        propertyService.updateProperty(propertyId, currentUser.id(), request);
 
-        List<MultipartFile> newImages =
-                propertyImages == null
-                        ? List.of()
-                        : propertyImages.stream()
-                        .filter(image -> !image.isEmpty())
-                        .toList();
+        List<MultipartFile> newImages = propertyImages == null ? List.of() : propertyImages.stream().filter(image -> !image.isEmpty()).toList();
 
         if (!newImages.isEmpty()) {
 
-            propertyImageService.uploadImages(
-                    propertyId,
-                    currentUser.id(),
-                    newImages
-            );
+            propertyImageService.uploadImages(propertyId, currentUser.id(), newImages);
         }
 
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "Property updated and submitted for admin approval."
-        );
+        redirectAttributes.addFlashAttribute("successMessage", "Property updated and submitted for admin approval.");
 
         return "redirect:/customer/dashboard";
     }
+
     private void prepareFormPage(Model model) {
 
-        model.addAttribute(
-                "formAction",
-                "/customer/property/save"
-        );
+        model.addAttribute("formAction", "/customer/property/save");
 
-        model.addAttribute(
-                "editMode",
-                false
-        );
+        model.addAttribute("editMode", false);
 
-        model.addAttribute(
-                "existingImages",
-                List.of()
-        );
+        model.addAttribute("existingImages", List.of());
 
-        model.addAttribute(
-                "existingImageCount",
-                0
-        );
+        model.addAttribute("existingImageCount", 0);
 
-        model.addAttribute(
-                "activeMenu",
-                "post-property"
-        );
+        model.addAttribute("activeMenu", "post-property");
 
-        model.addAttribute(
-                "pageTitle",
-                "List Your Property"
-        );
+        model.addAttribute("pageTitle", "List Your Property");
 
-        model.addAttribute(
-                "pageSubtitle",
-                "Share your property details and submit the listing "
-                        + "for admin approval."
-        );
+        model.addAttribute("pageSubtitle", "Share your property details and submit the listing " + "for admin approval.");
     }
 }
