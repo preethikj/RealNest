@@ -163,7 +163,21 @@
             </nav>
 
     </section>
+    <footer class="border-t border-white/10 px-6 py-4">
 
+        <p class="text-center text-xs leading-5 text-slate-500">
+            &copy;
+            <span th:text="${#dates.year(#dates.createNow())}">
+            2026
+        </span>
+            Preethi KJ
+        </p>
+
+        <p class="text-center text-xs text-slate-600">
+            All rights reserved.
+        </p>
+
+    </footer>
 </aside>
 
 </body>
