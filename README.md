@@ -8,15 +8,15 @@ The application includes role-based access, property search and filtering, Cloud
 
 > Deployment URL will be added after deployment.
 
-- Application: `https://your-deployment-url`
-- Swagger UI: `https://your-deployment-url/swagger-ui/index.html`
+- Application: https://realnest-preethi.onrender.com/
+- Swagger UI: https://realnest-preethi.onrender.com/swagger-ui/index.html
 
 ## Demo Credentials
 
 ### Administrator
 
-- Email: `<ADMIN_EMAIL>`
-- Password: `<ADMIN_PASSWORD>`
+- Email: admin@mail.com
+- Password: admin@123
 
 ### Customer
 
