@@ -24,8 +24,8 @@ Customers can create a new account using the registration page.
 
 Optional demo customer:
 
-- Email: `<CUSTOMER_EMAIL>`
-- Password: `<CUSTOMER_PASSWORD>`
+- Email: realnestcustomer@gmail.com
+- Password: cust@1234
 
 > These accounts are intended only for project demonstration and evaluation.
 
