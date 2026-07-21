@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
@@ -7,8 +8,8 @@
          class="relative z-30 rounded-3xl border
                 border-white/10 bg-slate-900 p-5 shadow-xl">
 
-    <p class="text-sm font-semibold uppercase tracking-widest
-              text-emerald-400">
+    <p class="text-sm font-semibold uppercase
+              tracking-widest text-emerald-400">
         Search Properties
     </p>
 
@@ -77,12 +78,14 @@
                      stroke-width="2"
                      stroke="currentColor"
                      aria-hidden="true"
-                     class="pointer-events-none absolute right-4 top-1/2
-                            h-4 w-4 -translate-y-1/2 text-slate-400">
+                     class="pointer-events-none absolute
+                            right-4 top-1/2 h-4 w-4
+                            -translate-y-1/2 text-slate-400">
 
                     <path stroke-linecap="round"
                           stroke-linejoin="round"
                           d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+
                 </svg>
 
                 <!-- Dynamic approved-property cities -->
@@ -94,20 +97,27 @@
                                 border border-white/10 bg-slate-900
                                 shadow-2xl">
 
-                    <p class="px-5 py-3 text-xs font-bold uppercase
+                    <p class="border-b border-white/10 px-5 py-3
+                              text-xs font-bold uppercase
                               tracking-widest text-slate-500">
                         Available Cities
                     </p>
 
-                    <button th:each="city : ${availableCities}"
-                            type="button"
-                            class="listing-city-option block w-full
-                                   px-5 py-3 text-left text-slate-300
-                                   transition hover:bg-emerald-500
-                                   hover:text-slate-950"
-                            th:text="${city}">
-                        City
-                    </button>
+                    <div class="themed-scrollbar max-h-64
+                                overflow-y-auto overscroll-contain">
+
+                        <button th:each="city : ${availableCities}"
+                                type="button"
+                                class="listing-city-option block w-full
+                                       px-5 py-3 text-left
+                                       text-slate-300 transition
+                                       hover:bg-emerald-500
+                                       hover:text-slate-950"
+                                th:text="${city}">
+                            City
+                        </button>
+
+                    </div>
 
                 </section>
 
@@ -139,12 +149,14 @@
                      stroke-width="2"
                      stroke="currentColor"
                      aria-hidden="true"
-                     class="pointer-events-none absolute right-4 top-1/2
-                            h-4 w-4 -translate-y-1/2 text-slate-400">
+                     class="pointer-events-none absolute
+                            right-4 top-1/2 h-4 w-4
+                            -translate-y-1/2 text-slate-400">
 
                     <path stroke-linecap="round"
                           stroke-linejoin="round"
                           d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+
                 </svg>
 
                 <!-- Localities belonging to the selected city -->
@@ -156,39 +168,50 @@
                                 border border-white/10 bg-slate-900
                                 shadow-2xl">
 
-                    <p class="px-5 py-3 text-xs font-bold uppercase
+                    <p class="border-b border-white/10 px-5 py-3
+                              text-xs font-bold uppercase
                               tracking-widest text-slate-500">
                         Available Localities
                     </p>
 
-                    <button th:each="locality : ${availableLocalities}"
-                            type="button"
-                            class="locality-option block w-full
-                                   px-5 py-3 text-left text-slate-300
-                                   transition hover:bg-emerald-500
-                                   hover:text-slate-950"
-                            th:text="${locality}">
-                        Locality
-                    </button>
+                    <div class="themed-scrollbar max-h-64
+                                overflow-y-auto overscroll-contain">
+
+                        <button th:each="locality : ${availableLocalities}"
+                                type="button"
+                                class="locality-option block w-full
+                                       px-5 py-3 text-left
+                                       text-slate-300 transition
+                                       hover:bg-emerald-500
+                                       hover:text-slate-950"
+                                th:text="${locality}">
+                            Locality
+                        </button>
+
+                    </div>
 
                 </section>
 
             </div>
 
+            <!-- Search actions -->
             <div class="flex gap-3">
 
                 <button type="submit"
-                        class="rounded-full bg-emerald-500 px-7 py-4
-                               text-sm font-bold text-slate-950 transition
+                        class="rounded-full bg-emerald-500
+                               px-7 py-4 text-sm font-bold
+                               text-slate-950 transition
                                hover:bg-emerald-400">
                     Search
                 </button>
 
                 <a th:href="@{/properties}"
-                   class="inline-flex items-center justify-center rounded-full
-                          border border-white/15 px-6 py-4 text-sm
-                          font-semibold text-slate-300 transition
-                          hover:border-emerald-400 hover:text-emerald-400">
+                   class="inline-flex items-center justify-center
+                          rounded-full border border-white/15
+                          px-6 py-4 text-sm font-semibold
+                          text-slate-300 transition
+                          hover:border-emerald-400
+                          hover:text-emerald-400">
                     Clear All
                 </a>
 
