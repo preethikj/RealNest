@@ -3,30 +3,38 @@
 
 <body>
 
+<!-- Public property card -->
 <article th:fragment="propertyCard(property)"
-         class="group overflow-hidden rounded-3xl border border-white/10
+         class="group flex h-full flex-col overflow-hidden
+                rounded-3xl border border-white/10
                 bg-slate-900 shadow-xl transition
-                hover:-translate-y-1 hover:border-emerald-400/40
+                hover:-translate-y-1
+                hover:border-emerald-400/40
                 hover:shadow-emerald-500/10">
 
-    <section class="relative h-60 overflow-hidden">
+    <section class="relative h-60 shrink-0 overflow-hidden">
 
         <!-- Uploaded property image -->
-        <img th:if="${property.images != null and !property.images.isEmpty()}"
+        <img th:if="${property.images != null
+                    and !property.images.isEmpty()}"
              th:src="${property.images[0].imageUrl}"
              th:alt="${property.title}"
-             class="h-full w-full object-cover transition duration-500
+             class="h-full w-full object-cover
+                    transition duration-500
                     group-hover:scale-105">
 
         <!-- Fallback when the property has no image -->
-        <img th:unless="${property.images != null and !property.images.isEmpty()}"
+        <img th:unless="${property.images != null
+                        and !property.images.isEmpty()}"
              src="/images/property-placeholder.png"
              th:alt="${property.title}"
-             class="h-full w-full object-cover transition duration-500
+             class="h-full w-full object-cover
+                    transition duration-500
                     group-hover:scale-105">
 
-        <span class="absolute left-4 top-4 rounded-full bg-emerald-500
-                     px-4 py-1 text-xs font-bold text-slate-950"
+        <span class="absolute left-4 top-4 rounded-full
+                     bg-emerald-500 px-4 py-1
+                     text-xs font-bold text-slate-950"
               th:text="${property.listingType == 'SALE'
                     ? 'FOR SALE'
                     : 'FOR RENT'}">
@@ -35,14 +43,20 @@
 
     </section>
 
-    <section class="p-5">
+    <section class="flex flex-1 flex-col p-5">
 
         <p class="text-2xl font-bold text-emerald-400">
+
             ₹<span th:text="${#numbers.formatDecimal(
-                    property.price, 1, 'COMMA', 0, 'POINT'
+                    property.price,
+                    1,
+                    'COMMA',
+                    0,
+                    'POINT'
                 )}">
                 85,00,000
             </span>
+
         </p>
 
         <h2 class="mt-2 truncate text-xl font-bold text-white"
@@ -55,7 +69,8 @@
             Indiranagar, Bangalore
         </p>
 
-        <ul class="mt-5 flex flex-wrap gap-3 text-sm text-slate-300">
+        <ul class="mt-5 flex flex-wrap gap-3
+                   text-sm text-slate-300">
 
             <li th:if="${property.bedrooms != null}"
                 class="rounded-full bg-white/5 px-3 py-1"
@@ -72,26 +87,34 @@
             <li th:if="${property.area != null}"
                 class="rounded-full bg-white/5 px-3 py-1"
                 th:text="${#numbers.formatDecimal(
-                        property.area, 1, 'COMMA', 0, 'POINT'
+                        property.area,
+                        1,
+                        'COMMA',
+                        0,
+                        'POINT'
                     ) + ' sqft'}">
                 1450 sqft
             </li>
 
         </ul>
 
-        <div class="mt-6">
+        <div class="mt-auto pt-6">
+
             <th:block th:replace="~{fragments/buttons ::
                 primaryLink(
                     'View Details',
                     ${'/properties/' + property.id}
                 )}">
             </th:block>
+
         </div>
 
     </section>
 
 </article>
 
+
+<!-- Customer property card -->
 <article th:fragment="customerPropertyCard(
             imageUrl,
             imageAlt,
@@ -104,25 +127,31 @@
             editUrl,
             deleteUrl
          )"
-         class="group overflow-hidden rounded-3xl border border-slate-200
-                bg-white shadow-sm transition duration-300
+         class="group overflow-hidden rounded-3xl
+                border border-slate-200 bg-white
+                shadow-sm transition duration-300
                 hover:-translate-y-1 hover:shadow-lg">
 
     <section class="relative h-60 overflow-hidden">
 
         <img th:src="${imageUrl}"
              th:alt="${imageAlt}"
-             class="h-full w-full object-cover transition duration-500
+             class="h-full w-full object-cover
+                    transition duration-500
                     group-hover:scale-105">
 
-        <span class="absolute left-4 top-4 rounded-full bg-slate-950/90 px-4 py-1
-                     text-xs font-bold text-white backdrop-blur"
-              th:text="${listingType == 'SALE' ? 'FOR SALE' : 'FOR RENT'}">
+        <span class="absolute left-4 top-4 rounded-full
+                     bg-slate-950/90 px-4 py-1
+                     text-xs font-bold text-white
+                     backdrop-blur"
+              th:text="${listingType == 'SALE'
+                    ? 'FOR SALE'
+                    : 'FOR RENT'}">
             FOR SALE
         </span>
 
-        <span class="absolute right-4 top-4 rounded-full px-4 py-1
-                     text-xs font-bold"
+        <span class="absolute right-4 top-4 rounded-full
+                     px-4 py-1 text-xs font-bold"
               th:text="${status}"
               th:classappend="
                     ${status == 'APPROVED'}
@@ -142,7 +171,8 @@
             ₹85 L
         </p>
 
-        <h2 class="mt-2 truncate text-xl font-bold text-slate-950"
+        <h2 class="mt-2 truncate text-xl font-bold
+                   text-slate-950"
             th:text="${title}">
             Modern Luxury Apartment
         </h2>
@@ -153,14 +183,23 @@
         </p>
 
         <div class="mt-6 flex items-center gap-2
-            border-t border-slate-100 pt-4">
+                    border-t border-slate-100 pt-4">
 
-            <th:block th:replace="~{fragments/buttons :: outlineLink('View', ${viewUrl})}"></th:block>
+            <th:block th:replace="~{fragments/buttons ::
+                outlineLink('View', ${viewUrl})}">
+            </th:block>
 
-            <th:block th:replace="~{fragments/buttons :: outlineLink('Edit', ${editUrl})}"></th:block>
+            <th:block th:replace="~{fragments/buttons ::
+                outlineLink('Edit', ${editUrl})}">
+            </th:block>
 
-            <form th:action="${deleteUrl}" method="post">
-                <th:block th:replace="~{fragments/buttons :: deleteButton('Delete', 'submit')}"></th:block>
+            <form th:action="${deleteUrl}"
+                  method="post">
+
+                <th:block th:replace="~{fragments/buttons ::
+                    deleteButton('Delete', 'submit')}">
+                </th:block>
+
             </form>
 
         </div>
@@ -169,6 +208,8 @@
 
 </article>
 
+
+<!-- Admin property card -->
 <article th:fragment="adminPropertyCard(
             imageUrl,
             imageAlt,
@@ -182,11 +223,13 @@
             viewUrl,
             reviewUrl
          )"
-         class="rounded-2xl border border-slate-200 bg-white
-                p-4 shadow-sm transition
-                hover:border-emerald-200 hover:shadow-md">
+         class="rounded-2xl border border-slate-200
+                bg-white p-4 shadow-sm transition
+                hover:border-emerald-200
+                hover:shadow-md">
 
-    <div class="flex flex-col gap-5 lg:flex-row lg:items-center">
+    <div class="flex flex-col gap-5
+                lg:flex-row lg:items-center">
 
         <!-- Image -->
         <img th:src="${imageUrl}"
@@ -199,15 +242,17 @@
 
             <div class="flex flex-wrap items-center gap-2">
 
-                <span class="rounded-full bg-slate-950 px-3 py-1
-                             text-[10px] font-bold text-white"
+                <span class="rounded-full bg-slate-950
+                             px-3 py-1 text-[10px]
+                             font-bold text-white"
                       th:text="${listingType == 'SALE'
                           ? 'FOR SALE'
                           : 'FOR RENT'}">
                     FOR SALE
                 </span>
 
-                <span class="rounded-full px-3 py-1 text-[10px] font-bold"
+                <span class="rounded-full px-3 py-1
+                             text-[10px] font-bold"
                       th:text="${status}"
                       th:classappend="
                             ${status == 'APPROVED'}
@@ -220,7 +265,8 @@
 
             </div>
 
-            <h2 class="mt-3 truncate text-lg font-bold text-slate-950"
+            <h2 class="mt-3 truncate text-lg font-bold
+                       text-slate-950"
                 th:text="${title}">
                 Modern 3BHK Villa
             </h2>
@@ -235,12 +281,13 @@
         <!-- Owner -->
         <section class="min-w-0 lg:flex-1">
 
-            <p class="text-xs font-semibold uppercase tracking-wide
-                      text-slate-400">
+            <p class="text-xs font-semibold uppercase
+                      tracking-wide text-slate-400">
                 Owner
             </p>
 
-            <p class="mt-1 truncate text-sm font-semibold text-slate-800"
+            <p class="mt-1 truncate text-sm font-semibold
+                      text-slate-800"
                th:text="${ownerName}">
                 Rohan Mehta
             </p>
@@ -250,8 +297,8 @@
         <!-- Location -->
         <section class="min-w-0 lg:flex-1">
 
-            <p class="text-xs font-semibold uppercase tracking-wide
-                      text-slate-400">
+            <p class="text-xs font-semibold uppercase
+                      tracking-wide text-slate-400">
                 Location
             </p>
 
@@ -262,11 +309,11 @@
 
         </section>
 
-        <!-- Submitted Date -->
+        <!-- Submitted date -->
         <section class="min-w-0 lg:w-36 lg:shrink-0">
 
-            <p class="text-xs font-semibold uppercase tracking-wide
-                      text-slate-400">
+            <p class="text-xs font-semibold uppercase
+                      tracking-wide text-slate-400">
                 Submitted
             </p>
 
@@ -278,9 +325,11 @@
         </section>
 
         <!-- Actions -->
-        <section class="flex shrink-0 flex-wrap items-center justify-end gap-2
-                border-t border-slate-100 pt-4
-                lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+        <section class="flex shrink-0 flex-wrap
+                        items-center justify-end gap-2
+                        border-t border-slate-100 pt-4
+                        lg:border-l lg:border-t-0
+                        lg:pl-5 lg:pt-0">
 
             <th:block th:if="${status != 'PENDING'}">
 
@@ -303,5 +352,6 @@
     </div>
 
 </article>
+
 </body>
 </html>

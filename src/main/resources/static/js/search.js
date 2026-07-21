@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     const searchForm =
         document.getElementById("propertySearchForm");
 
@@ -15,7 +16,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+
+    const showAllCities = () => {
+
+        if (!suggestions || cityOptions.length === 0) {
+            return;
+        }
+
+        cityOptions.forEach((option) => {
+            option.classList.remove("hidden");
+        });
+
+        suggestions.classList.remove("hidden");
+    };
+
+
     const showMatchingCities = () => {
+
         if (!suggestions) {
             return;
         }
@@ -26,13 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
         let matchingCityExists = false;
 
         cityOptions.forEach((option) => {
+
             const city =
                 option.textContent.trim().toLowerCase();
 
             const matches =
                 city.includes(enteredCity);
 
-            option.classList.toggle("hidden", !matches);
+            option.classList.toggle(
+                "hidden",
+                !matches
+            );
 
             if (matches) {
                 matchingCityExists = true;
@@ -45,11 +66,19 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     };
 
+
     cityInput.addEventListener("focus", () => {
-        showMatchingCities();
+        showAllCities();
     });
 
+
+    cityInput.addEventListener("click", () => {
+        showAllCities();
+    });
+
+
     cityInput.addEventListener("input", () => {
+
         cityInput.classList.remove(
             "ring-2",
             "ring-red-400"
@@ -58,8 +87,11 @@ document.addEventListener("DOMContentLoaded", () => {
         showMatchingCities();
     });
 
+
     cityOptions.forEach((option) => {
+
         option.addEventListener("click", () => {
+
             cityInput.value =
                 option.textContent.trim();
 
@@ -67,7 +99,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+
     document.addEventListener("click", (event) => {
+
         if (
             suggestions &&
             !cityInput.contains(event.target) &&
@@ -77,10 +111,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+
+    document.addEventListener("keydown", (event) => {
+
+        if (
+            event.key === "Escape" &&
+            suggestions
+        ) {
+            suggestions.classList.add("hidden");
+        }
+    });
+
+
     searchForm.addEventListener("submit", (event) => {
-        const city = cityInput.value.trim();
+
+        const city =
+            cityInput.value.trim();
 
         if (city.length < 2) {
+
             event.preventDefault();
 
             cityInput.classList.add(
@@ -89,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             cityInput.focus();
+
             return;
         }
 

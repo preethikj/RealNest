@@ -10,40 +10,85 @@
     <section th:if="${images != null and !#lists.isEmpty(images)}"
              class="grid gap-4 lg:grid-cols-4 lg:grid-rows-2">
 
-        <img id="mainPropertyImage"
-             th:src="${images[0].imageUrl}"
-             th:alt="${propertyTitle + ' main view'}"
-             th:classappend="${images.size() == 1}
-            ? ' lg:col-span-4'
-            : ' lg:col-span-3 lg:row-span-2'"
-             class="h-[420px] w-full rounded-3xl object-cover">
+        <!-- Main image -->
+        <button type="button"
+                data-gallery-open
+                data-gallery-index="0"
+                th:attr="aria-label=${images.size() > 1
+                    ? 'View all ' + images.size() + ' property photos'
+                    : 'View property photo'}"
+                th:classappend="${images.size() == 1}
+                    ? ' lg:col-span-4'
+                    : ' lg:col-span-3 lg:row-span-2'"
+                class="group relative h-72 w-full cursor-pointer
+                       overflow-hidden rounded-3xl
+                       sm:h-[420px]">
 
-        <img th:if="${images.size() > 1}"
-             th:src="${images[1].imageUrl}"
-             th:attr="data-gallery-image=${images[1].imageUrl}"
-             th:alt="${propertyTitle + ' additional view'}"
-             th:classappend="${images.size() == 2}
-            ? ' h-[420px] lg:row-span-2'
-            : ' h-[202px]'"
-             class="gallery-thumbnail hidden w-full cursor-pointer
-            rounded-2xl object-cover lg:block">
+            <img id="mainPropertyImage"
+                 th:src="${images[0].imageUrl}"
+                 th:alt="${propertyTitle + ' main view'}"
+                 class="h-full w-full object-cover
+                        transition duration-500
+                        group-hover:scale-105">
 
-        <button th:if="${images.size() > 2}"
-                id="openGalleryModal"
+            <!-- Mobile photo-count badge -->
+            <span class="absolute bottom-4 right-4
+                         rounded-full bg-slate-950/80
+                         px-4 py-2 text-sm font-bold text-white
+                         shadow-lg backdrop-blur lg:hidden"
+                  th:text="${images.size() > 1
+                      ? 'View all ' + images.size() + ' photos'
+                      : 'View photo'}">
+                View all photos
+            </span>
+
+        </button>
+
+        <!-- Second desktop image -->
+        <button th:if="${images.size() > 1}"
                 type="button"
-                class="relative hidden h-[202px] cursor-pointer
-               overflow-hidden rounded-2xl lg:block">
+                data-gallery-open
+                data-gallery-index="1"
+                th:attr="aria-label=${'Open property photo 2'}"
+                th:classappend="${images.size() == 2}
+                    ? ' h-[420px] lg:row-span-2'
+                    : ' h-[202px]'"
+                class="group hidden w-full cursor-pointer
+                       overflow-hidden rounded-2xl lg:block">
+
+            <img th:src="${images[1].imageUrl}"
+                 th:alt="${propertyTitle + ' additional view'}"
+                 class="h-full w-full object-cover
+                        transition duration-500
+                        group-hover:scale-105">
+
+        </button>
+
+        <!-- Remaining-images desktop preview -->
+        <button th:if="${images.size() > 2}"
+                type="button"
+                data-gallery-open
+                data-gallery-index="2"
+                th:attr="aria-label=${'View all '
+                    + images.size() + ' property photos'}"
+                class="group relative hidden h-[202px]
+                       cursor-pointer overflow-hidden
+                       rounded-2xl lg:block">
 
             <img th:src="${images[2].imageUrl}"
                  th:alt="${propertyTitle + ' gallery preview'}"
-                 class="h-full w-full object-cover">
+                 class="h-full w-full object-cover
+                        transition duration-500
+                        group-hover:scale-105">
 
             <span class="absolute inset-0 flex items-center
                          justify-center bg-slate-950/65">
 
-                <span class="rounded-full bg-white/15 px-5 py-2
-                             text-sm font-bold text-white backdrop-blur"
-                      th:text="${'+' + (images.size() - 2) + ' Photos'}">
+                <span class="rounded-full bg-white/15
+                             px-5 py-2 text-sm font-bold
+                             text-white backdrop-blur"
+                      th:text="${'+' + (images.size() - 2)
+                          + ' Photos'}">
                     +1 Photos
                 </span>
 
@@ -55,8 +100,9 @@
 
     <!-- No images available -->
     <section th:if="${images == null or #lists.isEmpty(images)}"
-             class="flex h-[420px] items-center justify-center
-                    rounded-3xl border border-white/10 bg-slate-900">
+             class="flex h-72 items-center justify-center
+                    rounded-3xl border border-white/10
+                    bg-slate-900 sm:h-[420px]">
 
         <div class="text-center text-slate-500">
 
@@ -88,26 +134,32 @@
 
     </section>
 
-    <!-- Gallery modal -->
-    <section th:if="${images != null and images.size() > 2}"
+    <!-- Gallery modal: available even when there is only one image -->
+    <section th:if="${images != null and !#lists.isEmpty(images)}"
              id="galleryModal"
-             class="fixed inset-0 z-50 hidden bg-slate-950/95
-                    p-6 text-white">
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="galleryModalTitle"
+             class="fixed inset-0 z-[100] hidden
+                    bg-slate-950/95 p-4 text-white
+                    sm:p-6">
 
         <section class="mx-auto flex h-full max-w-6xl flex-col">
 
             <header class="mb-4 flex items-center justify-between">
 
-                <p class="text-lg font-bold">
+                <p id="galleryModalTitle"
+                   class="text-lg font-bold">
                     Property Photos
                 </p>
 
                 <button id="closeGalleryModal"
                         type="button"
                         aria-label="Close gallery"
-                        class="flex h-10 w-10 items-center justify-center
-                               rounded-full bg-black/70 text-white
-                               transition hover:bg-emerald-500
+                        class="flex h-10 w-10 items-center
+                               justify-center rounded-full
+                               bg-black/70 text-white transition
+                               hover:bg-emerald-500
                                hover:text-slate-950">
 
                     <span aria-hidden="true"
@@ -119,17 +171,17 @@
 
             </header>
 
-            <section class="relative flex flex-1 items-center
-                            justify-center">
+            <section class="relative flex min-h-0 flex-1
+                            items-center justify-center">
 
                 <button id="previousGalleryImage"
                         type="button"
                         aria-label="Previous image"
-                        class="absolute left-4 z-10 flex h-10 w-10
+                        class="absolute left-1 z-10 flex h-10 w-10
                                items-center justify-center rounded-full
                                bg-black/70 text-xl text-white
                                transition hover:bg-emerald-500
-                               hover:text-slate-950">
+                               hover:text-slate-950 sm:left-4">
                     &#10094;
                 </button>
 
@@ -137,16 +189,18 @@
                      th:src="${images[0].imageUrl}"
                      th:alt="${propertyTitle + ' gallery image'}"
                      class="max-h-[78vh] w-full max-w-5xl
-                            rounded-3xl object-contain">
+                            rounded-2xl object-contain
+                            transition-opacity duration-200
+                            sm:rounded-3xl">
 
                 <button id="nextGalleryImage"
                         type="button"
                         aria-label="Next image"
-                        class="absolute right-4 z-10 flex h-10 w-10
+                        class="absolute right-1 z-10 flex h-10 w-10
                                items-center justify-center rounded-full
                                bg-black/70 text-xl text-white
                                transition hover:bg-emerald-500
-                               hover:text-slate-950">
+                               hover:text-slate-950 sm:right-4">
                     &#10095;
                 </button>
 
@@ -161,6 +215,7 @@
 
         </section>
 
+        <!-- Image URLs consumed by property-gallery.js -->
         <span th:each="image : ${images}"
               class="gallery-image-source"
               th:attr="data-gallery-image=${image.imageUrl}">
