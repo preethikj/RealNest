@@ -168,7 +168,7 @@
           <th:block th:replace="~{fragments/property-card :: customerPropertyCard(
                 ${!#lists.isEmpty(property.images)
                     ? property.images[0].imageUrl
-                    : '/images/property-1.jpg'},
+                    : '/images/property-placeholder.png'},
                 ${property.title},
                 ${property.title},
                 ${property.city + ', ' + property.state},
