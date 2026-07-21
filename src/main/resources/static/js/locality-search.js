@@ -28,8 +28,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /*
-     * Display only city suggestions matching the
-     * value currently entered by the user.
+     * Show every city option.
+     */
+    const showAllCities = () => {
+
+        if (!citySuggestions || cityOptions.length === 0) {
+            return;
+        }
+
+        cityOptions.forEach((option) => {
+            option.classList.remove("hidden");
+        });
+
+        citySuggestions.classList.remove("hidden");
+    };
+
+
+    /*
+     * Show only the cities matching the text
+     * currently entered by the user.
      */
     const showMatchingCities = () => {
 
@@ -37,13 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const enteredCity = cityInput.value.trim().toLowerCase();
+        const enteredCity = cityInput.value
+            .trim()
+            .toLowerCase();
 
         let matchExists = false;
 
         cityOptions.forEach((option) => {
 
-            const city = option.textContent.trim().toLowerCase();
+            const city = option.textContent
+                .trim()
+                .toLowerCase();
 
             const matches = city.includes(enteredCity);
 
@@ -59,24 +80,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /*
-     * City suggestions
+     * Show every locality option.
+     */
+    const showAllLocalities = () => {
+
+        if (!localitySuggestions || localityOptions.length === 0 || cityChanged) {
+            return;
+        }
+
+        localityOptions.forEach((option) => {
+            option.classList.remove("hidden");
+        });
+
+        localitySuggestions.classList.remove("hidden");
+    };
+
+
+    /*
+     * Show only localities matching the text
+     * currently entered by the user.
+     */
+    const showMatchingLocalities = () => {
+
+        if (!localitySuggestions || cityChanged) {
+            return;
+        }
+
+        const enteredLocality = localityInput.value
+            .trim()
+            .toLowerCase();
+
+        let matchExists = false;
+
+        localityOptions.forEach((option) => {
+
+            const locality = option.textContent
+                .trim()
+                .toLowerCase();
+
+            const matches = locality.includes(enteredLocality);
+
+            option.classList.toggle("hidden", !matches);
+
+            if (matches) {
+                matchExists = true;
+            }
+        });
+
+        localitySuggestions.classList.toggle("hidden", !matchExists);
+    };
+
+
+    /*
+     * City suggestions.
+     *
+     * Clicking or focusing shows all cities.
+     * Typing filters the available cities.
      */
     if (citySuggestions) {
 
-        cityInput.addEventListener("focus", () => {
-            showMatchingCities();
-        });
+        cityInput.addEventListener("focus", showAllCities);
+
+        cityInput.addEventListener("click", showAllCities);
 
         cityInput.addEventListener("input", () => {
 
-            const currentCity = cityInput.value.trim().toLowerCase();
+            const currentCity = cityInput.value
+                .trim()
+                .toLowerCase();
 
             cityChanged = currentCity !== originalCity;
 
             if (cityChanged) {
+
                 localityInput.value = "";
 
-                localitySuggestions?.classList.add("hidden");
+                localitySuggestions
+                    ?.classList.add("hidden");
             }
 
             showMatchingCities();
@@ -93,8 +173,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 citySuggestions.classList.add("hidden");
 
                 /*
-                 * Reload the listing page for the selected city.
-                 * This also loads the correct locality suggestions.
+                 * Reload the listing page for the selected
+                 * city and load its locality suggestions.
                  */
                 searchForm.requestSubmit();
             });
@@ -103,20 +183,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /*
-     * Locality suggestions
+     * Locality suggestions.
+     *
+     * Clicking or focusing shows all localities.
+     * Typing filters the available localities.
      */
     if (localitySuggestions) {
 
-        localityInput.addEventListener("focus", () => {
+        localityInput.addEventListener("focus", showAllLocalities);
 
-            /*
-             * Do not display localities belonging to the old city
-             * if the city has been changed but not submitted yet.
-             */
-            if (!cityChanged) {
-                localitySuggestions.classList.remove("hidden");
-            }
-        });
+        localityInput.addEventListener("click", showAllLocalities);
+
+        localityInput.addEventListener("input", showMatchingLocalities);
 
         localityOptions.forEach((option) => {
 
@@ -133,7 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /*
-     * Close both suggestion panels when clicking outside them.
+     * Close suggestion panels when clicking
+     * outside their related controls.
      */
     document.addEventListener("click", (event) => {
 
@@ -142,18 +221,39 @@ document.addEventListener("DOMContentLoaded", () => {
         const clickedInsideLocality = localityInput.contains(event.target) || localitySuggestions?.contains(event.target);
 
         if (!clickedInsideCity) {
-            citySuggestions?.classList.add("hidden");
+
+            citySuggestions
+                ?.classList.add("hidden");
         }
 
         if (!clickedInsideLocality) {
-            localitySuggestions?.classList.add("hidden");
+
+            localitySuggestions
+                ?.classList.add("hidden");
         }
     });
 
 
     /*
-     * Clear a failed locality search and keep the user
-     * on the property-list page.
+     * Escape closes both dropdowns.
+     */
+    document.addEventListener("keydown", (event) => {
+
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        citySuggestions
+            ?.classList.add("hidden");
+
+        localitySuggestions
+            ?.classList.add("hidden");
+    });
+
+
+    /*
+     * Clear a failed locality search and keep
+     * the user on the property-list page.
      */
     if (searchAgainButton) {
 
@@ -163,11 +263,10 @@ document.addEventListener("DOMContentLoaded", () => {
             event.stopPropagation();
 
             localityInput.value = "";
+
             localityInput.focus();
 
-            if (localitySuggestions && !cityChanged) {
-                localitySuggestions.classList.remove("hidden");
-            }
+            showAllLocalities();
         });
     }
 });

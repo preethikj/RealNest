@@ -6,42 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RealNest | Find Your Perfect Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          th:href="@{/css/scrollbar.css}">
+
 </head>
 
-<body class="bg-slate-950 text-white font-sans">
+<body class="bg-slate-950 font-sans text-white">
 
 <header th:replace="~{fragments/navbar :: navbar('PUBLIC', null)}"></header>
 <main>
-    <th:block th:replace="~{fragments/hero :: hero}"></th:block>
 
+    <!-- Landing hero -->
+    <th:block th:replace="~{fragments/hero :: hero}">
+    </th:block>
+
+    <!-- Featured properties -->
     <section class="mx-auto max-w-7xl px-6
-                pb-16 pt-10
-                lg:pb-20 lg:pt-12">
+                    pb-16 pt-10
+                    lg:pb-20 lg:pt-12">
+
         <th:block th:replace="~{fragments/section-header ::
             sectionHeader(
-            'FEATURED PROPERTIES',
-            'Handpicked Homes',
-            'Explore premium verified homes carefully selected for you.',
-            'View All',
-            '/properties'
+                'FEATURED PROPERTIES',
+                'Handpicked Homes',
+                'Explore premium verified homes carefully selected for you.',
+                'View All',
+                '/properties'
             )}">
         </th:block>
 
-<!--        Property cards-->
-        <section th:if="${!featuredProperties.isEmpty()}"
-                 class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Property cards -->
+        <section th:if="${featuredProperties != null
+                         and !featuredProperties.isEmpty()}"
+                 class="mt-10 grid gap-6
+                        md:grid-cols-2 lg:grid-cols-3">
 
             <th:block th:each="property : ${featuredProperties}">
+
                 <th:block th:replace="~{fragments/property-card ::
                     propertyCard(${property})}">
                 </th:block>
+
             </th:block>
 
         </section>
 
-        <section th:if="${featuredProperties.isEmpty()}"
-                 class="mt-10 rounded-3xl border border-white/10
-                bg-slate-900 px-6 py-14 text-center">
+        <!-- Empty state -->
+        <section th:if="${featuredProperties == null
+                         or featuredProperties.isEmpty()}"
+                 class="mt-10 rounded-3xl
+                        border border-white/10
+                        bg-slate-900 px-6 py-14
+                        text-center">
 
             <h2 class="text-xl font-bold text-white">
                 No featured properties available
@@ -52,12 +68,16 @@
             </p>
 
         </section>
+
     </section>
+
 </main>
 
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+<footer th:replace="~{fragments/footer :: footer}">
+</footer>
 
-<script src="/js/navbar.js"></script>
-<script src="/js/search.js"></script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/search.js}"></script>
+
 </body>
 </html>
