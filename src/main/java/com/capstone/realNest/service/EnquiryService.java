@@ -8,6 +8,7 @@ import com.capstone.realNest.exception.EnquiryNotFoundException;
 import com.capstone.realNest.exception.PropertyNotFoundException;
 import com.capstone.realNest.exception.SelfEnquiryNotAllowedException;
 import com.capstone.realNest.exception.UserNotFoundException;
+import com.capstone.realNest.enums.PropertyStatus;
 import com.capstone.realNest.repository.EnquiryRepository;
 import com.capstone.realNest.repository.PropertyRepository;
 import com.capstone.realNest.repository.UserRepository;
@@ -21,8 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EnquiryService {
 
-    private static final String APPROVED_STATUS = "APPROVED";
-
     private final EnquiryRepository enquiryRepository;
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
@@ -31,7 +30,7 @@ public class EnquiryService {
     public EnquiryResponse createEnquiry(Long propertyId, EnquiryRequest request, Long requesterId) {
 
         Property property = propertyRepository
-                .findByIdAndStatus(propertyId, APPROVED_STATUS)
+                .findByIdAndStatus(propertyId, PropertyStatus.APPROVED)
                 .orElseThrow(() -> new PropertyNotFoundException(propertyId));
 
         if (requesterId != null && property.getOwner().getId().equals(requesterId)) {
