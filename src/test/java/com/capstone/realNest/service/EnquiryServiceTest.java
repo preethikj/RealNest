@@ -8,6 +8,7 @@ import com.capstone.realNest.entity.User;
 import com.capstone.realNest.exception.EnquiryNotFoundException;
 import com.capstone.realNest.exception.PropertyNotFoundException;
 import com.capstone.realNest.exception.SelfEnquiryNotAllowedException;
+import com.capstone.realNest.enums.PropertyStatus;
 import com.capstone.realNest.repository.EnquiryRepository;
 import com.capstone.realNest.repository.PropertyRepository;
 import com.capstone.realNest.repository.UserRepository;
@@ -84,7 +85,7 @@ class EnquiryServiceTest {
 
         when(propertyRepository.findByIdAndStatus(
                 propertyId,
-                "APPROVED"
+                PropertyStatus.APPROVED
         )).thenReturn(Optional.of(property));
 
         when(enquiryRepository.save(any(Enquiry.class)))
@@ -128,7 +129,7 @@ class EnquiryServiceTest {
 
         when(propertyRepository.findByIdAndStatus(
                 10L,
-                "APPROVED"
+                PropertyStatus.APPROVED
         )).thenReturn(Optional.of(property));
 
         when(enquiryRepository.save(any(Enquiry.class)))
@@ -164,7 +165,7 @@ class EnquiryServiceTest {
 
         when(propertyRepository.findByIdAndStatus(
                 propertyId,
-                "APPROVED"
+                PropertyStatus.APPROVED
         )).thenReturn(Optional.empty());
 
         assertThrows(
@@ -188,7 +189,7 @@ class EnquiryServiceTest {
 
         when(propertyRepository.findByIdAndStatus(
                 propertyId,
-                "APPROVED"
+                PropertyStatus.APPROVED
         )).thenReturn(Optional.of(property));
 
         assertThrows(

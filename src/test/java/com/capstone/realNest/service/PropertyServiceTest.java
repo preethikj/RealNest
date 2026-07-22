@@ -6,6 +6,7 @@ import com.capstone.realNest.entity.Property;
 import com.capstone.realNest.entity.User;
 import com.capstone.realNest.exception.PropertyNotFoundException;
 import com.capstone.realNest.exception.UserNotFoundException;
+import com.capstone.realNest.enums.PropertyStatus;
 import com.capstone.realNest.mapper.PropertyMapper;
 import com.capstone.realNest.repository.PropertyRepository;
 import com.capstone.realNest.repository.UserRepository;
@@ -76,7 +77,7 @@ class PropertyServiceTest {
 
         assertNotNull(result);
         assertSame(propertyResponse, result);
-        assertEquals("PENDING", property.getStatus());
+        assertEquals(PropertyStatus.PENDING, property.getStatus());
 
         verify(userRepository).findById(ownerId);
         verify(propertyRepository).save(property);
@@ -158,7 +159,7 @@ class PropertyServiceTest {
                 propertyService.approveProperty(propertyId);
 
         assertSame(propertyResponse, result);
-        assertEquals("APPROVED", property.getStatus());
+        assertEquals(PropertyStatus.APPROVED, property.getStatus());
 
         verify(propertyRepository).save(property);
         verify(propertyMapper).toResponse(property);
@@ -182,7 +183,7 @@ class PropertyServiceTest {
                 propertyService.rejectProperty(propertyId);
 
         assertSame(propertyResponse, result);
-        assertEquals("REJECTED", property.getStatus());
+        assertEquals(PropertyStatus.REJECTED, property.getStatus());
 
         verify(propertyRepository).save(property);
         verify(propertyMapper).toResponse(property);

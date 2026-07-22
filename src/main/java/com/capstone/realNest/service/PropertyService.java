@@ -6,6 +6,7 @@ import com.capstone.realNest.entity.Property;
 import com.capstone.realNest.entity.User;
 import com.capstone.realNest.exception.PropertyNotFoundException;
 import com.capstone.realNest.exception.UserNotFoundException;
+import com.capstone.realNest.enums.PropertyStatus;
 import com.capstone.realNest.mapper.PropertyMapper;
 import com.capstone.realNest.repository.PropertyRepository;
 import com.capstone.realNest.repository.UserRepository;
@@ -22,10 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PropertyService {
 
-    private static final String PENDING_STATUS = "PENDING";
-    private static final String APPROVED_STATUS = "APPROVED";
-    private static final String REJECTED_STATUS = "REJECTED";
-
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
     private final PropertyMapper propertyMapper;
@@ -39,7 +36,7 @@ public class PropertyService {
 
         Property property = propertyMapper.toEntity(request, owner);
 
-        property.setStatus(PENDING_STATUS);
+        property.setStatus(PropertyStatus.PENDING);
 
         Property savedProperty = propertyRepository.save(property);
 
@@ -72,7 +69,7 @@ public class PropertyService {
     public List<PropertyResponse> getPropertiesByStatus(String status) {
 
         return propertyRepository
-                .findByStatusOrderByCreatedAtDesc(status)
+                .findByStatusOrderByCreatedAtDesc(parseStatus(status))
                 .stream()
                 .map(propertyMapper::toResponse)
                 .toList();
@@ -89,16 +86,16 @@ public class PropertyService {
     @Transactional
     public PropertyResponse approveProperty(Long propertyId) {
 
-        return updatePropertyStatus(propertyId, APPROVED_STATUS);
+        return updatePropertyStatus(propertyId, PropertyStatus.APPROVED);
     }
 
     @Transactional
     public PropertyResponse rejectProperty(Long propertyId) {
 
-        return updatePropertyStatus(propertyId, REJECTED_STATUS);
+        return updatePropertyStatus(propertyId, PropertyStatus.REJECTED);
     }
 
-    private PropertyResponse updatePropertyStatus(Long propertyId, String status) {
+    private PropertyResponse updatePropertyStatus(Long propertyId, PropertyStatus status) {
 
         Property property = findPropertyById(propertyId);
 
@@ -121,7 +118,7 @@ public class PropertyService {
             Pageable pageable) {
 
         return propertyRepository.searchProperties(
-                        APPROVED_STATUS,
+                        PropertyStatus.APPROVED,
                         normalizeFilter(listingType),
                         normalizeFilter(propertyType),
                         bedrooms,
@@ -130,6 +127,11 @@ public class PropertyService {
                         minPrice,
                         maxPrice,
                         pageable).map(propertyMapper::toResponse);
+    }
+
+    private PropertyStatus parseStatus(String status) {
+
+        return PropertyStatus.valueOf(status.trim().toUpperCase());
     }
 
     private String normalizeFilter(String value) {
@@ -148,7 +150,7 @@ public class PropertyService {
 
         propertyMapper.updateEntity(property, request);
 
-        property.setStatus(PENDING_STATUS);
+        property.setStatus(PropertyStatus.PENDING);
 
         Property updatedProperty = propertyRepository.save(property);
 
@@ -181,7 +183,7 @@ public class PropertyService {
     public PropertyResponse getApprovedPropertyById(Long propertyId) {
 
         Property property = propertyRepository
-                .findByIdAndStatus(propertyId, APPROVED_STATUS)
+                .findByIdAndStatus(propertyId, PropertyStatus.APPROVED)
                 .orElseThrow(() -> new PropertyNotFoundException(propertyId));
 
         return propertyMapper.toResponse(property);
@@ -205,14 +207,14 @@ public class PropertyService {
 
     @Transactional(readOnly = true)
     public long countPropertiesByStatus(String status) {
-        return propertyRepository.countByStatus(status);
+        return propertyRepository.countByStatus(parseStatus(status));
     }
 
     @Transactional(readOnly = true)
     public List<PropertyResponse> getLatestPendingProperties(int limit) {
 
         return propertyRepository
-                .findByStatusOrderByCreatedAtDesc(PENDING_STATUS)
+                .findByStatusOrderByCreatedAtDesc(PropertyStatus.PENDING)
                 .stream()
                 .limit(limit)
                 .map(propertyMapper::toResponse)
@@ -240,7 +242,7 @@ public class PropertyService {
     public List<PropertyResponse> getFeaturedProperties(int limit) {
 
         return propertyRepository
-                .findByStatusOrderByCreatedAtDesc(APPROVED_STATUS)
+                .findByStatusOrderByCreatedAtDesc(PropertyStatus.APPROVED)
                 .stream()
                 .limit(limit)
                 .map(propertyMapper::toResponse)
@@ -249,13 +251,13 @@ public class PropertyService {
 
     @Transactional(readOnly = true)
     public long countApprovedProperties() {
-        return propertyRepository.countByStatus(APPROVED_STATUS);
+        return propertyRepository.countByStatus(PropertyStatus.APPROVED);
     }
 
     @Transactional(readOnly = true)
     public long countApprovedPropertiesByListingType(String listingType) {
 
-        return propertyRepository.countByStatusAndListingType(APPROVED_STATUS, listingType);
+        return propertyRepository.countByStatusAndListingType(PropertyStatus.APPROVED, listingType);
     }
 
     /*
@@ -264,7 +266,7 @@ public class PropertyService {
     @Transactional(readOnly = true)
     public List<String> getApprovedCities() {
 
-        return propertyRepository.findDistinctCitiesByStatus(APPROVED_STATUS);
+        return propertyRepository.findDistinctCitiesByStatus(PropertyStatus.APPROVED);
     }
 
 
@@ -275,6 +277,6 @@ public class PropertyService {
     public List<String> getApprovedLocalitiesByCity(String city) {
 
         return propertyRepository
-                .findDistinctLocalitiesByStatusAndCity(APPROVED_STATUS, normalizeFilter(city));
+                .findDistinctLocalitiesByStatusAndCity(PropertyStatus.APPROVED, normalizeFilter(city));
     }
 }

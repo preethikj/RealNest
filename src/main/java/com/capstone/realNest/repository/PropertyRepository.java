@@ -1,6 +1,7 @@
 package com.capstone.realNest.repository;
 
 import com.capstone.realNest.entity.Property;
+import com.capstone.realNest.enums.PropertyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +27,7 @@ public interface PropertyRepository
 
     List<Property> findByOwnerIdAndStatusOrderByCreatedAtDesc(
             Long ownerId,
-            String status
+            PropertyStatus status
     );
 
     Optional<Property> findByIdAndOwnerId(
@@ -42,20 +43,20 @@ public interface PropertyRepository
      */
 
     List<Property> findByStatusOrderByCreatedAtDesc(
-            String status
+            PropertyStatus status
     );
 
     Optional<Property> findByIdAndStatus(
             Long propertyId,
-            String status
+            PropertyStatus status
     );
 
     List<Property> findAllByOrderByCreatedAtDesc();
 
-    long countByStatus(String status);
+    long countByStatus(PropertyStatus status);
 
     long countByStatusAndListingType(
-            String status,
+            PropertyStatus status,
             String listingType
     );
 
@@ -127,7 +128,7 @@ public interface PropertyRepository
 
     """)
     Page<Property> searchProperties(
-            @Param("status") String status,
+            @Param("status") PropertyStatus status,
             @Param("listingType") String listingType,
             @Param("propertyType") String propertyType,
             @Param("bedrooms") Integer bedrooms,
@@ -154,7 +155,7 @@ public interface PropertyRepository
         ORDER BY property.city
         """)
     List<String> findDistinctCitiesByStatus(
-            @Param("status") String status
+            @Param("status") PropertyStatus status
     );
 
 
@@ -178,7 +179,7 @@ public interface PropertyRepository
         ORDER BY property.locality
         """)
     List<String> findDistinctLocalitiesByStatusAndCity(
-            @Param("status") String status,
+            @Param("status") PropertyStatus status,
             @Param("city") String city
     );
 }
