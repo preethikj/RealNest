@@ -1,20 +1,29 @@
 package com.capstone.realNest.service.email;
 
 import com.capstone.realNest.entity.User;
-import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import com.resend.Resend;
+import com.resend.services.emails.model.CreateEmailOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
-@RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender javaMailSender;
+    private final Resend resend;
     private final SpringTemplateEngine templateEngine;
+    private final String fromEmail;
+
+    public EmailService(
+            SpringTemplateEngine templateEngine,
+            @Value("${resend.api-key}") String apiKey,
+            @Value("${resend.from-email}") String fromEmail
+    ) {
+        this.resend = new Resend(apiKey);
+        this.templateEngine = templateEngine;
+        this.fromEmail = fromEmail;
+    }
 
     public void sendPasswordResetEmail(
             User user,
@@ -40,28 +49,21 @@ public class EmailService {
                             context
                     );
 
-            MimeMessage message =
-                    javaMailSender.createMimeMessage();
+            CreateEmailOptions email =
+                    CreateEmailOptions.builder()
+                            .from(
+                                    "RealNest <"
+                                            + fromEmail
+                                            + ">"
+                            )
+                            .to(user.getEmail())
+                            .subject(
+                                    "Reset Your RealNest Password"
+                            )
+                            .html(htmlContent)
+                            .build();
 
-            MimeMessageHelper helper =
-                    new MimeMessageHelper(
-                            message,
-                            true,
-                            "UTF-8"
-                    );
-
-            helper.setTo(user.getEmail());
-
-            helper.setSubject(
-                    "Reset Your RealNest Password"
-            );
-
-            helper.setText(
-                    htmlContent,
-                    true
-            );
-
-            javaMailSender.send(message);
+            resend.emails().send(email);
 
         } catch (Exception exception) {
 
