@@ -1,6 +1,7 @@
 package com.capstone.realNest.repository;
 
 import com.capstone.realNest.entity.Property;
+import com.capstone.realNest.enums.PropertyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +27,7 @@ public interface PropertyRepository
 
     List<Property> findByOwnerIdAndStatusOrderByCreatedAtDesc(
             Long ownerId,
-            String status
+            PropertyStatus status
     );
 
     Optional<Property> findByIdAndOwnerId(
@@ -42,12 +43,12 @@ public interface PropertyRepository
      */
 
     List<Property> findByStatusOrderByCreatedAtDesc(
-            String status
+            PropertyStatus status
     );
 
     Optional<Property> findByIdAndStatus(
             Long propertyId,
-            String status
+            PropertyStatus status
     );
 
     List<Property> findAllByOrderByCreatedAtDesc();
@@ -55,7 +56,7 @@ public interface PropertyRepository
     long countByStatus(String status);
 
     long countByStatusAndListingType(
-            String status,
+            PropertyStatus status,
             String listingType
     );
 
