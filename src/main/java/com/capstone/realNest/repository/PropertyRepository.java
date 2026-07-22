@@ -128,7 +128,7 @@ public interface PropertyRepository
 
     """)
     Page<Property> searchProperties(
-            @Param("status") String status,
+            @Param("status") PropertyStatus status,
             @Param("listingType") String listingType,
             @Param("propertyType") String propertyType,
             @Param("bedrooms") Integer bedrooms,
@@ -155,7 +155,7 @@ public interface PropertyRepository
         ORDER BY property.city
         """)
     List<String> findDistinctCitiesByStatus(
-            @Param("status") String status
+            @Param("status") PropertyStatus status
     );
 
 
@@ -179,7 +179,7 @@ public interface PropertyRepository
         ORDER BY property.locality
         """)
     List<String> findDistinctLocalitiesByStatusAndCity(
-            @Param("status") String status,
+            @Param("status") PropertyStatus status,
             @Param("city") String city
     );
 }
