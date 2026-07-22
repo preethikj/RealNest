@@ -74,7 +74,7 @@ public class PropertyMapper {
                 property.getPrice(),
                 property.getPropertyType(),
                 property.getListingType(),
-                property.getStatus(),
+                property.getStatus().name(),
                 property.getBedrooms(),
                 property.getBathrooms(),
                 property.getArea(),
