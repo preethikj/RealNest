@@ -53,7 +53,7 @@ public interface PropertyRepository
 
     List<Property> findAllByOrderByCreatedAtDesc();
 
-    long countByStatus(String status);
+    long countByStatus(PropertyStatus status);
 
     long countByStatusAndListingType(
             PropertyStatus status,
