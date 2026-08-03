@@ -5,6 +5,7 @@ import com.capstone.realNest.dto.request.UserRegistrationRequest;
 import com.capstone.realNest.dto.response.UserResponse;
 import com.capstone.realNest.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,8 @@ public class UserController {
         return ResponseEntity.ok("Password reset successfully");
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @GetMapping("/{userId}")
     @Operation(summary = "Get user profile")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long userId) {
@@ -65,6 +68,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @PutMapping("/{userId}")
     @Operation(summary = "Update user profile")
     public ResponseEntity<UserResponse> updateProfile(@PathVariable Long userId, @Valid @RequestBody UserProfileUpdateRequest request) {
@@ -74,6 +79,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @GetMapping("/customers")
     @Operation(summary = "Get all customers")
     public ResponseEntity<List<UserResponse>> getAllCustomers() {
@@ -83,12 +90,13 @@ public class UserController {
         return ResponseEntity.ok(responses);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @GetMapping("/customers/count")
     @Operation(summary = "Get customer count")
     public ResponseEntity<Long> countCustomers() {
 
         long count = userService.countCustomers();
-
         return ResponseEntity.ok(count);
     }
 }

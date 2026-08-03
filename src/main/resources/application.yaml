@@ -38,6 +38,13 @@ cloudinary:
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
 
+realnest:
+  admin:
+    name: ${REALNEST_ADMIN_NAME:RealNest Admin}
+    email: ${REALNEST_ADMIN_EMAIL:admin@realnest.com}
+    password: ${REALNEST_ADMIN_PASSWORD:Admin@123}
+    phone: ${REALNEST_ADMIN_PHONE:9999999999}
+
 app:
   base-url: ${APP_BASE_URL:http://localhost:8080}
 

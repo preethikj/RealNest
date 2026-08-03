@@ -4,6 +4,7 @@ import com.capstone.realNest.dto.request.EnquiryRequest;
 import com.capstone.realNest.dto.response.EnquiryResponse;
 import com.capstone.realNest.service.EnquiryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,8 @@ public class EnquiryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @GetMapping("/enquiries/owner/{ownerId}")
     @Operation(summary = "Get enquiries received by an owner")
     public ResponseEntity<List<EnquiryResponse>> getEnquiriesByOwner(@PathVariable Long ownerId) {
@@ -46,6 +49,7 @@ public class EnquiryController {
     }
 
 
+    @SecurityRequirement(name = "basicAuth")
     @GetMapping("/enquiries/property/{propertyId}")
     @Operation(summary = "Get enquiries for a property")
     public ResponseEntity<List<EnquiryResponse>> getEnquiriesByProperty(@PathVariable Long propertyId) {

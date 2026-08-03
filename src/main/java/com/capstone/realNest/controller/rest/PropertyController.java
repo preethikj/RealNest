@@ -7,6 +7,7 @@ import com.capstone.realNest.security.CustomUserPrincipal;
 import com.capstone.realNest.service.PropertyImageService;
 import com.capstone.realNest.service.PropertyService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class PropertyController {
     private final PropertyService propertyService;
     private final PropertyImageService propertyImageService;
 
-
+    @SecurityRequirement(name = "basicAuth")
     @PostMapping
     @Operation(summary = "Create a new property")
     public ResponseEntity<PropertyResponse> createProperty(@Valid @RequestBody PropertyRequest request,
@@ -45,6 +46,8 @@ public class PropertyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @PostMapping(value = "/{propertyId}/images",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload images for a property")
@@ -66,7 +69,7 @@ public class PropertyController {
         return ResponseEntity.ok(response);
     }
 
-
+    @SecurityRequirement(name = "basicAuth")
     @GetMapping("/owner/{ownerId}")
     @Operation(summary = "Get properties by owner")
     public ResponseEntity<List<PropertyResponse>> getPropertiesByOwner(@PathVariable Long ownerId) {
@@ -76,6 +79,7 @@ public class PropertyController {
     }
 
 
+    @SecurityRequirement(name = "basicAuth")
     @GetMapping("/status/{status}")
     @Operation(summary = "Get properties by status")
     public ResponseEntity<List<PropertyResponse>> getPropertiesByStatus(@PathVariable String status) {
@@ -83,6 +87,7 @@ public class PropertyController {
         List<PropertyResponse> responses = propertyService.getPropertiesByStatus(status.toUpperCase());
         return ResponseEntity.ok(responses);
     }
+
 
     @GetMapping("/{propertyId}/images")
     @Operation(summary = "Get images for a property")
@@ -92,6 +97,8 @@ public class PropertyController {
         return ResponseEntity.ok(responses);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @DeleteMapping("/{propertyId}/images/{imageId}")
     @Operation(summary = "Delete a property image")
     public ResponseEntity<Void> deletePropertyImage(
@@ -102,6 +109,8 @@ public class PropertyController {
         return ResponseEntity.noContent().build();
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @PatchMapping("/{propertyId}/approve")
     @Operation(summary = "Approve a property")
     public ResponseEntity<PropertyResponse> approveProperty(@PathVariable Long propertyId) {
@@ -110,6 +119,8 @@ public class PropertyController {
         return ResponseEntity.ok(response);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @PatchMapping("/{propertyId}/reject")
     @Operation(summary = "Reject a property")
     public ResponseEntity<PropertyResponse> rejectProperty(@PathVariable Long propertyId) {
@@ -144,6 +155,8 @@ public class PropertyController {
         return ResponseEntity.ok(properties);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @PutMapping("/{propertyId}")
     @Operation(summary = "Update a property")
     public ResponseEntity<PropertyResponse> updateProperty(@PathVariable Long propertyId,
@@ -154,6 +167,8 @@ public class PropertyController {
         return ResponseEntity.ok(response);
     }
 
+
+    @SecurityRequirement(name = "basicAuth")
     @DeleteMapping("/{propertyId}")
     @Operation(summary = "Delete a property")
     public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId) {
