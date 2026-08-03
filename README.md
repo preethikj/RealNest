@@ -13,21 +13,25 @@ The application includes role-based access, property search and filtering, Cloud
 
 ## Demo Credentials
 
+> [!NOTE]
+> **Automatic Admin Seeding:** RealNest automatically creates the
+> demonstration Administrator account during application startup.
+> No manual database insertion or SQL seed script is required.
+> If the configured Admin email already exists, another account is not created.
+
 ### Administrator
 
-- Email: admin@mail.com
-- Password: admin@123
+- Email: `admin@realnest.com`
+- Password: `Admin@123`
 
 ### Customer
 
-Customers can create a new account using the registration page.
+Customers may register a new account or use:
 
-Optional demo customer:
+- Email: `realnestcustomer@gmail.com`
+- Password: `cust@1234`
 
-- Email: realnestcustomer@gmail.com
-- Password: cust@1234
-
-> These accounts are intended only for project demonstration and evaluation.
+> These credentials are intended only for capstone demonstration and evaluation.
 
 ## Features
 
@@ -139,70 +143,6 @@ Database
 - **Mappers** convert between entities and DTOs.
 - **Security configuration** manages authentication and role-based authorization.
 
-## Main Entities
-
-### User
-
-Stores customer and administrator account information.
-
-Important fields:
-
-- Name
-- Email
-- Encoded password
-- Phone
-- Role
-- Creation date
-
-Roles:
-
-- `CUSTOMER`
-- `ADMIN`
-
-### Property
-
-Stores property listing information, including:
-
-- Title and description
-- Price
-- Property and listing types
-- Bedrooms and bathrooms
-- Area
-- Address, locality, city, state, country, and pincode
-- Geographic coordinates
-- Approval status
-- Owner
-- Creation and update timestamps
-
-Statuses:
-
-- `PENDING`
-- `APPROVED`
-- `REJECTED`
-
-### PropertyImage
-
-Stores Cloudinary image information:
-
-- Image URL
-- Cloudinary public ID
-- Display order
-- Associated property
-
-### Enquiry
-
-Stores enquiries submitted for approved properties:
-
-- Property
-- Name
-- Email
-- Phone
-- Message
-- Creation date
-
-### PasswordResetToken
-
-Stores time-limited, single-use password-reset tokens.
 
 ## Main REST API Endpoints
 
