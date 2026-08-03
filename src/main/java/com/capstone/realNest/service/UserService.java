@@ -203,27 +203,7 @@ public class UserService {
         }
 
         PasswordResetToken resetToken =
-                passwordResetTokenRepository
-                        .findByToken(token)
-                        .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Invalid password reset link."
-                                )
-                        );
-
-        if (resetToken.isUsed()) {
-            throw new IllegalArgumentException(
-                    "This password reset link has already been used."
-            );
-        }
-
-        if (resetToken.getExpiryDate()
-                .isBefore(LocalDateTime.now())) {
-
-            throw new IllegalArgumentException(
-                    "Password reset link has expired."
-            );
-        }
+                getUsablePasswordResetToken(token);
 
         User user =
                 userRepository
@@ -245,6 +225,48 @@ public class UserService {
         passwordResetTokenRepository.save(
                 resetToken
         );
+    }
+
+    @Transactional(readOnly = true)
+    public void validatePasswordResetToken(String token) {
+
+        getUsablePasswordResetToken(token);
+    }
+
+    private PasswordResetToken getUsablePasswordResetToken(
+            String token
+    ) {
+
+        if (token == null || token.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Invalid password reset link."
+            );
+        }
+
+        PasswordResetToken resetToken =
+                passwordResetTokenRepository
+                        .findByToken(token)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Invalid password reset link."
+                                )
+                        );
+
+        if (resetToken.isUsed()) {
+            throw new IllegalArgumentException(
+                    "This password reset link has already been used."
+            );
+        }
+
+        if (!resetToken.getExpiryDate()
+                .isAfter(LocalDateTime.now())) {
+
+            throw new IllegalArgumentException(
+                    "Password reset link has expired."
+            );
+        }
+
+        return resetToken;
     }
 
     private User findUserById(Long userId) {
