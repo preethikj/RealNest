@@ -8,7 +8,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -64,6 +66,12 @@ public class EmailService {
             javaMailSender.send(message);
 
         } catch (Exception exception) {
+
+            log.error(
+                    "Failed to send password reset email to {}",
+                    user.getEmail(),
+                    exception
+            );
 
             throw new IllegalStateException(
                     "Failed to send password reset email.",
