@@ -101,14 +101,37 @@ public class LoginViewController {
     }
 
     @PostMapping("/reset-password")
-    public String resetPassword(@RequestParam String token, @RequestParam String newPassword, @RequestParam String confirmPassword, Model model, RedirectAttributes redirectAttributes) {
+    public String resetPassword(
+            @RequestParam String token,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        model.addAttribute("token", token);
+
+        try {
+            userService.validatePasswordResetToken(token);
+
+        } catch (IllegalArgumentException exception) {
+            model.addAttribute("tokenValid", false);
+            model.addAttribute(
+                    "errorMessage",
+                    exception.getMessage()
+            );
+
+            return "auth/reset-password";
+        }
+
+        model.addAttribute("tokenValid", true);
 
         if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute(
+                    "errorMessage",
+                    "Password and confirm password do not match."
+            );
 
-            model.addAttribute("token", token);
-            model.addAttribute("tokenValid", true);
-            model.addAttribute("errorMessage",
-                    "Password and confirm password do not match.");
             return "auth/reset-password";
         }
 
@@ -116,16 +139,20 @@ public class LoginViewController {
             userService.resetPassword(token, newPassword);
 
         } catch (IllegalArgumentException exception) {
-
-            model.addAttribute("token", token);
-            model.addAttribute("tokenValid", false);
-            model.addAttribute("errorMessage", exception.getMessage());
+            model.addAttribute(
+                    "errorMessage",
+                    exception.getMessage()
+            );
 
             return "auth/reset-password";
         }
 
-        redirectAttributes.addFlashAttribute("successMessage",
-                "Password reset successful. Please log in.");
+        redirectAttributes.addFlashAttribute(
+                "successMessage",
+                "Password reset successful. Please log in."
+        );
+
         return "redirect:/auth/login";
     }
+
 }
