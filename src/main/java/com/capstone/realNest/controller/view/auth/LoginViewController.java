@@ -78,9 +78,24 @@ public class LoginViewController {
     }
 
     @GetMapping("/reset-password")
-    public String showResetPasswordPage(@RequestParam String token, Model model) {
+    public String showResetPasswordPage(
+            @RequestParam(required = false) String token,
+            Model model
+    ) {
 
         model.addAttribute("token", token);
+
+        try {
+            userService.validatePasswordResetToken(token);
+            model.addAttribute("tokenValid", true);
+
+        } catch (IllegalArgumentException exception) {
+            model.addAttribute("tokenValid", false);
+            model.addAttribute(
+                    "errorMessage",
+                    exception.getMessage()
+            );
+        }
 
         return "auth/reset-password";
     }
@@ -91,6 +106,7 @@ public class LoginViewController {
         if (!newPassword.equals(confirmPassword)) {
 
             model.addAttribute("token", token);
+            model.addAttribute("tokenValid", true);
             model.addAttribute("errorMessage",
                     "Password and confirm password do not match.");
             return "auth/reset-password";
@@ -102,6 +118,7 @@ public class LoginViewController {
         } catch (IllegalArgumentException exception) {
 
             model.addAttribute("token", token);
+            model.addAttribute("tokenValid", false);
             model.addAttribute("errorMessage", exception.getMessage());
 
             return "auth/reset-password";
