@@ -19,6 +19,16 @@ The application includes role-based access, property search and filtering, Cloud
 
 
 ## Screenshots
+<p align="center">
+<img width="25%" height="25%" alt="PropertylistingPage" src="https://github.com/user-attachments/assets/c6c36c8a-d358-4b10-867b-a2962d51175d" />
+<img width="25%" height="25%" alt="PropertyDetailsPage" src="https://github.com/user-attachments/assets/d4af0d04-d65e-4f39-94d8-c1c1df10e6b9" />
+<img width="25%" height="25%" alt="HomePage-TopView" src="https://github.com/user-attachments/assets/b402e7fe-393c-4f38-818c-0468d11d6fb3" />
+<img width="25%" height="25%" alt="HomePage-BottomView" src="https://github.com/user-attachments/assets/8fa0849c-62a3-4bae-bb97-cf6760c91a94" />
+<img width="25%" height="25%" alt="Customer-Profile" src="https://github.com/user-attachments/assets/70beef60-58c4-46b0-97a1-47316ce672b6" />
+<img width="25%" height="25%" alt="Customer-Dashboard" src="https://github.com/user-attachments/assets/0ec7fdac-3889-474f-aa67-a4dda86f5620" />
+<img width="25%" height="25%" alt="Admin-enquirespage" src="https://github.com/user-attachments/assets/a733bbc4-ebed-4559-b9d3-ff057ffebed8" />
+<img width="25%" height="25%" alt="Admin-Dashboard" src="https://github.com/user-attachments/assets/049ad713-6493-42ee-9e5a-2a65514456cd" />
+</p>
 
 
 ## Demo Credentials
