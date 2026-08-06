@@ -11,6 +11,16 @@ The application includes role-based access, property search and filtering, Cloud
 - Application: https://realnest-preethi.onrender.com/
 - Swagger UI: https://realnest-preethi.onrender.com/swagger-ui/index.html
 
+## Demo Video
+
+[▶ Watch the 2-minute Admin Flow demonstration](https://drive.google.com/file/d/199vAef9tWgt02CFsawmtu7ZpR2kbsN4m/view?usp=drive_link)
+
+[▶ Watch the 2-minute Customer Flow demonstration](https://drive.google.com/file/d/1CJ0q8if7wVNaIualy7-Pv3onZFu0XO5d/view?usp=sharing)
+
+
+## Screenshots
+
+
 ## Demo Credentials
 
 > [!NOTE]
