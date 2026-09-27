@@ -11,6 +11,9 @@ import com.capstone.realNest.mapper.PropertyMapper;
 import com.capstone.realNest.repository.PropertyRepository;
 import com.capstone.realNest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -84,12 +87,19 @@ public class PropertyService {
     }
 
     @Transactional
-    public PropertyResponse approveProperty(Long propertyId) {
+    @Caching(evict = {
+            @CacheEvict(value = "approvedCities", allEntries = true),
+            @CacheEvict(value = "approvedLocalities", allEntries = true)
+    })    public PropertyResponse approveProperty(Long propertyId) {
 
         return updatePropertyStatus(propertyId, PropertyStatus.APPROVED);
     }
 
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "approvedCities", allEntries = true),
+            @CacheEvict(value = "approvedLocalities", allEntries = true)
+    })
     public PropertyResponse rejectProperty(Long propertyId) {
 
         return updatePropertyStatus(propertyId, PropertyStatus.REJECTED);
@@ -143,7 +153,10 @@ public class PropertyService {
     }
 
     @Transactional
-    public PropertyResponse updateProperty(Long propertyId, Long ownerId, PropertyRequest request) {
+    @Caching(evict = {
+            @CacheEvict(value = "approvedCities", allEntries = true),
+            @CacheEvict(value = "approvedLocalities", allEntries = true)
+    })    public PropertyResponse updateProperty(Long propertyId, Long ownerId, PropertyRequest request) {
 
         Property property = propertyRepository.findByIdAndOwnerId(propertyId, ownerId)
                 .orElseThrow(() -> new PropertyNotFoundException(propertyId));
@@ -158,6 +171,11 @@ public class PropertyService {
     }
 
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "approvedCities", allEntries = true),
+            @CacheEvict(value = "approvedLocalities", allEntries = true)
+    })
+
     public void deleteProperty(Long propertyId) {
 
         Property property = findPropertyById(propertyId);
@@ -168,6 +186,10 @@ public class PropertyService {
     }
 
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "approvedCities", allEntries = true),
+            @CacheEvict(value = "approvedLocalities", allEntries = true)
+    })
     public void deletePropertyByOwner(Long propertyId, Long ownerId) {
 
         Property property = propertyRepository
@@ -264,6 +286,7 @@ public class PropertyService {
      * Returns cities that currently contain approved properties.
      */
     @Transactional(readOnly = true)
+    @Cacheable("approvedCities")
     public List<String> getApprovedCities() {
 
         return propertyRepository.findDistinctCitiesByStatus(PropertyStatus.APPROVED);
@@ -274,6 +297,8 @@ public class PropertyService {
      * Returns approved-property localities belonging to a selected city.
      */
     @Transactional(readOnly = true)
+    @Cacheable(value = "approvedCities",
+    key = "#city == null || #city.isBlank() ? 'ALL' : #city.trim().toLowerCase()")
     public List<String> getApprovedLocalitiesByCity(String city) {
 
         return propertyRepository
